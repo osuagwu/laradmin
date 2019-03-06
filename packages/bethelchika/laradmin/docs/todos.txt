@@ -1,0 +1,55 @@
+#Laradmin
+# Pages
+# posts
+# look again at how notifications are authorised. Make only a user can read her own notification Might need to create notification policy.
+
+
+# Reconfirm password before a user can self delete or deactivate their account etc;[e.g take you user to a separate page with deletion info and request password from this page]. Create a column on users table named re_auth and then write a a middleware that enforces reauthentication without login user off.Store the users intended destination before re_auth was invoked in the users table in a clumn named re_auth_intended_url
+# Logout user after self deletion
+# check that self deactivated user is reactivated on login.
+
+# Impliment like and dislike functions [might need to leave this to faceboom for now]
+
+# add reason comments and admin Id who disablled a user's account (comments cann be implemented with a 'note' field on users table) 
+
+# Extend permision to include single objects:  [Note it is probaly better to implement this using main_permission or a second permission table,.No need to worry about the permission tabl growing too large because not all objects will need explicit access definition]
+
+# Unless its neccessary and will not cause issues, replace all occurance of \BethelChika\Laradmin\User to \App\User expecially in policies and in then in \config\auth.php 
+
+# [done]Allow user to change email. Perhaps store the new email in user.temp_email column untill user confirms the new email
+
+# in the users table delete any user that have not confirmed their email after an hour (Admin management task)
+
+# Allow login with any varified email when AuthWithAnyVarifiedEmail=true|false is set to true.
+
+# Fix the error during registration; the error is Perhaps because laravel is handling registration and therefore uses \App\User instead of \BethelChika\Laradmin\User. Might need to let Laradmin handle registration.
+
+
+
+# [done]facebook login
+# [done]google login
+# twitter login
+# yahoo login
+
+# Nicely implement js/css
+# Beutify user profile
+
+# implement backup and in cp
+# implement settings in cp
+# design how apps are built and intalled
+#
+# build first app (let this app be an app that will let us implement facebook likes)
+
+
+# Getting ready for going live first time
+## Fix Logo, make final decision
+## A version of logo for a hero page that extends to the menu
+## Style the active menu to show clearly on hero pages that extends to the main menu
+## Find two hero images
+## [done] Build the feed system
+## Add publishable images to comic pic
+## [ perhaps note]make icon for comic pic
+
+####
+## Make the head dropdown menu item navigatable. Needs to make it work intuitively like in wordpress native theme which work with mouseover on desktop and have a different element for collapsing the dropdown and another (i.e main link text) for visiting the head menu item link
+

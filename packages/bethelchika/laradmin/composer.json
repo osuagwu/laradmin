@@ -1,0 +1,19 @@
+{
+    "name": "bethelchika/laradmin",
+    "description": "The most thought through features full laravel admin and user profile manager",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bethel Chika Osuagwu",
+            "email": "bethel.osuagwu@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {        
+        "doctrine/dbal": ">=2.5",
+        "laravel/socialite": ">=3.0",
+        "intervention/image":">=2.4",
+        "jgrossi/corcel":">=2.4"
+    }
+}

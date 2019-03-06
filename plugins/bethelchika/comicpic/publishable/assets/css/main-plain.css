@@ -1,0 +1,368 @@
+/* Comicpic*/
+.comicpic .section-primary .nav-simple.nav-tabs li.active a,
+.comicpic .section-success .nav-simple.nav-tabs li.active a,
+.comicpic .section-danger .nav-simple.nav-tabs li.active a,
+.comicpic .section-warning .nav-simple.nav-tabs li.active a,
+.comicpic .section-info .nav-simple.nav-tabs li.active a
+{
+    background-color:#f5f5f5; 
+}
+
+
+.comicpic .screenshot{
+    max-width:100%;
+    height: auto;
+}
+
+/* Show box */
+.comicpic .main-show{
+    margin-top: 15px;
+}
+.comicpic .main-show .mainshot-box{
+    padding-bottom: 15px;
+    
+}
+
+.comicpic .main-show.small-image .mainshot-box{/*small images should have large space*/
+    padding-bottom: 80px;
+    padding-top: 80px;
+}
+.comicpic .main-show .mainshot-box .mainshot{
+    max-width:100%;
+    height: auto;
+}
+.comicpic .main-show .mainshot-box hr{
+    margin-bottom: 1px;
+}
+.comicpic .show-box{
+    /*border:1px solid #ddd;*/
+    background-color: #fff;
+    border-radius: 4px;
+    margin-bottom:15px;
+
+}
+
+.comicpic .show-box .content-top{
+    padding:15px;
+}
+
+.comicpic .show-box .content-bottom{
+    padding:15px;
+    padding-top: 0;
+    border: 0px solid #ddd;
+    border-right:none;
+    border-bottom:none;
+    border-left:none;
+    margin-top: 15px;
+}
+.comicpic .show-box .content-bottom .title{
+    margin: 0px 0px 15px 0px;
+    font-weight: 500;
+    font-size: 18px;
+    
+}
+.comicpic .show-box .avatar-box.avatar-horizontal {
+    height: 20px;
+    overflow: hidden;
+    
+}
+
+.comicpic .show-box .avatar-horizontal .avatar-legend {
+    display: inline;
+    left: 18px;
+    top: -2px;
+    font-size: 85%;
+}
+.comicpic .show-box .avatar-box img{
+    width:20px;
+}
+
+.comicpic .show-box .avatar{  
+    width: 15px;
+    height: 15px;
+    padding-top: 1px;
+    font-size: 10px;
+    line-height: normal;
+    
+}
+.comicpic .show-box.show-box-edit{
+    
+}
+
+/* Small view box */
+.comicpic .view-box-sm{
+    border:1px solid #e9ebee;
+    margin-bottom: 32px;
+    text-align:center;
+
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+    padding: 10px;
+    
+    
+}
+.comicpic .view-box-sm .screenshot{
+    max-width:100%;
+    height: auto;
+}
+.comicpic .view-box-sm .content-top{
+    padding:15px;
+}
+.comicpic .view-box-sm .content-bottom{
+    padding:7px 7px 7px 7px;
+    opacity:0.9;
+}
+.comicpic .view-box-sm .content-bottom:hover{
+    opacity:1;
+}
+@media (max-width: 768px){
+    .comicpic .view-box-sm .content-top{
+        padding:2px 5px 5px 5px;
+    }
+    .comicpic .view-box-sm .content-bottom{
+        padding:2px 5px 5px 5px;
+        
+    }
+}
+.comicpic .view-box-sm .screenshot-box{
+    position: relative;
+    overflow: hidden;
+}
+/* @media (max-width: 768px){
+    .comicpic .view-box-sm .screenshot-box{
+        min-height: 100px;
+        max-height: 100px;
+    }
+} */
+.comicpic .view-box-sm .screenshot-link{
+    display: block;
+}
+
+
+
+.comicpic .view-box-sm .avatar-box .comicpic-item {
+    width: 20px;
+    height: auto;
+}
+.comicpic .view-box-sm .avatar-legend{
+    
+    font-weight: 500;
+    font-size:85%;
+}
+.comicpic .view-box-sm .avatar-box.avatar-horizontal {
+    height: 20px;
+    overflow: hidden;
+}
+.comicpic .view-box-sm .avatar-horizontal .avatar-legend {
+    display: inline;
+    left: 25px;
+    top: 1px;
+}
+.comicpic .view-box-sm .avatar-box img{
+    width:20px;
+}
+.comicpic .view-box-sm .avatar{  
+    width: 20px;
+    height: 20px;
+    padding-top: 3px;
+    font-size: 12px;
+    line-height: normal;
+    
+}
+
+/* The overlay effect (full height and width) - lays on top of the container and over the image */
+.comicpic .view-box-sm .overlay { 
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0, 0.444);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  -webkit-transform:scale(0);
+  transform:scale(0);
+  transition: .3s ease;
+}
+/* When you mouse over the container, the overlay text will "zoom" in display */
+.comicpic .view-box-sm:hover .overlay {
+    transform: scale(1)
+  }
+
+  /* Some text inside the overlay, which is positioned in the middle vertically and horizontally */
+  .comicpic .view-box-sm .overlay-content {
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    overflow: hidden;
+  }
+  .comicpic .view-box-sm .overlay-content h4{
+    font-size: 14px;
+  }
+
+  .comicpic .view-box-sm .btn-primary{
+    opacity:0.9;
+    border-width:0;
+  }
+  .comicpic .view-box-sm .btn-primary:hover{
+    opacity: 1;
+  }
+  
+
+
+/* Widgets*******************************************/
+/*Social panel*/
+.comicpic .social-panel{
+    text-align: right;
+    
+}
+.comicpic .social-panel.social-panel-sm{
+    
+    margin:7px -7px -7px -7px;
+    
+}
+.comicpic .social-panel.social-panel-sm iframe{
+    
+
+    border: 0;
+    
+    display: inline-block;
+    height: 60px;
+    width: 96px;
+    
+}
+
+
+
+@media (max-width: 768px){
+.comicpic .social-panel.social-panel-sm{
+    margin:2px -5px -5px -5px;
+    
+}
+}
+.comicpic .social-panel-item{
+    display:inline-block;
+    margin-left:7px;
+}
+@media (max-width: 768px){
+.comicpic .social-panel-item{
+    display:inline-block;
+    margin-left:5px;
+}
+}
+
+
+.comicpic .social-panel form{
+    display:inline-block;
+}
+
+.comicpic .social-panel .text-muted{
+    color:rgba(119, 119, 119, 0.555);
+}
+.comicpic .social-panel .text-muted:hover{
+    color:rgba(119, 119, 119, 0.815);
+}
+
+
+
+/* related item *******************************************
+*/
+.comicpic .related-list{
+
+}
+.comicpic .related-list .list-title{
+    font-weight: 400;
+    font-size: 16px;
+}
+.comicpic .list-item .screenshot-box{
+    margin-right:7px;
+}
+.comicpic .list-item .screenshot-box:hover{
+    box-shadow: 1px 1px 3px 3px #ddddddb4;
+}
+
+@media (max-width: 768px){
+.comicpic .list-item .screenshot-box{
+
+    margin-bottom:7px;
+}
+.comicpic .list-item{
+    margin-top: 15px;
+}
+}
+
+.comicpic .list-item{
+    margin-bottom: 8px;
+}
+
+.comicpic .list-item .avatar-box.avatar-horizontal {
+    height: 20px;
+    overflow: hidden;
+    
+}
+
+.comicpic .list-item .avatar-horizontal .avatar-legend {
+    display: inline;
+    left: 18px;
+    top: -1px;
+    font-size: 85%;
+}
+.comicpic .list-item .avatar-box img{
+    width:15px;
+}
+.comicpic .list-item .avatar{  
+    width: 15px;
+    height: 15px;
+    padding-top: 1px;
+    font-size: 10px;
+    line-height: normal;
+    
+}
+.comicpic .list-item .created-at{  
+    font-size: 80%;
+    color:rgba(102, 102, 102, 0.729);
+}
+.comicpic .list-item .title{
+    font-weight: bold;
+}
+.comicpic .list-item .created-at:hover{
+    color:#666;
+}
+
+/**
+* Dropzone
+*/
+.comicpic .dropzone{
+    border:2px dashed rgba(204, 204, 204, 0.273);
+    background-color: #fff;
+    margin-top:30px;
+}
+.comicpic .dz-message{
+    font-weight: 700;
+    color: rgba(102, 102, 102, 0.692);
+}
+
+
+.comicpic .dz-message .upload-icon{
+    font-size: 80px;
+    display: block;
+}
+.comicpic .dz-message .select-message{
+    font-size: 20px;
+    display: block;
+    margin-top:-20px;
+     
+}
+
+/* STyle the OG page*/
+body.comicpic.og{
+    padding: 0;
+    margin: 0;
+    
+}

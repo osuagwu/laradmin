@@ -1,0 +1,130 @@
+/*Main CSS***************************************************************************
+**************************************************************************************/
+body{
+    background-image:url(https://static.pexels.com/photos/22794/pexels-photo.jpg);
+    background-attachment: fixed;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-color:#222;
+}
+#page-content-wrapper{
+}
+#page-content-wrapper .page-content-top{
+}
+#page-content-wrapper .page-content-body{
+    padding-top:15px;
+    padding-bottom:15px;
+    background-color:rgba(255, 255, 255, 0.95);
+    border-radius:4px;
+    /*color:#222;*/
+    
+}
+#page-content-wrapper .page-content-top h1.page-title{
+        color:#ccc;
+        text-shadow: 2px 2px 4px #000000;
+   
+    
+}
+
+/*Bootstrap corrections**************************************************************
+***********************************************************************************/
+/*Tables*/
+td .checkbox-inline input[type="checkbox"],
+th .checkbox-inline input[type="checkbox"] {
+    position:unset; 
+    margin-left: 0px;
+}
+/*breadcrumb*/
+#page-content-wrapper .page-content-top .breadcrumb{
+    background-color:transparent;
+}
+
+
+ 
+
+/* Round Button styles***********************************************************************************/
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+/*Message**************************************************************************************/
+.message-container .unread .subject,
+.message-container .unread .date-sent,
+.message-container .unread .sender-name{
+    font-weight:700;
+}
+.message-container .panel.active{
+    
+}
+.message-container .panel.active .panel-title{
+    font-weight:700;
+}
+
+/*Plugin vie****************************************************/
+.cp-plugins-view{
+
+}
+.cp-plugins-view .icon-box {
+    height: 90px;
+    width: 150px;
+    border:1px solid #ddd;
+    padding-bottom:8px;
+    text-align: center;
+    display: inline-block;
+    background-color: #fbfbfb;
+    border-radius: 3px;
+    font-size: 450%;
+}
+.cp-plugins-view .notice{
+}
+.cp-plugins-view .error-msg{
+    margin: 5px 0 5px 0;
+}
+.cp-plugins-view .description{
+    padding: 10px 0 15px 0;;
+}
+
+/* Plugin show***************************************/
+.cp-plugin-show{
+    
+    }
+    .cp-plugin-show .icon-box {
+        height: 90px;
+        width: 150px;
+        border:1px solid #ddd;
+        padding-bottom:15px;
+        text-align: center;
+        display: inline-block;
+        background-color: #fbfbfb;
+        font-size: 450%;
+    }
+    .cp-plugin-show .notice{
+    }
+    .cp-plugin-show .error-msg{
+        margin: 5px 0 5px 0;
+    }
+    .cp-plugin-show .description{
+        padding: 15px 0 20px 0;;
+    }

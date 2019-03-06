@@ -1,0 +1,25 @@
+
+{
+    "name": "bethelchika/isthisfake",
+    "description": "The most thought through features full laravel admin and user profile manager",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bethel Chika Osuagwu",
+            "email": "bethel.osuagwu@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "\\BethelChika\\IsThisFake\\": "src/"
+        }
+    },
+    "extra":{
+        "title":"Is this Fake",
+        "plugable":"\\BethelChika\\IsThisFake\\IsThisFakePlugable"
+    }
+}
+    

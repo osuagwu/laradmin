@@ -1,0 +1,64 @@
+
+// Body
+$body-bg:#fff; //#f5f8fa;
+
+// Borders
+//$laradmin-border-color: darken($body-bg, 10%);
+//$list-group-border: $laradmin-border-color;
+//$navbar-default-border: $laradmin-border-color;
+//$panel-default-border: $laradmin-border-color;
+//$panel-inner-border: $laradmin-border-color;
+
+// Possible scheems
+// Base=[E2271A] => paletton.com 
+
+// Brands
+$brand-primary:#135B7A;//#5782c3; //#3097D1;
+$brand-info:#7f8fa6 ;//#8eb4cb;
+$brand-success: #108C42;//#2ab27b;
+$brand-warning: #C27116;
+$brand-danger: #C23716;//#bf5329;
+$brand-subtle:#f4f4f4;//#f1f1f1f1;
+
+$brand-subtle2:#e2ebf7;//NOTE: unused randome color
+
+$defaut-logo-url:"/img/logo.svg";
+
+// Typography
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$font-family-sans-serif: "Raleway", sans-serif;
+$font-size-base: 15px;
+$line-height-base: 1.6;
+$text-color:#000;// #636b6f;//,#111;
+
+// Navbar
+$navbar-default-bg: #fff;
+
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Inputs
+$input-border: rgba(0,0,0,.6);
+$input-border-focus: lighten($input-border, 15%);
+$input-color-placeholder: lighten($text-color, 60%);
+
+// Panels
+$panel-default-heading-bg: #fff;
+
+
+//== Components
+//
+//## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
+$border-radius-base:        0px !default;
+$border-radius-large:       0px !default;
+$border-radius-small:       0px !default;
+
+// Allows for customizing button radius independently from global border radius
+$btn-border-radius-base:         0px !default;
+$btn-border-radius-large:        $border-radius-large !default;
+$btn-border-radius-small:        0px !default;
+
+//Bethel
+$ubr:0;//{0,1}This stands for 'use border radius' set it to 0 to remove border radius that are not 50%, and 1 to allowe them.
+$border-radius-round:50%;
