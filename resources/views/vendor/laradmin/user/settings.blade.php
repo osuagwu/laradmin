@@ -31,7 +31,7 @@
     </div>
 </section>
 --}}
-<section class="section section-subtle  section-last section-full-page">
+<section class="section section-subtle section-diffuse section-light-bg section-full-page">
     <div class="container-fluid">
         <div class="sidebar-mainbar">
             {{-- sidebar control --}}
@@ -41,6 +41,14 @@
                 <div class="sidebar-content mCustomScrollbar" data-mcs-theme="minimal-dark">
                     {{-- sidebar content --}}
                     <div class="sidebar-close-btn" title="Close sidebar">X</div>
+                    
+                    <div class=" small">      
+                        <strong class="fainted-09">Registred Since</strong>&nbsp;&nbsp;&nbsp;<i class="far fa-clock"></i>&nbsp; <strong class="fainted-07">{{Auth::user()->created_at->todatestring()}} </strong>  
+                        <br>
+                        <strong class="fainted-09">Last updated</strong>&nbsp;&nbsp;&nbsp;<i class="far fa-clock"></i>&nbsp; <strong class=" fainted-07">{{Auth::user()->updated_at->todatestring()}} </strong>  
+                    </div> 
+                    <hr class="list-separator">
+
                     @include('laradmin::user.partials.quick_settings')
                     
                 </div>
@@ -67,11 +75,7 @@
                 <h2 class="heading-huge text-center ">Control and secure your account!</h2>
                 <p  class="heading-3 text-center "> Use the settings below for modification of relevant parts of your account.</p>
 
-                <div class=" text-center padding-bottom-x3">      
-                    <strong class="fainted-09">Registred Since</strong>&nbsp;&nbsp;&nbsp;<i class="fas fa-clock"></i>&nbsp; <strong class="fainted-07">{{Auth::user()->created_at->todatestring()}} </strong>  
-                    &nbsp;&nbsp;&nbsp; <span class="fainted-03">|</span>&nbsp;&nbsp;&nbsp;
-                    <strong class="fainted-09">Last updated</strong>&nbsp;&nbsp;&nbsp;<i class="fas fa-clock"></i>&nbsp; <strong class=" fainted-07">{{Auth::user()->updated_at->todatestring()}} </strong>  
-                </div> 
+                
 
                 <ul class="row list-unstyled ">
                     

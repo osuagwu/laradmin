@@ -32,7 +32,7 @@
                     @if(Auth::user()->self_deactivated_at)
                         <p ><a href="{{route('user-self-reactivate')}}" class="btn btn-primary"><strong>Reactivate my account</strong></a></p>
                     @else
-                        <p class=""><a href="{{route('user-self-deactivate')}}" class="btn btn-warning btn-sm"><strong>Deactivate my account</strong></a></p>
+                        <p class=""><a href="{{route('user-self-deactivate')}}" class="btn btn-danger btn-sm"><strong>Deactivate my account</strong></a></p>
                     @endif
                 </div>
 

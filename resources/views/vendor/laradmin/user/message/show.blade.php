@@ -24,7 +24,7 @@
                         <ol class="breadcrumb bg-transparent">
                             <li class="breadcrumb-item"><a href="{{route('user-profile')}}">me</a></li>
                             <li class="breadcrumb-item "><a href="{{route('user-message-index')}}"> <i class="fas fa-envelope"></i>  uMessage</a></li>
-                            <li class="breadcrumb-item active hidden-sm-down"> <i class="fas fa-envelope-open"></i> {{substr($parentMessage->subject,0,15)}}</li>
+                            <li class="breadcrumb-item active hidden-sm-down" title="{{$parentMessage->subject}}"> <i class="fas fa-envelope-open"></i> {{str_limit($parentMessage->subject,6,'...')}}</li>
                         </ol>
                     
                     <h1 class='heading-4 content-title'>{{$parentMessage->subject}}</h1>

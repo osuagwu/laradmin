@@ -1,14 +1,14 @@
 @extends('laradmin::user.layouts.app')
 
 @section('content')
-<section class="section section-primary section-first padding-top-x7 padding-bottom-x7">
+<section class="section section-primary  padding-top-x7 padding-bottom-x7" style="border-top: 1px solid #fffdfd38;">
     <div class="container">
         @include('laradmin::user.partials.profile_board',['laradmin'=>$laradmin])
         
     </div>
    
 </section>
-<section class="section section-primary section-first section-title section-diffuse" >
+<section class="section section-primary  section-title section-diffuse " >
         <div class="section-overlay">
             <div class="container">
                 <div class="row">

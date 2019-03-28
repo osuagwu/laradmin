@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @include('comicpic::scripts')
 @section('content')
-<section class="section section-danger section-first  section-title">
+<section class="section section-danger   section-title section-diffuse section-light-bg">
     <div class="container">
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">Comicpic</a></li>
@@ -34,7 +34,7 @@
         </nav>
     </div>
 </section>
-<section class="section section-subtle section-last first-content-padding section-extra-padding-bottom">     
+<section class="section section-subtle section-diffuse section-diffuse-no-shadow section-light-bg  first-content-padding section-extra-padding-bottom">     
 {{--Example of minimalistic UI (Miniui,miniUI)
     ----------------------------------------------------------
     <miniui min-height="100px" min-width="200px" responsive="true">

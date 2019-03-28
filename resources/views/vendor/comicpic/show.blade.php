@@ -6,7 +6,7 @@
  @include('comicpic::partials.item_metas')
 
 
-<section class="section section-subtle section-first section-last"> 
+<section class="section section-subtle  section-diffuse section-light-bg section-diffuse-no-shadow section-last"> 
     
 
    

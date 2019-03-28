@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @include('comicpic::scripts')
 @section('content')
-<section class="section section-primary section-first  section-title">
+<section class="section section-primary  section-title section-diffuse section-light-bg">
     <div class="container">
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item active">Comicpic</li>
@@ -14,7 +14,7 @@
         </nav>
     </div>
 </section> 
-<section class="section section-subtle section-first section-last section-full-height section-extra-padding-bottom">     
+<section class="section section-subtle  section-full-height section-extra-padding-bottom section-diffuse section-light-bg ">     
     <div class="container">
         
         {{-- <div class="text-right">

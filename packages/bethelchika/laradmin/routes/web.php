@@ -20,7 +20,7 @@
 Route::group(['middleware' => ['web']], function () {
 
     $LCR_LOCAL="\\BethelChika\\Laradmin\\Http\\Controllers\\";//Laradmin Controller Roots
-    $LCR_EXT="\\App\\Http\\Controllers\\Laradmin\\";
+    $LCR_EXT="\\App\\Http\\Controllers\\Laradmin\\";// User own implementation of Laradmin controller roots
     
     
     // Laradmins User Rgistration (THE output of Auth::routes() should be modified to remove the link to registration)
@@ -52,6 +52,18 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/u/reactivate',$LCR.'User\UserProfileController@selfReactivate')->name('user-self-reactivate');
     //Route::get('/u/plugin-settings',$LCR.'User\UserProfileController@pluginSettings')->name('user-plugin-settings');
     Route::get('/u/alerts',$LCR.'User\UserProfileController@userAlerts')->name('user-alerts');
+
+    //deletes theese////////////////////////////////////////
+    Route::get('/u/form-create/',$LCR.'User\UserProfileController@formCreate')->name('form-create');
+    Route::put('/u/form-create/',$LCR.'User\UserProfileController@updateForm');
+    /////////////////////////////////////////////////////////
+
+    // AutoForm
+    $LCR=class_exists($LCR_EXT.'User\AutoformController')?$LCR_EXT:$LCR_LOCAL;
+    Route::get('/u/autoform/{pack}/{tag}/index',$LCR.'User\AutoformController@index')->name('user-autoform');
+    Route::get('/u/autoform/{pack}/{tag}/edit',$LCR.'User\AutoformController@edit')->name('user-autoform-edit');
+    Route::put('/u/autoform/{pack}/{tag}/edit',$LCR.'User\AutoformController@process');
+
 
     // Notifications
     $LCR=class_exists($LCR_EXT.'User\NotificationController')?$LCR_EXT:$LCR_LOCAL;

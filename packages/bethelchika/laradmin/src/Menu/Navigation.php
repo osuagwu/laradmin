@@ -15,8 +15,26 @@ class Navigation{
      * @var array
      */
     protected static $menus=[];
-    
 
+    /**
+     * Tells when the man activation method has been called i.e when surely all the entire navigation system has been activated. So can be used to prevent runing the method all over again.
+     *
+     * @var boolean
+     */
+    private static $isActivated=false;
+    
+    /**
+     * Keep all active menu item dot separated tags
+     *
+     * @var array
+     */
+    protected static $activeTags=[];
+
+    /**
+     * Construct new navigation
+     *
+     * @param string $navigationFile
+     */
     public function __construct($navigationFile=null){
         if($navigationFile){
             self::$navigationFile=$navigationFile;
@@ -48,7 +66,84 @@ class Navigation{
         }
         
     }
+
+    /**
+     * Add an active item tags 
+     *
+     * @param string $tags Dot separated tags to uniquely identify and item
+     * @return void
+     */
+    public static function addActiveTags($tags){
+        //xxxxxxxxxxxxxxxNOTE that this block is not neccessasry and can be savely be removed if it is causing problem. It tries to avoid adding parents and duplicatesxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        foreach(self::$activeTags as $at){//
+            
+            if(starts_with($at,$tags))return;//Basically if the one that is already in starts with the new one we are trying to add, then the new one is a parent and we do not need to add it.
+        }
+        //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        self::$activeTags[]=$tags;
+        
+    }
    
+    /**
+     * If it exists, returns first found dot separated active tag which must start with the spicified tag
+     *
+     * @param string $roottag Tag/dot separated tag that must preceed the returned tags.
+     * @return string Null on empty result 
+     */
+    public function getActiveTag($roottag){
+
+        $at=null;
+        foreach(self::$activeTags as $at){
+            if(starts_with($at,$roottag)){
+                break;//NOTE taht we are only cosidering the first match here.
+            }
+        }
+
+        return $at;
+
+    }
+
+     /**
+     * Returns array of active dot separated tags
+     *
+     * @return array
+     */
+    public static function getActiveTags(){
+            return self::$activeTags;
+    }
+
+    /**
+     * Return the item tag that should be rendered for the current minor menu or null if all the parents befor the roottag has no children.
+     * Note that this function is based on the current active tag/s
+     *
+     * @param string $roottag The roottag with which to base the miomor menu
+     * @return string
+     */
+    public function getMinorNavTag($roottag='primary'){
+
+        //First make sure navoigation is activated
+        self::activates();//Makes sure that menus are activated else null will be returned
+
+        // Now carry on
+        $at=self::getActiveTag($roottag);
+        
+        if (!$at)return null;
+        
+        $item=self::getMenuByTags($at);
+        if($item){
+            while(!$item->hasChildren() and strcmp($roottag,$item->getTags()) ){//keep going untill we find one with children unless we get to the roottag in which case not need to return it as its children should already be listed in the page
+                $item=$item->getParent();
+            }
+
+            if($item->hasChildren() and strcmp($roottag,$item->getTags() )){//i.e if item has children and it not the same as the root tag
+                return $item->getTags();
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+    }
     
     /**
      * Add a menu making sure tag is unique
@@ -175,9 +270,12 @@ class Navigation{
      * Check the item that should be active and set it so. If no tag is specified, all menu will be activated
      * @param $tags the tag [or dot separated tags] of the menu [or menuItem]
      * @param $url (defualt=null) the url we want to activate against
+     * @param boolean $isforced When true, this method is still executed even if it has been previously been executed
      * @return void
      */
-    public static function activates($tags=null,$url=null){
+    public static function activates($tags=null,$url=null,$isforced=false){
+        if(self::$isActivated and !$isforced)return; //return if it has been run before and we are not forcing
+        
         //dd($tags);
         if($tags){
             $tags=explode('.',$tags);
@@ -193,7 +291,7 @@ class Navigation{
                     MenuItem::activates($menu->getChildByTag(implode('.',$tags)));
                 }
             }
-            return;
+            return;//We return without making a note that this method has been executed b/c since tags are given, not neccessarily all navigation were activated;
         }
         
         foreach(self::getMenus() as $menu){
@@ -203,6 +301,8 @@ class Navigation{
             }
             
         }
+
+        self::$isActivated=true;//makes a note that this method has been executed;
         
     }
 

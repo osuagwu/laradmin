@@ -61,7 +61,9 @@ class ComicpicServiceProvider extends ServiceProvider
         //Add a menu to user_apps
         $laradmin->navigation->create($appname,'comicpic','user_apps',[
             'namedRoute'=>'comicpic.index','iconClass'=>'fas fa-laugh-wink']);
-            
+        
+        // Register fieldables
+        $laradmin->formManager->registerFieldable('user_settings','profile',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
 
         // Add assets that should appear in every page
         //$laradmin->assetManager->addAsset('head-styles','test','<style>.dropzone{background-color:yellow;}</style>');

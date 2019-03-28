@@ -1,21 +1,21 @@
 @extends('laradmin::user.layouts.app')
 @include('comicpic::scripts')
 @section('content')
-<section class="section section-primary section-first  section-title">
+<section class="section section-primary   section-title section-diffuse section-light-bg">
     <div class="container">
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">Comicpic</a></li>
             <li class="breadcrumb-item active">Create/edit</li>
         </ol>
         <h1 class="heading-1 content-title   "> My Comic Pics <small class="text-white"> - your very own creation!</small></h1>
-        <nav>
+        {{-- <nav><!--THIS IS NOT DISPLAYED B/C OF JUST TESTING S DIFFERENT LOOK-->
             <ul class="nav nav-tabs nav-justified nav-flat">
                 @include('laradmin::menu',['tag'=>'primary.comicpic'])
             </ul>
-        </nav>
+        </nav> --}}
     </div>
 </section>
-<section class="section section-subtle section-full-page section-first section-last section-extra-padding-bottom">     
+<section class="section section-subtle section-diffuse section-light-bg section-diffuse-no-shadow ">     
     <div class="container">
         {{--  <div class="text-right">
             <p>

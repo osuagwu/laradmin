@@ -2,6 +2,7 @@
 
 @section('content')
 
+@if($show_profile_card)
 <section class="section section-primary section-first padding-top-x7 padding-bottom-x7 section-diffuse">
     <div class="container-fluid">
         @include('laradmin::user.partials.profile_board')
@@ -9,8 +10,9 @@
     </div>
     
 </section>
+@endif
 <section class="section section-subtle" style="border-bottom:1px solid #ddd">
-    @include('laradmin::user.partials.minor_nav',['scheme'=>'subtle','with_container_fluid'=>true,'with_icon'=>false,'left_menu_tag'=>'user_settings','title'=>''])
+    @include('laradmin::user.partials.minor_nav',['scheme'=>'subtle','with_container'=>true,'with_icon'=>false,'left_menu_tag'=>'user_settings','root_tag'=>false])
 </section>
 
 <section class="section section-subtle">
@@ -75,6 +77,18 @@
                                             
                                     </div>
                                 </div>
+
+                                @foreach($fields as $field)
+                                    @if($field->group==0 or str_is($field->group,'personal'))
+                                        <div class="row">
+                                                <div class="col-xs-6 col-md-3 "><span class="">{{$field->label}} @if($field->unit) <em>{{$field->unit}}</em> @endif </span></div>
+                                                <div class="col-xs-6 col-md-9 ">
+                                                    {{$field->value}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a>     
+                                                </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+
                                 <div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-user-edit"></i> {{__('Edit profile')}}</a></div>
                             </div>
                         </div>

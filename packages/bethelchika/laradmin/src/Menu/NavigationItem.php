@@ -278,6 +278,22 @@ abstract class NavigationItem
     }
 
     /**
+     * Return the dot separated tags down to the parent menu of this item
+     *
+     * @return string
+     */
+    public function getTags(){
+        $tags[]=$this->tag;
+        $parent=$this->getParent();
+        while($parent){
+            $tags[]=$parent->getTag();
+            $parent=$parent->getParent();
+            
+        }
+        return implode('.',array_reverse($tags));
+    }
+
+    /**
      * Checks if this item has a chiled with a given tag and returns the child or false otherwise
      *
      * @param string $tags A tag or dot separated tags each suitable for array indexing
@@ -300,7 +316,7 @@ abstract class NavigationItem
     }
 
     /**
-     * Remove an item  with a give tag or dot separated tag
+     * Remove an item  with a given tag or dot separated tag
      *
      * @param string $tags One or dot saparated tag identifier. Dot separated tag should be relative to the tag of the parent i.e. this object 
      * @return boolean true on success or false if menu does not exist , otherwise false
@@ -370,6 +386,13 @@ abstract class NavigationItem
      * @return boolean . 
      */
     public abstract function hasParent();
+
+    /**
+     * Get parent item. 
+     *
+     * @return NavigationItem . 
+     */
+    public abstract function getParent();
 
      /**
      * Check if item is a child of menu. 

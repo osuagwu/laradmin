@@ -7,7 +7,7 @@
 </style>    
 @endpush 
 @section('content')
-<section class="section section-subtle section-first section-extra-padding-bottom">
+<section class="section section-subtle section-diffuse section-light-bg section-diffuse-no-shadow section-extra-padding-bottom">
     
     <div class="container">
         

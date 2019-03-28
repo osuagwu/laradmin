@@ -138,7 +138,7 @@ class MenuItem extends NavigationItem
     public function getParent()
     {
         if ($this->parentId) {
-            return self::getMenuItemById($this->parentId);
+            return self::findItem($this->parentId);
         } else {
             return null;
         }
@@ -162,7 +162,7 @@ class MenuItem extends NavigationItem
     /**
      * Check if item has link
      *
-     * @return boolean
+     * @inheritdoc
      */
     public function hasLink()
     {
@@ -224,7 +224,7 @@ class MenuItem extends NavigationItem
     /**
      * Check if item has icon
      *
-     * @return boolean
+     *@inheritdoc
      */
     public function hasIcon()
     {
@@ -249,7 +249,7 @@ class MenuItem extends NavigationItem
     /**
      * 
      *
-     * @see parent 
+     * @inheritdoc
      */
     public function hasParent()
     {
@@ -262,7 +262,7 @@ class MenuItem extends NavigationItem
          /**
      * 
      *
-     * @see parent 
+     * @inheritdoc
      */
     public function isMenuItem(){
         return true;
@@ -270,7 +270,7 @@ class MenuItem extends NavigationItem
          /**
      * 
      *
-     * @see parent 
+     * @inheritdoc
      */
     public function isMenu(){
         return false;
@@ -283,6 +283,7 @@ class MenuItem extends NavigationItem
      */
     public function setActive(){
         $this->active=true;
+        self::navigation()->addActiveTags($this->getTags());//keepping all active items in navigation
         if($this->hasParent()){
             $this->getParent()->setActive();
         }
@@ -315,7 +316,7 @@ class MenuItem extends NavigationItem
 
         if ($isactive) {
             $item->active = true;
-            
+            self::navigation()->addActiveTags($item->getTags());//keepping all active items in navigation
             self::makeParentsActive($item);
         }
     }
@@ -352,7 +353,7 @@ class MenuItem extends NavigationItem
         $parent = $item->getParent();
         if ($parent instanceof MenuItem) {
             $parent->active=true;
-
+            // self::navigation()->addActiveTags($item->getTags());///No need to add parents as their children will be added. keepping all active items in navigation
             if($parent->parentId){
                 self::makeParentsActive($parent);
             }

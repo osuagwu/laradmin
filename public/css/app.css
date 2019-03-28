@@ -10551,6 +10551,10 @@ strong,
   font-weight: 500;
 }
 
+ul {
+  list-style-type: square;
+}
+
 .navbar-default .navbar-nav > li > a {
   color: #262626;
 }
@@ -10564,6 +10568,14 @@ strong,
 
 .main-nav .navbar-header .sidebar-control {
   float: left;
+  width: 54px;
+}
+
+@media (max-width: 768px) {
+  .main-nav .navbar-header .sidebar-control {
+    margin-left: 0px;
+    width: 36px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -10597,6 +10609,11 @@ strong,
     border-left-color: rgba(255, 255, 255, 0.521);
     color: #fff;
   }
+}
+
+.nav .external-link,
+.nav .custom-caret {
+  font-size: 75%;
 }
 
 body.main-nav-no-border-bottom .main-nav.navbar,
@@ -10712,6 +10729,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   height: auto;
   padding-top: 9px;
   padding-bottom: 9px;
+  padding-left: 0px;
   line-height: 19px;
   opacity: 0.7;
   margin-right: 25px;
@@ -10963,6 +10981,13 @@ h6 {
   background-color: #219dd2;
 }
 
+/**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+
 .section-primary.section-light-bg.section-diffuse {
   background: -webkit-gradient(linear, left top, left bottom, from(#219dd2), to(#2ea9de));
   background: linear-gradient(to bottom, #219dd2 0%, #2ea9de);
@@ -10974,6 +10999,11 @@ h6 {
   background: linear-gradient(to bottom, #135B7A 0%, #1a7ca6);
   -webkit-box-shadow: 0 12px 45px -8px rgba(19, 91, 122, 0.35);
           box-shadow: 0 12px 45px -8px rgba(19, 91, 122, 0.35);
+}
+
+.section-primary.section-diffuse.section-diffuse-no-shadow {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .section-primary .section-overlay {
@@ -10989,8 +11019,33 @@ h6 {
   background-color: #bbc4d0;
 }
 
+/**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+
+.section-info.section-light-bg.section-diffuse {
+  background: -webkit-gradient(linear, left top, left bottom, from(#bbc4d0), to(#cad1da));
+  background: linear-gradient(to bottom, #bbc4d0 0%, #cad1da);
+}
+
+.section-info.section-diffuse {
+  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, from(#7f8fa6), to(#9da9bb));
+  background: linear-gradient(to bottom, #7f8fa6 0%, #9da9bb);
+  -webkit-box-shadow: 0 12px 45px -8px rgba(127, 143, 166, 0.35);
+          box-shadow: 0 12px 45px -8px rgba(127, 143, 166, 0.35);
+}
+
+.section-info.section-diffuse.section-diffuse-no-shadow {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .section-info .section-overlay {
-  background-color: rgba(127, 143, 166, 0.4);
+  background-color: rgba(127, 143, 166, 0.2);
 }
 
 .section-success {
@@ -11002,8 +11057,33 @@ h6 {
   background-color: #1de56e;
 }
 
+/**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+
+.section-success.section-light-bg.section-diffuse {
+  background: -webkit-gradient(linear, left top, left bottom, from(#1de56e), to(#34e87c));
+  background: linear-gradient(to bottom, #1de56e 0%, #34e87c);
+}
+
+.section-success.section-diffuse {
+  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, from(#108C42), to(#15ba58));
+  background: linear-gradient(to bottom, #108C42 0%, #15ba58);
+  -webkit-box-shadow: 0 12px 45px -8px rgba(16, 140, 66, 0.35);
+          box-shadow: 0 12px 45px -8px rgba(16, 140, 66, 0.35);
+}
+
+.section-success.section-diffuse.section-diffuse-no-shadow {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .section-success .section-overlay {
-  background-color: rgba(16, 140, 66, 0.4);
+  background-color: rgba(16, 140, 66, 0.2);
 }
 
 .section-warning {
@@ -11015,8 +11095,33 @@ h6 {
   background-color: #eba353;
 }
 
+/**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+
+.section-warning.section-light-bg.section-diffuse {
+  background: -webkit-gradient(linear, left top, left bottom, from(#eba353), to(#eeb069));
+  background: linear-gradient(to bottom, #eba353 0%, #eeb069);
+}
+
+.section-warning.section-diffuse {
+  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, from(#C27116), to(#e68b25));
+  background: linear-gradient(to bottom, #C27116 0%, #e68b25);
+  -webkit-box-shadow: 0 12px 45px -8px rgba(194, 113, 22, 0.35);
+          box-shadow: 0 12px 45px -8px rgba(194, 113, 22, 0.35);
+}
+
+.section-warning.section-diffuse.section-diffuse-no-shadow {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .section-warning .section-overlay {
-  background-color: rgba(194, 113, 22, 0.4);
+  background-color: rgba(194, 113, 22, 0.2);
 }
 
 .section-danger {
@@ -11028,12 +11133,62 @@ h6 {
   background-color: #eb7053;
 }
 
+/**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+
+.section-danger.section-light-bg.section-diffuse {
+  background: -webkit-gradient(linear, left top, left bottom, from(#eb7053), to(#ee8369));
+  background: linear-gradient(to bottom, #eb7053 0%, #ee8369);
+}
+
+.section-danger.section-diffuse {
+  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, from(#C23716), to(#e64a25));
+  background: linear-gradient(to bottom, #C23716 0%, #e64a25);
+  -webkit-box-shadow: 0 12px 45px -8px rgba(194, 55, 22, 0.35);
+          box-shadow: 0 12px 45px -8px rgba(194, 55, 22, 0.35);
+}
+
+.section-danger.section-diffuse.section-diffuse-no-shadow {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .section-danger .section-overlay {
-  background-color: rgba(194, 55, 22, 0.4);
+  background-color: rgba(194, 55, 22, 0.2);
 }
 
 .section-subtle {
   background-color: #f4f4f4;
+}
+
+/**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+
+.section-subtle.section-light-bg.section-diffuse {
+  background: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(white));
+  background: linear-gradient(to bottom, #f4f4f4 0%, white);
+}
+
+.section-subtle.section-diffuse {
+  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, from(#c1c1c1), to(#dbdada));
+  background: linear-gradient(to bottom, #c1c1c1 0%, #dbdada);
+  -webkit-box-shadow: 0 12px 45px -8px rgba(193, 193, 193, 0.35);
+          box-shadow: 0 12px 45px -8px rgba(193, 193, 193, 0.35);
+}
+
+.section-subtle.section-diffuse.section-diffuse-no-shadow {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .section-subtle .section-overlay {
@@ -11333,6 +11488,7 @@ h6 {
   margin-bottom: 5px;
   -webkit-transition: background-color 0.4s, border-color 0.4s;
   transition: background-color 0.4s, border-color 0.4s;
+  border: 1px solid transparent;
 }
 
 .section.hero .btn-hero.btn-hero-clean {
@@ -11544,25 +11700,6 @@ body.sidebar-white .sidebar {
   content: '\E260';
 }
 
-.sidebar-control {
-  width: 30px;
-  height: 30px;
-  margin-right: 15px;
-}
-
-.sidebar-control .toggle-btn:hover {
-  border-radius: 50%;
-  background-color: #f3f5f5;
-  padding: 7px 8px 9px 8px;
-}
-
-.sidebar-mainbar .sidebar-control {
-  position: absolute;
-  display: inline-block;
-  margin-top: -8px;
-  z-index: 1;
-}
-
 @media (max-width: 768px) {
   .sidebar {
     margin-left: -250px;
@@ -11629,7 +11766,14 @@ body.sidebar-white .sidebar {
 }
 
 .sidebar-control {
-  display: none;
+  margin-left: -15px;
+}
+
+.sidebar-mainbar .sidebar-control {
+  position: absolute;
+  display: inline-block;
+  margin-top: -8px;
+  z-index: 1;
 }
 
 .has-sidebar .sidebar-control {
@@ -11637,8 +11781,6 @@ body.sidebar-white .sidebar {
 }
 
 .sidebar-control .toggle-btn {
-  margin-right: 15px;
-  margin-top: 11px;
   border-width: 0px;
 }
 
@@ -11768,6 +11910,10 @@ body.sidebar-white .sidebar {
 .message-container .message-header .message-sender:hover,
 .message-container .message-header .channels:hover {
   opacity: 1;
+}
+
+.message-container .message .badge {
+  font-size: 10px;
 }
 
 .message-container .message-body {
@@ -13485,15 +13631,13 @@ body.has-sidebar .breadcrumb {
  */
 
 .toggle-btn {
-  margin-right: 15px;
-  padding: 9px 10px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 8px;
   background-color: transparent;
   background-image: none;
   border: 1px solid transparent;
   border-radius: 0px;
   text-transform: none;
+  padding: 7px;
 }
 
 .toggle-btn.toggle-btn-default {
@@ -13519,6 +13663,11 @@ body.has-sidebar .breadcrumb {
 
 .toggle-btn.toggle-btn-default .icon-bar {
   background-color: #b6b6b6;
+}
+
+.toggle-btn:hover {
+  border-radius: 50%;
+  background-color: #f3f5f5;
 }
 
 body.user-profile-page .section-title .avatar-box .avatar-legend {
@@ -13574,7 +13723,6 @@ article.page .featured-image-box .featured-image {
   width: 25%;
   height: 300px;
   overflow-y: hidden;
-  border-bottom: 1px solid #ddd;
   margin-left: 15px;
   margin-bottom: 15px;
 }
@@ -13663,7 +13811,6 @@ article.page .featured-image-box .featured-image {
   width: 100%;
   height: auto;
   overflow-x: hidden;
-  border-bottom: 1px solid #ddd;
   margin-bottom: 22px;
 }
 
@@ -13762,7 +13909,14 @@ article.page .featured-image-box .featured-image {
   color: #363636;
 }
 
-#footer .social-icons {
+#footer .social-links:after {
+  clear: both;
+  display: table;
+  content: " ";
+}
+
+#footer .social-links .nav {
   font-size: 16px;
+  float: right;
 }
 

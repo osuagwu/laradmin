@@ -48,7 +48,7 @@ class Menu extends NavigationItem
     /**
      * Check if item has link
      *
-     * @return boolean
+     * @inheritdoc
      */
     public function hasLink()
     {
@@ -58,7 +58,7 @@ class Menu extends NavigationItem
     /**
      * Check if item has icon. 
      *
-     * @return boolean Always false. 
+     *@inheritdoc Always false. 
      */
     public function hasIcon()
     {
@@ -68,16 +68,27 @@ class Menu extends NavigationItem
     /**
      * 
      *
-     * @see parent 
+     * @inheritdoc
      */
     public function hasParent()
     {
         return false;
     }
+
+      /**
+     * 
+     *
+     * @inheritdoc
+     */
+    public function getParent()
+    {
+        return null;//Menu do not have parent
+    }
+
      /**
      * 
      *
-     * @see parent 
+     * @inheritdoc 
      */
     public  function isMenuItem(){
         return false;
@@ -85,7 +96,7 @@ class Menu extends NavigationItem
          /**
      * 
      *
-     * @see parent 
+     * @inheritdoc 
      */
     public function isMenu(){
         return true;

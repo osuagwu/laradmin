@@ -24,6 +24,9 @@ class SocialUserLinkEmailController extends Controller
 
        //Register classes
        $laradmin->assetManager->registerBodyClass('sidebar-white');
+       
+       // Set container fluid
+       $laradmin->assetManager->setContainerType('fluid');
     }
 
     public function index(Request $request){

@@ -3,16 +3,23 @@
     This uses a bootstrap navbar class but without the container class by deafult to avoid mistakenly nesting containers when this partial in included in a view;
 
     INPUTS
+    $root_tag string The root tag of minor nav. (e.g $root_tag=false disables root tag behaviour; $root_tag='primary' for minor menus under a Menu with tag 'primary'; $root_tag='primary.services' for minor nave under a menu with tag 'primary' and under menu item with tag 'services' ).
     $left_menu_tag=page_family string  Tag or dot separated manu tag that goes to the left
     $right_menu_tag string Tag or dot separated manu tag that goes to the right
-    $title='In this setion' string The title of the bar . You can pass in empty string to avoid the default string.
+    $title= string The title of the bar . 
     $with_container boolean Set to false to remove bootstrap container inside the minor nav (Use when you already have container wrapping the output of this file).
     $scheme string The scheme to used for nav tag. e.g 'primary' which makes the minor nav a a primary look and feel
     $class string The class added to the nav tag
 --}}
 @php
+
+
 //// Remove border-bottom on major navs
-$laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom') 
+$laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom') ;
+if(!isset($root_tag)){
+    $root_tag=$laradmin->navigation->getMinorNavTag();//
+}
+
 @endphp
 <nav id="site-top-minor-nav" class="navbar navbar-default minor-nav @if(isset($scheme)) minor-nav-{{$scheme}} @else minor-nav-subtle @endif {{$class??''}}">
     <div class="@if(!isset($with_container) or $with_container)  {{$laradmin->assetManager->isContainerFluid('container-fluid','container')}} @endif">
@@ -30,10 +37,9 @@ $laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom')
             </button>
 
             <!-- Branding -->
-            @if(isset($title) and !$title)
-            @else
+            @if(isset($title) and $title)
                 <a class=" navbar-brand " name="minor-navigation" role="presentation">
-                    <small> {{$title??'In this section'}}</small>
+                    <small> {{$title}}</small>
                 </a>
             @endif
             
@@ -47,8 +53,13 @@ $laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom')
             {{-- <p class="navbar-text">In this section</p> --}}
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav navbar-left">
-                @include('laradmin::menu', ['tag' => $left_menu_tag??'page_family','class'=>'','with_icon'=>false]){{-- Note sending empty class prevent menu inheriting class var sent to the current file--}}
-                
+                @if($root_tag)
+                    @include('laradmin::menu', ['tag' => $root_tag,'class'=>'','with_icon'=>false]){{-- Note sending empty class prevent menu inheriting class var sent to the current file--}}
+                @endif
+
+                @if(isset($left_menu_tag))
+                    @include('laradmin::menu', ['tag' => $left_menu_tag,'class'=>'','with_icon'=>false]){{-- Note sending empty class prevent menu inheriting class var sent to the current file--}}
+                @endif
             </ul>
 
             

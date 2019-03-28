@@ -21,6 +21,7 @@ use BethelChika\Laradmin\Asset\AssetManager;
 use BethelChika\Laradmin\Content\ContentManager;
 use BethelChika\Laradmin\Plugin\PluginServiceProvider;
 use BethelChika\Laradmin\WP\WPServiceProvider;
+use BethelChika\Laradmin\Form\FormServiceProvider;
 
 class LaradminServiceProvider extends ServiceProvider
 {
@@ -50,10 +51,13 @@ class LaradminServiceProvider extends ServiceProvider
         $this->app->register(PluginServiceProvider::class);
 
         // Register service providers from other packages 
-        $this->app->register(ImageServiceProvider::class); //NOTE: this can also be simply be put in the laravel's main config/app instead expecially if the main app is going to use this package already
+        $this->app->register(ImageServiceProvider::class); //TODO: this can also be simply be put in the laravel's main config/app instead expecially if the main app is going to use this package already
 
         // Register wordpress bridge which will pages menus etc
         $this->app->register(WPServiceProvider::class);
+
+        // Register form service provider
+        $this->app->register(FormServiceProvider::class);
         
         
     }

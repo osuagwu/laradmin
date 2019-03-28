@@ -21,8 +21,8 @@
             </div>
 
             <div class="col-xs-12 col-md-4 " >
-                <nav >
-                    <ul class="nav nav-pills social-icons">
+                <nav class="social-links">
+                    <ul class="nav nav-pills ">
                         @if(env('MEDIA_FACEBOOK_URL'))
                         <li role="presentation">
 

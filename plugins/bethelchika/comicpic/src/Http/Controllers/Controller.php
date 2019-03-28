@@ -15,6 +15,7 @@ class Controller extends BaseController
 
     public function __construct(Laradmin $laradmin){
         $laradmin->assetManager->registerBodyClass('comicpic');
+        $laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
         $appname=Cache::get('comicpic.appname','Comicpic');
         $laradmin->contentManager->registerSubAppName($appname,route('comicpic.index'));
     }

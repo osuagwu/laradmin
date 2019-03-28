@@ -11,6 +11,19 @@ use BethelChika\Laradmin\WP\Models\Post;
 use BethelChika\Laradmin\WP\Models\Page;
 //use BethelChika\Laradmin\Menu\MenuItem;
 class WP{
+    /*
+    
+    TODO: $menuitem=Corcel\Model\MenuItem::whereHas('meta', function($q)use($page){
+                                                    $q->where('meta_key','_menu_item_object_id')
+                                                        ->where('meta_value',$page->ID);})
+                                                        ->get()->first();//Its possiblt for the page to appera in more thatn one menu whihc means that  this  result could be more than one item; but we are currently ignoring the rest and just choosing the forst one.
+    if($menuitem){
+        $parentid=$menuitem->meta->_menu_item_menu_item_parent;
+        if($parentid){
+            
+        }
+    }
+*/
 
     /**
      * Exports a tag specified wp menu to laradmin navigation system

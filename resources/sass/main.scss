@@ -40,6 +40,12 @@ strong, .strong{
     font-weight: 500;
 }
 
+ul{
+    @if $ubr==0 {
+        list-style-type: square;
+    }  
+}
+
 
 
 // Application_________________________________________________________
@@ -69,6 +75,11 @@ strong, .strong{
 }
 .main-nav .navbar-header .sidebar-control{
     float:left;
+    width: 54px;//REF:GHTGRJ
+    @media (max-width: 768px){
+        margin-left: 0px; // NOTE: I am not sure why this need to be set to zero here;
+        width: 36px; //I am not not sure why width here needs to be different from REF:GHTGRJ.
+    }
 }
 
 @media (min-width: 768px){
@@ -109,7 +120,11 @@ strong, .strong{
 
 
 //___________________________________________________________________
-
+.nav{
+    .external-link,.custom-caret{
+        font-size:75%;
+    }
+}
 body.main-nav-no-border-bottom .main-nav.navbar,
 body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add 'main-nav-no-border-bottom' to the body tag to remove the border bottom on the main menu and minor nav
     border-bottom-width:0px;
@@ -237,6 +252,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
     height: auto;
     padding-top: 9px;
     padding-bottom: 9px;
+    padding-left:0px;//TODO: NOT TESTED
     //padding: 13px 15px;
     //font-size: 19px;
     line-height: 19px;
@@ -485,6 +501,29 @@ section{
     
     
 }
+
+@mixin section-diffuse($brand-name,$brand){
+    /**
+    * Helper for creating setion diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+    .section-#{$brand-name}.section-light-bg.section-diffuse{
+        background: linear-gradient(to bottom,lighten($brand,20%) 0%,lighten($brand,25%));
+    }
+    .section-#{$brand-name}.section-diffuse {
+        position: relative;
+        background: linear-gradient(to bottom,$brand 0%,lighten($brand,10%));
+        box-shadow: 0 12px 45px -8px rgba($brand,.35);
+    }
+    .section-#{$brand-name}.section-diffuse.section-diffuse-no-shadow{
+        box-shadow:none;
+    }
+}
+
+
+
 .section-overlay{
     //NOTE: You can offset the any padding set in the .section  class here  and tranfer them inside the overlay here if you want the overlay edges to start with the section edges.
      
@@ -500,14 +539,8 @@ section{
 .section-primary.section-light-bg{
     background-color:lighten($brand-primary,20%);
 }
-.section-primary.section-light-bg.section-diffuse{
-    background: linear-gradient(to bottom,lighten($brand-primary,20%) 0%,lighten($brand-primary,25%));
-}
-.section-primary.section-diffuse {
-    position: relative;
-    background: linear-gradient(to bottom,$brand-primary 0%,lighten($brand-primary,10%));
-    box-shadow: 0 12px 45px -8px rgba($brand-primary,.35);
-}
+
+@include section-diffuse(primary,$brand-primary);
 
 .section-primary .section-overlay{
     background-color:rgba($brand-primary,0.2); 
@@ -530,8 +563,10 @@ section{
     background-color:lighten($brand-info,20%);
 }
 
+@include section-diffuse(info,$brand-info);
+
 .section-info .section-overlay{
-    background-color:rgba($brand-info,0.4); 
+    background-color:rgba($brand-info,0.2); 
 }
 
 
@@ -547,8 +582,11 @@ section{
 .section-success.section-light-bg{
     background-color:lighten($brand-success,20%);
 }
+
+@include section-diffuse(success,$brand-success);
+
 .section-success .section-overlay{
-    background-color:rgba($brand-success,0.4); 
+    background-color:rgba($brand-success,0.2); 
 }
 
 
@@ -562,8 +600,10 @@ section{
 .section-warning.section-light-bg{
     background-color:lighten($brand-warning,20%);
 }
+@include section-diffuse(warning,$brand-warning);
+
 .section-warning .section-overlay{
-    background-color:rgba($brand-warning,0.4); 
+    background-color:rgba($brand-warning,0.2); 
 }
 
 
@@ -578,8 +618,9 @@ section{
 .section-danger.section-light-bg{
     background-color:lighten($brand-danger,20%);
 }
+@include section-diffuse(danger,$brand-danger);
 .section-danger .section-overlay{
-    background-color:rgba($brand-danger,0.4); 
+    background-color:rgba($brand-danger,0.2); 
 }
 
 
@@ -590,6 +631,8 @@ section{
     background-color:$brand-subtle;
     
 }
+@include section-diffuse(subtle,darken($brand-subtle,20));
+
 .section-subtle .section-overlay{
     background-color:rgba($brand-subtle,0.4); 
 }
@@ -1011,6 +1054,7 @@ section{
     font-size: 15px;
     margin-bottom: 5px;
     transition: background-color 0.4s, border-color 0.4s;
+    border:1px solid transparent;
 }
 .section.hero .btn-hero.btn-hero-clean{
     text-transform: unset;
@@ -1427,30 +1471,7 @@ body.sidebar-white .sidebar .list-separator{
 
 
 
-.sidebar-control{
-    width: 30px;
-    height: 30px;
-    margin-right: 15px;
-    
 
-}
-
-.sidebar-control .toggle-btn:hover{
-    
-    border-radius:50%;
-    background-color: #f3f5f5;
-    padding:7px 8px 9px 8px;
-    
-
-}
-.sidebar-mainbar .sidebar-control{
-    position:absolute;
-    display: inline-block;
-    margin-top: -8px;
-    //margin-left: -7px;
-    z-index: 1;
-    
-}
 
 /////////////////////MAIN COLLASPSING////////////////////////////////////////
 .sidebar {
@@ -1539,16 +1560,42 @@ body.sidebar-white .sidebar .list-separator{
     // top:-30px;
     
 }
+
+//Sidebar control
+//.sidebar-control{
+    //display:none;
+//}
 .sidebar-control{
-    display:none;
+    //width: 60px;
+    //height: 30px;
+    //margin-right: 15px;
+    margin-left: -15px;
+    
+}
+
+.sidebar-control .toggle-btn:hover{
+    
+    //border-radius:50%;
+    //background-color: #f3f5f5;
+    
+    
+
+}
+.sidebar-mainbar .sidebar-control{
+    position:absolute;
+    display: inline-block;
+    margin-top: -8px;
+    //margin-left: -7px;
+    z-index: 1;
+    
 }
 .has-sidebar .sidebar-control{
     display: initial;
 }
 .sidebar-control .toggle-btn{
-    margin-right: 15px;
+    //margin-right: 15px;
     //padding: 7px 8px 9px 8px;
-    margin-top: 11px;
+    //margin-top: 11px;
     border-width: 0px;
 }
 
@@ -1702,21 +1749,27 @@ body.sidebar-white .sidebar .list-separator{
 
 }
 
-.message-container .message-header{
-    margin-top:0px;
-    margin-bottom: 2px;
-    opacity:0.9;
-    &:hover{opacity:1;}
-    .subject{
-        font-size: 13px;
-        
-    }
-    .from,.to,.message-sender,.channels{
-        font-size:11px;
-        opacity:0.8;
-        &:hover{
-            opacity: 1;
+.message-container {
+    .message-header{
+        margin-top:0px;
+        margin-bottom: 2px;
+        opacity:0.9;
+        &:hover{opacity:1;}
+        .subject{
+            font-size: 13px;
+            
         }
+        .from,.to,.message-sender,.channels{
+            font-size:11px;
+            opacity:0.8;
+            &:hover{
+                opacity: 1;
+            }
+        }
+    }
+
+    .message .badge{
+        font-size: 10px;
     }
 }
 .message-container .message-body{
@@ -3165,15 +3218,16 @@ body.has-sidebar .breadcrumb{
  * Toggle button
  */
  .toggle-btn{
-    margin-right: 15px;
-    padding: 9px 10px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin: 8px;
+    //padding: 9px 10px;
+    //margin-top: 8px;
+    //margin-bottom: 8px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
     border-radius: 4px*$ubr;
     text-transform: none;
+    padding:7px;
  }
  .toggle-btn.toggle-btn-default{
     border-color: #ddd;
@@ -3196,7 +3250,10 @@ body.has-sidebar .breadcrumb{
 .toggle-btn.toggle-btn-default .icon-bar {
     background-color: #b6b6b6;
 }
-
+.toggle-btn:hover{
+    border-radius:50%;
+    background-color: #f3f5f5;
+}
 
 /////// Pages
 // Profile
@@ -3277,7 +3334,7 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
         //     height:auto;
         // }
 
-        border-bottom:1px solid #ddd;
+        //border-bottom:1px solid #ddd;
         margin-left: 15px;
         margin-bottom: 15px;
      
@@ -3386,7 +3443,7 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
         width:100%;
         height:auto; 
         overflow-x: hidden;
-        border-bottom:1px solid #ddd;
+        //border-bottom:1px solid #ddd;
         margin-bottom: 22px;
      
         .blog-post-inner{

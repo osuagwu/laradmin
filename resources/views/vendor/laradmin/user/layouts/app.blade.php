@@ -104,8 +104,11 @@
                                 <li class="dropdown login-menu-item ">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                             <i class="far fa-user"></i> {{ str_limit(Auth::user()->name,6,'...') }} 
-                                            <span class="iconify" data-icon="entypo-chevron-thin-down" data-inline="false"></span>
-                                            <noscript><span class="caret"></span></noscript> 
+                                            <span class="custom-caret">
+                                                <span class="iconify" data-icon="entypo-chevron-thin-down" data-inline="false"></span>
+                                            </span>
+                                                <noscript><span class="caret"></span></noscript>
+                                             
                                     </a>
 
                                     <ul class="dropdown-menu" role="menu">

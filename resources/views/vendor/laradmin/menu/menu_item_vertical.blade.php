@@ -31,8 +31,12 @@
 
           {{ $item->name }}
           @if($item->isExternalLink())<small title="Opens external webpage" class="external-link"><i class="fas fa-external-link-alt"></i></small>@endif
-          @if($item->hasChildren() and $level==0)  <span class="caret"></span> @endif {{--Note that the reason we are printint the caret only at level==0 is because higher level caret are provided by another css--}}
-
+          @if($item->hasChildren() and $level==0) {{--Note that the reason we are printint the caret/chevron only at level==0 is because higher level caret are provided by another css--}} 
+            <span class="custom-caret">
+              <span class="iconify" data-icon="entypo-chevron-thin-down" data-inline="false"></span>
+            </span>
+            <noscript><span class="caret"></span></noscript> 
+          @endif
           {!!$item->htmlAfter!!}
       </a>
     @else

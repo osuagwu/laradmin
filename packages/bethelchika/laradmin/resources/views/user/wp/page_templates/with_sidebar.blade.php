@@ -161,7 +161,7 @@
     </div>
 </section>
 @if(str_contains(strtolower($page->meta->blog_listing),'bottom'))
-<section class="section section-subtle ">
+<section class="section section-primary section-diffuse section-light-bg section-diffuse-no-shadow">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="blog-listing">
             @if($posts->count())

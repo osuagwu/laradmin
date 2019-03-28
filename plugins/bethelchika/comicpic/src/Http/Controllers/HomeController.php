@@ -59,13 +59,15 @@ class HomeController extends Controller
      */
     public function show(Comicpic $comicpic,Laradmin $laradmin)
     {
+        $laradmin->assetManager->unregisterBodyClass('main-nav-no-border-bottom');
+
         $comicpics=Comicpic::has('medias')->with(['medias'=>function($query){
             $query->where('tag', 'comicpic');
         },'user'])
         ->whereNotIn('id',[$comicpic->id])
         ->whereNotNull('published_at')->inRandomOrder()->limit(8)->get(); //TODO: Here we use inRanomOder but what we really need is to search an feach related results to the one beign shown
         
-        $laradmin->assetManager->setContainerType('fluid',true);
+        //$laradmin->assetManager->setContainerType('fluid',true);
 
         $pageTitle=$comicpic->title;
         $has_small_height=$comicpic->medias[0]->getHeight()<200?true:false;

@@ -3,7 +3,7 @@
 @extends('laradmin::user.layouts.app')
             
 @section('content')
-<section class="section section-primary section-first" style="">
+<section class="section section-primary " style="">
     <div class="container-fluid">
         <nav>
             <ul class="nav nav-tabs nav-flat ">
@@ -23,7 +23,7 @@
         </div>
     </div>
 </section>  --}}
-<section class="section section-subtle  section-last ">
+<section class="section section-subtle  section-last section-diffuse section-light-bg section-diffuse-no-shadow">
     <div class="container-fluid">
         <div class="sidebar-mainbar">
             {{-- sidebar control --}}

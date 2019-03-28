@@ -14,7 +14,7 @@ use BethelChika\Laradmin\Traits\EmailConfirmationEmail;
 use BethelChika\Laradmin\Traits\ReAuthController;
 use BethelChika\Laradmin\Laradmin;
 use BethelChika\Laradmin\WP\Models\Post;
-
+use BethelChika\Laradmin\Form\Form;
 class UserProfileController extends Controller
 {
     use EmailConfirmationEmail, ReAuthController;
@@ -72,12 +72,16 @@ class UserProfileController extends Controller
           
           $this->laradmin->assetManager->registerMainNavScheme('primary');
           $this->laradmin->assetManager->registerBodyClass('user-profile-page');
+          $this->laradmin->assetManager->setContainerType('fluid');
           
+          $fields=(new Form('user_settings','profile'))->getFields();
           
-
+          $show_profile_card=false; //When true similar profile card shown in the dashboard will be shown in the profile page too
           
-          return view('laradmin::user.profile',['pageTitle'=>$pageTitle,'laradmin'=>$this->laradmin]);
+          return view('laradmin::user.profile',['pageTitle'=>$pageTitle,'show_profile_card'=>$show_profile_card,'laradmin'=>$this->laradmin,'fields'=>$fields]);
       }
+
+   
 
       /**
       * Show main settings.
@@ -89,6 +93,7 @@ class UserProfileController extends Controller
           $user=Auth::user();
           $this->authorize('view', $user);
           $pageTitle= 'Welcome, '. $user->name;
+          $this->laradmin->assetManager->setContainerType('fluid');
           $laradmin->assetManager->unregisterBodyClass('main-nav-no-border-bottom');
           return view('laradmin::user.settings',compact('pageTitle'));
       }
@@ -102,10 +107,13 @@ class UserProfileController extends Controller
       {
           $this->authorize('update', Auth::user()); //No need to authorize here but we will do it anyways
 
+          // Get form for profile
+          $form=new Form('user_settings','profile');
+
           $countries=Lang::get('laradmin::list_of_countries');
           $faiths=Lang::get('laradmin::list_of_faiths');
           $pageTitle='Edit profile | '.Auth::user()->name;
-          return view('laradmin::user.edit',['user'=>Auth::user(),'countries'=>$countries,'faiths'=>$faiths,'pageTitle'=>$pageTitle]);
+          return view('laradmin::user.edit',['user'=>Auth::user(),'countries'=>$countries,'faiths'=>$faiths,'pageTitle'=>$pageTitle,'form'=>$form]);
       }
 
       /**
@@ -140,6 +148,12 @@ class UserProfileController extends Controller
             'faith'=>'nullable|string|max:255',
             'country'=>'nullable|string|max:255',
           ]);
+
+          //Process extrinsic fields
+          $form=new Form('user_settings','profile');
+          $form->getValidator($request->all())->validate();
+          $form->process($request);
+
          // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
           //update the user
           $user=User::find(Auth::user()->id);
@@ -165,7 +179,7 @@ class UserProfileController extends Controller
        */
       public function security(){
           $this->authorize('update', Auth::user());   
-         
+          $this->laradmin->assetManager->setContainerType('fluid');
           $pageTitle="Security";      
           return view('laradmin::user.security',compact('pageTitle'));
       }
@@ -457,6 +471,49 @@ class UserProfileController extends Controller
     public function pluginSettings(){
         $pageTitle='Application settings';
         return view('laradmin::user.plugin_settings',compact('pageTitle'));
+    }
+
+    public function formCreate(){
+        // $field=\BethelChika\Laradmin\Form\FormItem::make([   'type'=>'text',
+        // 'name'=>'comicpic_autor_r_name',
+        // 'label'=>'Comicpic 2 writer',
+        // 'group'=>'personal',
+        // 'order'=>0,
+        // 'help'=>'Help text',
+        // 'value'=>'Bethel',
+        // 'options'=>[],
+        // 'rules' => 'required|min:5',
+        // 'messages'=>['required'=>'Writer must be given',
+        //                 'min'=>'Cannot be less than five',
+        //             ]
+
+        // ]);
+
+        $form=new \BethelChika\Laradmin\Form\Form('profile');
+        //$form->addField($field);
+        return view('laradmin::user.profile_form',compact('form'));
+        
+    }
+    public function updateForm(Request $request){
+        $form=new \BethelChika\Laradmin\Form\Form('profile');
+        
+
+        $form=new \BethelChika\Laradmin\Form\Form('profile');
+        $form->addField($field);
+
+        $form->getValidator($request->all())->validate();
+        $form->store($request);
+
+        $fields=$form->getFields($form->getTag());
+        dd('Done');
+        $this->validate($request, [
+            //'password'=>'required|in:'.$pass_match,
+            'new_password' => 'required|string|min:6|confirmed|max:255',
+          ]);
+
+        $fieldables=$form->getFieldables($form->getTag());
+
+        dd($request);
     }
     
 

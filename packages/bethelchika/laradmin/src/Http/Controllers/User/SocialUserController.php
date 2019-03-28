@@ -28,8 +28,10 @@ class SocialUserController extends Controller
        $laradmin->contentManager->loadMenu('user_settings');
 
        //Register classes
-       $laradmin->assetManager->registerBodyClass('sidebar-white');
-       
+       //$laradmin->assetManager->registerBodyClass('sidebar-white');
+
+       // Set container fluid
+       $laradmin->assetManager->setContainerType('fluid');
     }
 
     public function index(Request $request){

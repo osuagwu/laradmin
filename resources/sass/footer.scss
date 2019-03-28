@@ -67,7 +67,12 @@
 #footer .cookies-use{
   @extend .text-muted;
 }
-
-#footer .social-icons{
+#footer .social-links:after {
+  clear: both;
+  display: table;
+  content: " ";
+}
+#footer .social-links .nav{
   font-size:16px;
+  float:right;
 }

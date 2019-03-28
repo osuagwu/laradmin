@@ -47,6 +47,9 @@
                     @component('laradmin::blade_components.input_select',['name'=>'faith','value'=>$user->faith,'options'=>$faiths,])
                     @endcomponent
                     
+                    @component('laradmin::form.fields',['fields'=>$form->getFields()])
+                        
+                    @endcomponent
                     {{--
                     <hr class="hr">
                     

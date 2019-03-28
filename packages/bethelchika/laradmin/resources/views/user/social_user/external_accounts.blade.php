@@ -19,7 +19,7 @@
         </nav>
     </div>
 </section>
-<section class="section section-subtle">
+<section class="section section-subtle section-diffuse section-light-bg section-diffuse-no-shadow">
     <div class="container-fluid">
             
             <div class="sidebar-mainbar">
