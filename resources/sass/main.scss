@@ -373,7 +373,7 @@ h6{
 .heading-0,
 .heading-1,
 .heading-2,
-.heading-3,
+.heading-3
 {
     font-weight:100;
 }
@@ -1024,8 +1024,7 @@ section{
     padding:20px 0 20px 0;
 }
 .section.hero .hero-headline-md .hero-headline-text small,
-.section.hero .hero-headline-md .hero-headline-summary,
- {
+.section.hero .hero-headline-md .hero-headline-summary{
     font-size: 15px;
 }
 @media (max-width: 768px){
@@ -1224,11 +1223,25 @@ section{
 .sidebar-mainbar .mainbar{
     padding-top:20px;
 }
+//When breadcrum is inside mainbar
 .sidebar-mainbar .mainbar .breadcrumb{
     margin-top:-20px;
 }
-    
 
+// When a section wants to remove the offeset the padding-top added by the mainbar
+.mainbar .section.section-offset-mainbar-top{
+    margin-top: -20px;
+}
+//section inside mainbar
+.mainbar .section.section-offset-mainbar-sides{//Make section take all width outside of sidebar by negating paddings
+    
+    margin-right: -15px;
+    margin-left:-15px;
+    
+    
+}
+    
+ //Minor nave inside mainbar
 .mainbar .minor-nav.navbar {
     margin-left: -15px;
     margin-top:-20px;
@@ -1237,8 +1250,14 @@ section{
     border-left:0px;   
 }
 @media (min-width: 768px){
+    //Minor nave inside mainbar
     .mainbar .minor-nav.navbar {
         margin-left: -30px;
+    }
+    //section inside mainbar (offcourse margin collapse kicks in if the section aalso has .minor-nav.navbar which also negates mainbar
+    .mainbar .section.section-offset-mainbar-sides{//Make section take all width outside of sidebar by negating paddings
+        margin-left: -30px;
+        
     }
 }
 .mainbar .page-title{
@@ -1322,7 +1341,7 @@ body.sidebar-white .sidebar .list-separator{
 .sidebar .heading-3,
 .sidebar .heading-4,
 .sidebar .heading-5,
-.sidebar .heading-6,{
+.sidebar .heading-6{
     color:lighten($text-color, 10);
     margin-bottom: 10px;
     margin-top: 10px;
@@ -1375,7 +1394,7 @@ body.sidebar-white .sidebar .list-separator{
 }
 
 .sidebar ul li a .far,
-.sidebar ul li a .fas,
+.sidebar ul li a .fas
 {
     color:rgba(0,0,0,0.5)
 }
@@ -1441,7 +1460,7 @@ body.sidebar-white .sidebar .list-separator{
 
 
 .sidebar ul li.active a .far,
-.sidebar ul li.active a .fas,
+.sidebar ul li.active a .fas
 {
     //color:$brand-info;
 }
@@ -2216,7 +2235,7 @@ body.has-sidebar .breadcrumb{
 .banner-block-content .heading-1,
 .banner-block-content .heading-2,
 .banner-block-content .heading-3,
-.banner-block-content .heading-4,
+.banner-block-content .heading-4
 {
     padding-bottom:0;
     padding-top:0
@@ -3492,6 +3511,7 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
 
 }
 
+
 // article.blog-posts.horizontal{
     
 // }
@@ -3617,3 +3637,48 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
 //     }
 // }
 // }
+
+//Form_______________________________________________
+//________________________________________________________
+.form-page{
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+    padding:15px;
+    &.index{}
+    &.edit{}
+    .header {
+        .formbar{
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 15px;
+            
+            .nav-back-to{
+                flex: 1 1 auto;
+                justify-self: flex-end;
+                order:1;
+                //border:1px solid red;
+            }
+            .nav-close{
+                flex: 1 1 auto;
+                justify-self: flex-end;
+                order:3;
+                //border:1px solid red;
+                text-align: right;
+            }
+            .page-title{
+                flex: 1 1 auto;
+                justify-self: center;
+                order:2;
+                //border:1px solid red;
+                margin:0;
+                margin-left:30px;
+                margin-right: 30px;
+                
+            }
+        }
+        nav.nav{
+            margin-bottom:15px;
+        }
+        
+    }
+
+}

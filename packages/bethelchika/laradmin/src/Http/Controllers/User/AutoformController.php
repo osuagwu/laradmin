@@ -27,7 +27,9 @@ class AutoformController extends Controller
         $this->middleware('re-auth:30')->only(['edit']);
 
         $this->laradmin=$laradmin;
-        
+        //$this->laradmin->contentManager->loadMenu('user_settings');
+        $this->laradmin->assetManager->registerMainNavScheme('primary');
+        $this->laradmin->assetManager->setContainerType('fluid');
       
     }
     public function index(Request $request,$pack,$tag){
@@ -37,14 +39,12 @@ class AutoformController extends Controller
         }
         $form->build();
 
-        $this->laradmin->contentManager->loadMenu('user_settings');
-        $this->laradmin->assetManager->registerMainNavScheme('primary');
-        $this->laradmin->assetManager->setContainerType('fluid');
+       
 
 
 
         if (method_exists($form,'index')){
-            return $form->index($pack,$tag);//TODO:Reverse $pack and $tag
+            return $form->index($pack,$tag);//TODO:Reverse $pack and $tag in aff form system
         }
         
         

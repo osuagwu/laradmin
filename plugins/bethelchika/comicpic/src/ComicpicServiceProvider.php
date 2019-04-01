@@ -57,13 +57,24 @@ class ComicpicServiceProvider extends ServiceProvider
             'namedRoute'=>'comicpic.me','iconClass'=>'far fa-laugh-wink']);
         $laradmin->navigation->create('Upload','upload','primary.comicpic',[
                 'namedRoute'=>'comicpic.create','iconClass'=>'fas fa-upload']);
+        $laradmin->navigation->create('Settings','settings','primary.comicpic',[
+            'namedRoute'=>'comicpic.user_settings','iconClass'=>'fas fa-laugh-wink']);
 
         //Add a menu to user_apps
         $laradmin->navigation->create($appname,'comicpic','user_apps',[
             'namedRoute'=>'comicpic.index','iconClass'=>'fas fa-laugh-wink']);
+
+        //Add a menu to the user settings
+        $laradmin->navigation->create($appname.' settings','comicpic','user_settings',[
+            'namedRoute'=>'comicpic.user_settings','iconClass'=>'fas fa-laugh-wink']);
         
         // Register fieldables
         $laradmin->formManager->registerFieldable('user_settings','profile',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        
+        //Register auto forms
+        $laradmin->formManager->registerAutoform('comicpic','user_settings',\BethelChika\Comicpic\Form\ComicpicAutoform::class);
+//Register auto forms
+$laradmin->formManager->registerAutoform('comicpic','user_settings2',\BethelChika\Comicpic\Form\ComicpicAutoform::class);
 
         // Add assets that should appear in every page
         //$laradmin->assetManager->addAsset('head-styles','test','<style>.dropzone{background-color:yellow;}</style>');

@@ -13,6 +13,13 @@ Trait Autoform{
     public static $autoformNames=null;
 
     /**
+     * The menu tag for list of auto form
+     *
+     * @var string
+     */
+    public static $autoformNavTag='autoforms';
+
+    /**
      * Register the Autoform
      * @param string $pack The pack of auto forms this belongs to
      * @param string $tag The identifier,.
@@ -20,7 +27,10 @@ Trait Autoform{
      * @return void
      */
     public static function registerAutoform($pack,$tag,$autoform_name){
-        if(!self::$autoformNames);self::$autoformNames=new Collection;//TODO:Could put this in parent class constructor
+        
+        if(!self::$autoformNames){
+            self::$autoformNames=new Collection;
+        }
 
         if(!self::$autoformNames->has($pack)){
             self::$autoformNames[$pack]=new Collection;
@@ -40,6 +50,10 @@ Trait Autoform{
      * @return void
      */
     public static function unregisterAutoform($pack,$tag=null){
+        if(!self::$autoformNames){
+            return;
+        }
+
         if(self::$autoformNames->has($pack)){
             if($tag) {
                 if(self::$autoformNames[$pack]->has($tag)){
@@ -58,9 +72,13 @@ Trait Autoform{
      *
      * @param string $pack
      * @param string $tag
-     * @return void
+     * @return Autoform
      */
-    public function getAutoformName($pack,$tag){
+    public static function getAutoformName($pack,$tag){
+        if(!self::$autoformNames){
+            return null;
+        }
+
         if(!self::$autoformNames->has($pack)){
             return null;
         }
@@ -70,17 +88,114 @@ Trait Autoform{
         return self::$autoformNames[$pack][$tag];
     }
 
+        /**
+     * Get autoform name
+     *
+     * @param string $pack
+     * @param string $tag
+     * @return Collection
+     */
+    public static function getAutoformNames($pack){
+        if(!self::$autoformNames){
+            return new Collection;
+        }
+
+        if(!self::$autoformNames->has($pack)){
+            return null;
+        }
+        return self::$autoformNames[$pack];
+    }
+
     /**
      * Get autoform
      *
      * @param string $pack
      * @param string $tag
-     * @return void
+     * @return Autoform
      */
-    public function getAutoform($pack,$tag){
+    public static function getAutoform($pack,$tag){
         $autoform=self::getAutoformName($pack,$tag);
+        if($autoform){
+            return new $autoform($pack,$tag);
+        }
+        return null;
         
-        return new $autoform($pack,$tag);
+    }
+      /**
+     * Get all autoforms in a given pack
+    *
+    * @param string $pack
+    * @return Collection
+    */
+    public static function getAutoforms($pack){ 
+        $autoforms=new Collection;
+        foreach(self::getAutoformNames($pack) as $tag=> $autoform_name){
+            $autoforms[$tag]=self::getAutoform($pack,$tag);
+        }
+        return $autoforms;
+
+    }
+        /**
+     * Gets the link for form
+     * @param string $pack
+     * @param string $tag
+     * @return string
+     */
+    public static function autoformLink($pack,$tag){
+        return route('user-autoform',[$pack,$tag]);
+    }
+    
+
+    /**
+     * Gets the link for editing form
+     * @param string $pack
+     * @param string $tag
+     * @return string
+     */
+    public static function autoformEditLink($pack,$tag){
+        return route('user-autoform-edit',[$pack,$tag]);
+    }
+
+    /**
+     * The a form pack and returns a menu tag for them
+    *
+    * @param string $pack
+    * @param string $tag
+    * @return string The menu tag that can be used to display the menu
+    */
+    public static function autoformPackToMenu($pack,$tag=null){
+        
+        $autoforms=new Collection;
+        if($tag){
+            $autoforms=collect(self::getAutoform($pack,$tag));
+        }else{
+            $autoforms=self::getAutoforms($pack);
+        }
+       
+
+        /// Make nav
+        
+        $navigation=self::navigation();
+        foreach($autoforms as $autoform){
+            //Add a menu to the user settings
+            $pack_tag=$autoform->getPack().'_'.$autoform->getTag();
+            $route=self::autoformLink($autoform->getPack(),$autoform->getTag());
+            
+            $navigation->create($autoform->getName(),$pack_tag,self::$autoformNavTag,[
+            'url'=>$route,'iconClass'=>'fab fa-wpforms']);
+        
+        }
+        return self::$autoformNavTag;
+        
+    }
+
+    /**
+     * Returns a navigation manager
+     *
+     * @return \BethelChika\Laradmin\Menu\Navigation
+     */
+    private static function navigation(){
+        return app('laradmin')->navigation;
     }
 
 }

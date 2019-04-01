@@ -30,6 +30,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/comicpic/admin/settings', $CR.'AdminController@editSettings')->name('comicpic.admin-edit-settings');
     Route::put('/comicpic/admin/settings', $CR.'AdminController@updateSettings');
 
-   
+    // User settings
+    Route::get('/comicpic/user_settings', $CR.'UserController@settings')->name('comicpic.user_settings');
     
 });

@@ -8,7 +8,7 @@ $pluginmanager=$laradmin->pluginManager;
 ```
 
 
-##Configuration.
+## Configuration.
 The default plugin folder is /plugins relative to application root. The folder can be changed by changing Laradmin config 'plugins_path' or setting the 'LARADMIN_PLUGINS_PATH' in env file. Set these to empty string to use the default path.
 
 ## Installing  and unintalling a plugin
@@ -77,5 +77,22 @@ Here is an example json file:
 ### Admin
 Add menu items for you plugin admin to the menu. The create corresponding routes and view as normal as in Laravel packages. Also the controllers are as normal except that instead of calling return view(..), you should call 
 ```php 
-$pluginmanager->adminView(....) ;
+return $pluginmanager->adminView(....) ;
 ```
+
+## User settings page
+In addition to creating admin pages for a plugin, you can create also a user settings page.The following are required to create a user settinsg page:
+- create a menu item with parent tag of 'user_settings', e.g in the boot method of your service provider. see menu documentation for how to create a menu. TODO: Note that because the rest of the menu items are loaded later, your menu will be first on the list; This should be fixed in the future.
+- Add a corresponding Laravel route to the menu.
+- Create a controller  and method for the route. 
+- In the method of your controller, return your 'view' thus:
+```php 
+return $pluginmanager->userView(....) ;
+```
+- Done.
+
+A few things to note: When the plugin has php error, the whole page will break because they is not processed separatly. The view of the plugin is rendered as part of the user settings page which already is wrapped with the '.container(-fluid)' css class of Bootstrap, so no need to add another one; you can just use 'row's and 'col's css classes as normal. The the view content of the plugin is also wrapped with the '.mainbar' css class which add content padding tot he content as well as display it on the right side of sidebar. So if you want to use the standard '.section' css class inside your view and want the section to offset the content padding of '.mainbar' then you can add the following css classes to the '.section' 
+- 'section-offset-mainbar-top' : to offset the top margin
+- 'section-offset-mainbar-sides' : to offset the left and right margins
+There are offcourse not neccessary.
+

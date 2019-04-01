@@ -5,18 +5,7 @@ use Illuminate\Support\Collection;
 
 class Fieldset extends FormItem{
 
-    /**
- * 
- *
- * @var string
- */
-public  $indexDescription=null;
-/**
-* 
-*
-* @var string
-*/
-public  $editDescription=null;
+ 
     /**
      * Collection of fields
      *

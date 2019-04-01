@@ -64,6 +64,13 @@ abstract class FormItem{
      */
     public const GROUP='group';
     ///////////////////////////////////////////////////////////
+
+     /**
+     * The group name of Group field type.
+     *
+     * @var string
+     */
+    public const GROUP_GROUP_NAME='__group__';
     //////////////////////////////////////////////////////////
 
     /**

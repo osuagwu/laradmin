@@ -30,6 +30,12 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
      private $fields;
 
 
+     /**
+     * Name
+     *
+     * @var string
+     */
+    public $name;
 
      /**
       * Title of the form
@@ -68,15 +74,20 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
 
      /**
       * Construct a new form
-      *
+      * @param string $pack       
       * @param string $tag A tag that uniquely identify this form
+      * @param string $name
       */
-     public function __construct($pack,$tag){
+     public function __construct($pack,$tag,$name=null){
         $this->pack=$pack;
          $this->tag=$tag;
          $this->fields=new Collection;
 
          $this->title=$pack.'/'. $tag;
+         $this->name=$name;
+         if(!$this->name){
+             $this->name=$tag;
+         }
      }
 
      /**
@@ -96,6 +107,23 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
      public function getTag(){
          return $this->tag;
      }
+     /**
+      * Gets the form  name
+      *
+      * @return string
+      */
+      public function getName(){
+        return $this->name;
+    }
+
+    /**
+      * Gets the form  title
+      *
+      * @return string
+      */
+      public function getTitle(){
+        return $this->title;
+    }
 
      /**
       * Add fields
@@ -147,8 +175,8 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
         $fields=$this->getFields($with_registered);
         $fields=$fields->groupBy('group');
 
-        if($fields->has('__group__')){
-            return $fields['__group__'];
+        if($fields->has(FormItem::GROUP_GROUP_NAME)){
+            return $fields[FormItem::GROUP_GROUP_NAME];
         }
         return new Collection;
      }
@@ -296,6 +324,8 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
         return -1;
      }
 
+     
+
      /**
       * Returns a view file for the top of index page
       *
@@ -331,5 +361,14 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
     public function getEditBottom(){
         return null;
    }
+
+   /**
+    * Return form manager
+    *
+    * @return \BethelChika\Laradmin\Form\FormManager
+    */
+  public static function manager(){
+      return app('laradmin')->formManager;
+  }
      
  }

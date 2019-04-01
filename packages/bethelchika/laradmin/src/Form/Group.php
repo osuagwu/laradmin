@@ -6,6 +6,7 @@ namespace BethelChika\Laradmin\Form;
 class Group extends FormItem{
 
 
+
 /**
  * 
  *
@@ -36,7 +37,7 @@ class Group extends FormItem{
         
         $this->type=FormItem::GROUP;
         $this->name=$name;
-        $this->group='__group__';
+        $this->group=parent::GROUP_GROUP_NAME;
         
     }
 

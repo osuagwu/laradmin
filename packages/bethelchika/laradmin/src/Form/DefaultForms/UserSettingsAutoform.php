@@ -65,7 +65,7 @@ class UserSettingsAutoform extends Autoform{
 
       $group1=new Group('personal');
       $group1->lable="Personal";
-      $group1->editDescription=$group1->IndexDescription="Personal data information";
+      $group1->editDescription=$group1->indexDescription="Personal data information";
       
       
 

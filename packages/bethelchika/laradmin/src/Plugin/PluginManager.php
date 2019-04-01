@@ -725,15 +725,27 @@ class PluginManager{
     // }
 
     /**
-     * Accepts the view name and the parameters to display it for a plugin admin settings page
+     * Accepts the view name and the parameters to display it for a plugin admin settings pages
      *
-     * @param string $view
-     * @param array $params
+     * @param string $viewname
+     * @param array $data
      * @return Illuminate\Http\RedirectResponse 
      */
     public function adminView($viewname,$data=[]){
         //$content=$view->render();
         return \App::call('\\BethelChika\Laradmin\Http\Controllers\CP\PluginAdminController@pluginVendorAdminView',
+                            ['viewname'=>$viewname,'data'=>$data]);
+    }
+
+    /**
+     * Accepts the view name and the parameters to display it for a plugin users settings pages
+     *
+     * @param string $view
+     * @param array $data
+     * @return Illuminate\Http\RedirectResponse 
+     */
+    public function userView($viewname,$data=[]){
+        return \App::call('\\BethelChika\Laradmin\Http\Controllers\User\PluginUserController@pluginVendorUserView',
                             ['viewname'=>$viewname,'data'=>$data]);
     }
 

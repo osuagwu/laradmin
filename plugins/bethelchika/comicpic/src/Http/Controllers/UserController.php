@@ -17,6 +17,7 @@ class UserController extends Controller
 {
     use Helper;
     public $mediaManager;
+    public $laradmin;
     /**
      * Create a new controller instance.
      *
@@ -26,6 +27,7 @@ class UserController extends Controller
     {
         $this->middleware('auth');
         $this->mediaManager=$laradmin->mediaManager;
+        $this->laradmin=$laradmin;
         parent::__construct($laradmin);
         
     }
@@ -37,14 +39,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function setting()
+    public function settings()
     {
         $user=Auth::user();
 
         $this->authorize('view',$user);
         
         $pageTitle='Settings';
-        return view('comicpic::setting',compact('pageTitle'));
+        return $this->laradmin->pluginManager->userView('comicpic::settings',compact('pageTitle'));
     }
     public function create(){
         $user=Auth::user();
