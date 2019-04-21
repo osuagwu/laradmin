@@ -1,6 +1,9 @@
 <?php
 namespace BethelChika\Laradmin\Menu;
 
+use Illuminate\Support\Collection;
+
+
 abstract class NavigationItem
 {
     /**
@@ -449,8 +452,13 @@ abstract class NavigationItem
      * @return array NavigationItem
      */
     public function getChildren(){
-        return $this->children;
+        //return $this->children;
+        return (new Collection($this->children))->sortBy('order')->all(); //TODO: should sort without Laravel Collection to keep dependency low
     }
+
+    // public static function sort(Collection $items){
+
+    // }
 
     /**
      * Returns the html attributes formated. 

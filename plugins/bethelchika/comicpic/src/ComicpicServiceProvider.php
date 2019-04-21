@@ -69,12 +69,20 @@ class ComicpicServiceProvider extends ServiceProvider
             'namedRoute'=>'comicpic.user_settings','iconClass'=>'fas fa-laugh-wink']);
         
         // Register fieldables
-        $laradmin->formManager->registerFieldable('user_settings','profile',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        $laradmin->formManager->registerFieldable('user_settings','personal',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
         
+        // //delte from here**************************************************************
+        // $laradmin->formManager->registerFieldable('user_settings','adresses',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        // $laradmin->formManager->registerFieldable('user_settings','Loppost',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        // $laradmin->formManager->registerFieldable('user_settings','credit',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        // $laradmin->formManager->registerFieldable('user_settings','film_items',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        // $laradmin->formManager->registerFieldable('user_settings','my_likes',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
+        // //delete to here***********************************************
+
         //Register auto forms
         $laradmin->formManager->registerAutoform('comicpic','user_settings',\BethelChika\Comicpic\Form\ComicpicAutoform::class);
-//Register auto forms
-$laradmin->formManager->registerAutoform('comicpic','user_settings2',\BethelChika\Comicpic\Form\ComicpicAutoform::class);
+        //Register auto form duplicate just to test multiple form
+        $laradmin->formManager->registerAutoform('comicpic','user_settings2',\BethelChika\Comicpic\Form\ComicpicAutoform::class);
 
         // Add assets that should appear in every page
         //$laradmin->assetManager->addAsset('head-styles','test','<style>.dropzone{background-color:yellow;}</style>');

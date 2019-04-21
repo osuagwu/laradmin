@@ -111,26 +111,27 @@ Trait Autoform{
      *
      * @param string $pack
      * @param string $tag
+      * @param string $mode The mode that this call is made for: {'index','edit'}
      * @return Autoform
      */
-    public static function getAutoform($pack,$tag){
+    public static function getAutoform($pack,$tag,$mode){
         $autoform=self::getAutoformName($pack,$tag);
         if($autoform){
-            return new $autoform($pack,$tag);
+            return new $autoform($pack,$tag,$mode);
         }
         return null;
         
     }
       /**
      * Get all autoforms in a given pack
-    *
     * @param string $pack
+     * @param string $mode The mode that this call is made for: {'index','edit'}
     * @return Collection
     */
-    public static function getAutoforms($pack){ 
+    public static function getAutoforms($pack,$mode='index'){ 
         $autoforms=new Collection;
         foreach(self::getAutoformNames($pack) as $tag=> $autoform_name){
-            $autoforms[$tag]=self::getAutoform($pack,$tag);
+            $autoforms[$tag]=self::getAutoform($pack,$tag,$mode);
         }
         return $autoforms;
 
@@ -174,7 +175,6 @@ Trait Autoform{
        
 
         /// Make nav
-        
         $navigation=self::navigation();
         foreach($autoforms as $autoform){
             //Add a menu to the user settings
@@ -189,13 +189,6 @@ Trait Autoform{
         
     }
 
-    /**
-     * Returns a navigation manager
-     *
-     * @return \BethelChika\Laradmin\Menu\Navigation
-     */
-    private static function navigation(){
-        return app('laradmin')->navigation;
-    }
+    
 
 }

@@ -33,7 +33,7 @@ class FormServiceProvider extends ServiceProvider
     public function boot(Laradmin $laradmin)
     {
         //Register defaultvforms
-        $laradmin->formManager->registerAutoform('user_settings','profile',\BethelChika\Laradmin\Form\DefaultForms\UserSettingsAutoform::class);
+        //$laradmin->formManager->registerAutoform('user_settings','profile',\BethelChika\Laradmin\Form\ExampleForms\UserSettingsAutoform::class);
     }
 
     

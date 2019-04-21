@@ -35,13 +35,14 @@ Route::group(['middleware' => ['web']], function () {
     // Userprofile routes
     $LCR=class_exists($LCR_EXT.'User\UserProfileController')?$LCR_EXT:$LCR_LOCAL;
     Route::get('/u/index', $LCR.'User\UserProfileController@index')->name('user-home');
-    Route::get('/u/profile', $LCR.'User\UserProfileController@profile')->name('user-profile');
+    Route::get('/u/profile/{form_pack?}/{form_tag?}', $LCR.'User\UserProfileController@profile')->name('user-profile');
+    Route::get('/u/edit_profile/{form_pack}/{form_tag}', $LCR.'User\UserProfileController@edit')->name('user-profile-edit');
+    Route::put('/u/edit_profile/{form_pack}/{form_tag}', $LCR.'User\UserProfileController@update');
     Route::get('/u/settings', $LCR.'User\UserProfileController@settings')->name('user-settings');
-    Route::get('/u/edit', $LCR.'User\UserProfileController@edit')->name('user-edit');
     Route::get('/u/security', $LCR.'User\UserProfileController@security')->name('user-security');
     Route::get('/u/edit-password', $LCR.'User\UserProfileController@editPassword')->name('user-edit-password');
     Route::put('/u/edit-password', $LCR.'User\UserProfileController@updatePassword');
-    Route::put('/u/update', $LCR.'User\UserProfileController@update')->name('user-update');
+ 
     Route::get('/u/send-email-confirmation/',$LCR.'User\UserProfileController@sendEmailConfirmation')->name('send-email-confirmation');
     Route::get('/u/email-confirmation/{email}/{key}',$LCR.'User\UserProfileController@emailConfirmation')->name('email-confirmation');
 

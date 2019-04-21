@@ -33,7 +33,10 @@ class AutoformController extends Controller
       
     }
     public function index(Request $request,$pack,$tag){
-        $form=$this->laradmin->formManager->getAutoform($pack,$tag);
+        $form=$this->laradmin->formManager->getAutoform($pack,$tag,'index');
+        if(!$form){
+            return abort(404);
+        }
         if(!$form->gate($request->user())){
             return abort(403);
         }
@@ -54,8 +57,10 @@ class AutoformController extends Controller
     }
 
     public function edit(Request $request,$pack,$tag){
-        $form=$this->laradmin->formManager->getAutoform($pack,$tag);
-    
+        $form=$this->laradmin->formManager->getAutoform($pack,$tag,'edit');
+        if(!$form){
+            return abort(404);
+        }
         
         
         if(!$form->gate($request->user())){
@@ -70,7 +75,14 @@ class AutoformController extends Controller
     }
     
     public function process(Request $request,$pack,$tag){
-        $form=$this->laradmin->formManager->getAutoform($pack,$tag);
+        $form=$this->laradmin->formManager->getAutoform($pack,$tag,'edit');
+        if(!$form){
+            return abort(404);
+        }
+        if(!$form->gate($request->user())){
+            return abort(403);
+        }
+        $form->build();
         $form->getValidator($request->all())->validate();
         $form->process($request);
         return redirect()->route('user-autoform',[$pack,$tag])->with('success','Done');

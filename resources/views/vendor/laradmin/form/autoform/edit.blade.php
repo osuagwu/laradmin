@@ -2,9 +2,9 @@
 @extends('laradmin::user.layouts.app')
 
 @section('content')
-<section class="section section-first section-full-page section-subtle section-diffuse section-light-bg">
+<section class="section section-full-page section-subtle section-diffuse section-light-bg">
     <div class="container-fluid">
-        <div class="form-page index">
+        <div class="form-page autoform edit">
             <div class="header ">
                 <div class="formbar">
                     <div class="nav-back-to ">
@@ -20,37 +20,43 @@
                         </a>
                     </div>
                     
-                    <h1 class="heading-2 page-title">{{$pageTitle}}</h1> 
+                    <h1 class=" title heading-2 page-title">{{$pageTitle}}</h1> 
                 </div>
             </div>
             <!-------------end header------------------>
         
             
                 
-                
+            
             @if($form->editDescription)<p class=" fainted-08"><small>{{$form->editDescription}}</small></p>@endif
             @includeIf($form->getEditTop())
             @include ('laradmin::inc.msg_board')
             @include('laradmin::inc.email_confirmation_prompt')
 
 
-            <form class="form-horizontal" role="form" method="POST" action="{{$form->getEditLink()}}">
-                {{ method_field('PUT') }}
+            <form class="form-horizontal" role="form" method="@if(str_is(strtolower($form->method),'get')){{'GET'}}@else{{'POST'}}@endif" action="{{$form->getEditLink()}}"
+                @if($form->hasImageField($form->getFields())) enctype="multipart/form-data" @endif
+            >
+                @if(!in_array(strtolower($form->method),['get','post']))
+                    {{ method_field($form->method) }}
+                @endif
                 {{ csrf_field() }}
 
                 @foreach($form->getGroupedFields() as $group_name=> $fields)
-                    @if(str_is($group_name,'__group__'))
-                        @continue
-                    @endif
+                    
                     <div class="group">
-                        @if(!str_is($group_name,'__') and $form->getGroup($group_name))
-                            <h6 class="label label-warning ">{{$form->getGroup($group_name)->label??ucfirst($group_name)}}</h6>
+                        @if($form->getGroup($group_name) and $form->getGroup($group_name)->label)
+                            <h6 class="label label-warning ">{{$form->getGroup($group_name)->label}}</h6>
                             {{-- @if($form->getGroup($group_name)->editDescription) --}}
                                 <span class="description">{{$form->getGroup($group_name)->editDescription}}</span>
                             {{-- @endif --}}
+                            
                             <hr class=" list-separator">
+                        @else 
+                            @if(!$loop->first)<hr class=" list-separator">@endif 
                         @endif
-                        @component('laradmin::form.fields',['fields'=>$fields])
+
+                        @component('laradmin::form.edit_fields',['fields'=>$fields])
                         @endcomponent
                     </div>
                 @endforeach
@@ -70,7 +76,7 @@
                 @includeIf($form->getEditBottom())
             </form>
                     
-                
+           
               
         </div>
     </div>

@@ -17,19 +17,13 @@ interface Fieldable{
      */
      public function handle($pack,$tag,Field $field);
 
-    /**
-     * Returns field value pair to be displayed to user
-     * @param $pack string The form pack
-     * @param $tag string The tag for a form
-     * @return Collection
-     */
-    public function show($pack,$tag,Field $field);
-
       /**
      * Returns fields 
      * @param $pack string The form pack
      * @param string $tag Tag to a form 
+     * @param string $mode Tells the the mode the fields will be displayed on: values are:{'index'=>readonly for index page,'edit'=>read/write for edit page}
      * @return Collection Fields
+     * 
      */
-    public function all($pack,$tag);
+    public function all($pack,$tag,$mode);
 }

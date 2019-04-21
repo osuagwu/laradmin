@@ -242,27 +242,28 @@ class ContentManager
             case 'user_settings':
                 //Acount
                 $navigation->create('Dashboard','dashboard','user_settings',[
-                    'url'=>route('user-home'),'iconClass'=>'fas fa-home','comment'=>'Users dashboard with summary of activities.']);
-                $navigation->create('Account','account','user_settings',[
-                    'namedRoute'=>'user-profile','iconClass'=>'fas fa-user','comment'=>'Manage you account details howevr you want.']);
-                $navigation->create('Personal information','personal_information','user_settings.account',[
-                    'url'=>route('user-profile'),'urlFragment'=>'PD-personal-information','iconClass'=>'fas fa-info-circle']);
-                $navigation->create('Contact details','contact_details','user_settings.account',[
-                    'url'=>route('user-profile'),'urlFragment'=>'PD-contact-details','iconClass'=>'fas fa-phone']);
-                $navigation->create('Location','location','user_settings.account',[
-                    'url'=>route('user-profile'),'urlFragment'=>'PD-location','iconClass'=>'fas fa-home']);
+                    'url'=>route('user-home'),'iconClass'=>'fas fa-home','order'=>0.0,'comment'=>'Users dashboard with summary of activities.']);
+                
+                    $navigation->create('Account','account','user_settings',[
+                    'namedRoute'=>'user-profile','iconClass'=>'fas fa-user','order'=>1.0,'comment'=>'Manage you account details howevr you want.']);
+                // $navigation->create('Personal information','personal_information','user_settings.account',[
+                //     'url'=>route('user-profile'),'urlFragment'=>'PD-personal-information','iconClass'=>'fas fa-info-circle']);
+                // $navigation->create('Contact details','contact_details','user_settings.account',[
+                //     'url'=>route('user-profile'),'urlFragment'=>'PD-contact-details','iconClass'=>'fas fa-phone']);
+                // $navigation->create('Location','location','user_settings.account',[
+                //     'url'=>route('user-profile'),'urlFragment'=>'PD-location','iconClass'=>'fas fa-home']);
 
                 
 
                 //Security
                 $navigation->create('Security','security','user_settings',[
-                    'namedRoute'=>'user-security','iconClass'=>'fas fa-user-lock','comment'=>'Manage your account access and security with a strong password.']);
+                    'namedRoute'=>'user-security','iconClass'=>'fas fa-user-lock','order'=>2.0,'comment'=>'Manage your account access and security with a strong password.']);
                 $navigation->create('Password','password','user_settings.security',[
                     'namedRoute'=>'user-security','iconClass'=>'fas fa-lock']);
 
                 //External accounts
                 $navigation->create('External','external_accounts','user_settings',[
-                    'namedRoute'=>'social-user-external' ,'iconClass'=>'fas fa-share','comment'=>'Connect and manage social and email accounts linked to this account']);
+                    'namedRoute'=>'social-user-external' ,'iconClass'=>'fas fa-share','order'=>3.0,'comment'=>'Connect and manage social and email accounts linked to this account']);
                 $navigation->create('External accounts','external_accounts2','user_settings.external_accounts',[
                     'namedRoute'=>'social-user-external','iconClass'=>'fas fa-external-link-alt']);
                 $navigation->create('Social User accounts','social_user_accounts','user_settings.external_accounts',[
@@ -272,7 +273,7 @@ class ContentManager
 
                 // Control
                 $navigation->create('Control','account_control','user_settings',[
-                    'namedRoute'=>'user-account-control' ,'iconClass'=>'fas fa-gamepad','comment'=>'Temporarily or permanently disable your account']);
+                    'namedRoute'=>'user-account-control' ,'iconClass'=>'fas fa-gamepad','order'=>3.1,'comment'=>'Temporarily or permanently disable your account']);
                 break;
 
             case 'primary':

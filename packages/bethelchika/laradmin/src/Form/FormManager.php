@@ -91,15 +91,31 @@ use BethelChika\Laradmin\Form\Traits\Autoform;
     }
 
     /**
-     * Return all fieldables registered in form of fieldable object
+     * Return fieldables registered, in form of Fieldable object, if only pack is given then a collection of collection is returned
      * @param string $pack
      * @param string $tag 
      * @return Collection of Fieldable
      */
     public static function getFieldables($pack,$tag=null){
+        $fieldables=self::getFieldableNames($pack,$tag);
         $fos=new Collection;
-        foreach (self::getFieldableNames($pack,$tag) as $fn)
-            $fos->push(new $fn);
+        if($tag){
+            
+            foreach ($fieldables as $fn){
+                $fos->push(new $fn);
+            }
+        }else{
+            foreach ( $fieldables as $tg=>$fns){
+                
+                $fos_temp=new collection;
+                foreach ($fns as $fn){
+                    $fos_temp->push(new $fn);
+                }
+                $fos->put($tg,$fos_temp);
+                $fos_temp=null;
+            }
+            
+        }
         return $fos;
     }
 
@@ -159,19 +175,28 @@ use BethelChika\Laradmin\Form\Traits\Autoform;
      * Returns a collection of fields/fieldset
      * @param $pack
      * @param string $tag The form tag to which the field/s of interest is registered
+     * @param string $mode The mode that this call is made for: {'index','edit'}
      * @return Collection
      */
-    public static function getRegisteredFields($pack,$tag){
+    public static function getRegisteredFields($pack,$tag,$mode){
         
         ////////////////////////////////////////////
         $fieldables=self::getFieldables($pack,$tag);
         $fields=new Collection;
         foreach($fieldables as $fieldable){
-            $fields=$fields->merge($fieldable->all($pack,$tag));
+            $fields=$fields->merge($fieldable->all($pack,$tag,$mode));
            
         }
         return $fields;
     }
 
-
+  /**
+     * Returns a navigation manager
+     *
+     * @return \BethelChika\Laradmin\Menu\Navigation
+     */
+    public static function navigation(){
+        return app('laradmin')->navigation;
+    }
+     
 }

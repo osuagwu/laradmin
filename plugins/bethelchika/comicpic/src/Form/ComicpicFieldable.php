@@ -3,7 +3,9 @@ namespace BethelChika\Comicpic\Form;
 
 use BethelChika\Laradmin\Form\Contracts\Fieldable;
 use BethelChika\Laradmin\Form\Field;
-use BethelChika\Laradmin\Form\FormItem;
+use BethelChika\Laradmin\Form\Group;
+use Illuminate\Support\Facades\Auth;
+use BethelChika\Laradmin\Form\Fieldset;
 
 class ComicpicFieldable implements Fieldable{
 /**
@@ -18,48 +20,37 @@ class ComicpicFieldable implements Fieldable{
         return 1;
     }
 
-    /**
-     * 
-     *
-     * @inheritdoc
-     */
 
-    public function show($pack,$tag,Field $field){
-
-    }
 
       /**
      * 
      *
      * @inheritdoc
      */
-    public function all($pack,$tag){
-        $field1=FormItem::make([   'type'=>'text',
-        'name'=>'comicpic_author_screen_name',
-        'label'=>'Comicpic author screen name',
-        'group'=>'personal',
+    public function all($pack,$tag,$mode){
+        $group1=Group::make(['name'=>'comicpic_author','label'=>'Comicpic author','order'=>10]);
+        $field1=Field::make([   'type'=>Field::TEXT,
+        'name'=>'comicpic_screen_name',
+        'label'=>'Author name',
+        'group'=>'comicpic_author',
         'order'=>0,
         'help'=>'Help text',
-        'placeholder'=>'Enter text',
-        'class'=>'comicpic-field1',
-        'unit'=>'(£)',
-        'value'=>'Bethel',
+        'placeholder'=>'Enter author name',
+        'class'=>'',
+        'unit'=>'',
+        'value'=>'',
         'options'=>[],
-        'rules' => 'required|min:5',
+        'rules' => 'required|min:2',
         'messages'=>['required'=>'Comicpic author screen name must be given',
-                        'min'=>'Comicpic author screen name cannot be less than five characters',
+                        'min'=>'Comicpic author screen name cannot be less than 2 characters',
                     ]
 
         ]);
 
-        $field2=new Field('comipic_author_name');
-        $field2->type='password';
-        $field2->label='Comicpic author name';
-        $field2->value='BC';
-        $field2->rules='required|min:3';
-        $field2->order=0;
+
         
-        return collect([$field1,$field2]);
+        
+        return collect([$group1,$field1]);
 
 
     }

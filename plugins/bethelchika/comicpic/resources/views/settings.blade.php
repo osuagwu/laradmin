@@ -27,7 +27,7 @@
     
     @include ('laradmin::inc.msg_board')
     <p>Please use the button below to open settings</p>
-    <a class="btn btn-warning btn-lg" href="{{$laradmin->formManager->autoformLink('comicpic','user_settings')}}">Open settings</a>
+    <a class="btn btn-primary btn-sm" href="{{$laradmin->formManager->autoformLink('comicpic','user_settings')}}">Open settings</a>
     
 
 </section>

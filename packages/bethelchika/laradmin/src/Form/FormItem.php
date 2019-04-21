@@ -1,76 +1,101 @@
 <?php
 namespace BethelChika\Laradmin\Form;
-abstract class FormItem{
+
+abstract class FormItem
+{
     /**
      * Field type
      *
      * @var string
      */
-    public const TEXT='text';
-
-    /**
-     * Field type
-     *
-     * @var string
-     */
-    public const PASSWORD='password';
-
-        /**
-     * Field type
-     *
-     * @var string
-     */
-    public const HIDDEN='hidden';
+    public const TEXT = 'text';
 
     /**
      * Field type
      *
      * @var string
      */
-    public const SELECT='select';
+    public const PASSWORD = 'password';
 
     /**
      * Field type
      *
      * @var string
      */
-    public const CHECKBOX='checkbox';
+    public const HIDDEN = 'hidden';
 
     /**
      * Field type
      *
      * @var string
      */
-    public const RADIO='radio';
+    public const SELECT = 'select';
 
     /**
      * Field type
      *
      * @var string
      */
-    public const TEXTAREA='textarea';
+    public const CHECKBOX = 'checkbox';
 
     /**
      * Field type
      *
      * @var string
      */
-    public const FIELDSET='fieldset';
+    public const RADIO = 'radio';
 
-     /**
+    /**
      * Field type
      *
      * @var string
      */
-    public const GROUP='group';
+    public const TEXTAREA = 'textarea';
+
+     
+
+    /**
+     * Field type
+     *
+     * @var string
+     */
+    public const IMAGE = 'image';
+
+    /**
+     * Field type for displaying rich text
+     *
+     * @var string
+     */
+    public const HTML = 'html';
+
+    /**
+     * Field type
+     *
+     * @var string
+     */
+    public const FIELDSET = 'fieldset';
+
+    /**
+     * Field type
+     *
+     * @var string
+     */
+    public const GROUP = 'group';
     ///////////////////////////////////////////////////////////
 
-     /**
+    /**
      * The group name of Group field type.
      *
      * @var string
      */
-    public const GROUP_GROUP_NAME='__group__';
+    public const GROUP_GROUP_NAME = '__group__';
+
+     /**
+     * The group name of am item that does not have group property spicified
+     *
+     * @var string
+     */
+    public const DEFAULT_GROUP_NAME = '__';
     //////////////////////////////////////////////////////////
 
     /**
@@ -99,54 +124,68 @@ abstract class FormItem{
      *
      * @var string
      */
-    public $group='__';
+    public $group = '__';
 
     /**
      * The order of the field i relation to the fields in a form
-     *
-     * @var int
+     * The default value is arbitratrily large to force last
+     * @var float
      */
-    public $order;
+    public $order=100;
 
     /**
-     * COnstruct a new item from array; the item returned can be a field or fieldset based on the type array index
+     * The url to edit page of item. If this is specified for an item, the edit link for the corresponding form is ignored for that item.
      *
-     * @param array $props Must contain 'name' index if the item to be returned is a Field
-     * @return Field|Fieldset The created item oy false;
+     * @var string
      */
-    public static function make($props){
+    public $editLink='';
+
+
+    /**
+     * Construct a new item from array; the item returned can be a field or fieldset or group based on the type array index
+     *
+     * @param array $props Must contain 'name' index which is actually not requird for a fieldset but this method still makes it a requirement for no reason.
+     * @return FormItem The created item oy false;
+     */
+    public static function make($props)
+    {
 
         //Lets first get the name
-        $name=null;
-        foreach ($props as $prop=>$v){
-            if(str_is($prop,'name')){
-                $name=$v;
+        $name = null;
+        foreach ($props as $prop => $v) {
+            if (str_is($prop, 'name')) {
+                $name = $v;
                 break;
             }
         }
 
-        if(!$name)return false;// We cannot do without a name
+        if (!$name) return false; // We cannot do without a name
 
-        $item=null;
-        switch($props['type']){
-            case FormItem::FIELDSET:
-                $item=new Fieldset($name);
-                break;
-            default:
-                $item=new Field($name);
-                
+        $item = null;
+        if(isset($props['type'])){
+            switch ($props['type']) {
+                case FormItem::FIELDSET:
+                    $item = new Fieldset($name);
+                    break;
+                case FormItem::GROUP:
+                    $item = new Group($name);
+                    break;
+                default:
+                    $item = new Field($name);
+            }
+        }else{
+            $item = new Field($name);
         }
-        
-        
-        foreach ($props as $prop=>$v){
-            if(str_is($prop,'name')){
+
+
+        foreach ($props as $prop => $v) {
+            if (str_is($prop, 'name')) {
                 continue;
             }
-            $item->$prop=$v;
+            $item->$prop = $v;
         }
 
         return $item;
     }
-
-
 }
+

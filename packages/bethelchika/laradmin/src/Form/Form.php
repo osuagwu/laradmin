@@ -22,13 +22,32 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
      */
     private $tag;
 
-     /**
+
+    /**
+     * Tells what mode the form is opened.
+     * values are:{
+     * 'index'=>readonly for index page,
+     * 'edit'=>read/write for edit page
+     * }
+     *
+     * @var string
+     */
+    private $mode; 
+    
+    
+    /**
       * Hold all form fields
       *
       * @var Collection
       */
      private $fields;
 
+     /**
+      * The method of the form eg: 'GET','POST' 'DELETE', ...
+      *
+      * @var string
+      */
+     public $method='PUT';//
 
      /**
      * Name
@@ -43,6 +62,22 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
       * @var string
       */
      public $title='';
+
+     /**
+      * The url to the form
+      *
+      * @var string
+      */
+     public $link=null;
+
+     /**
+      * The url to the form edit page
+      *
+      * @var string
+      */
+     public $editLink=null;
+
+
 
      /**
       * For description of index page
@@ -76,11 +111,13 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
       * Construct a new form
       * @param string $pack       
       * @param string $tag A tag that uniquely identify this form
+       * @param string $mode Tells what mode the form should be opened: {'index','edit'}
       * @param string $name
       */
-     public function __construct($pack,$tag,$name=null){
+     public function __construct($pack,$tag,$mode,$name=null){
         $this->pack=$pack;
          $this->tag=$tag;
+         $this->mode=$mode;
          $this->fields=new Collection;
 
          $this->title=$pack.'/'. $tag;
@@ -88,6 +125,18 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
          if(!$this->name){
              $this->name=$tag;
          }
+
+
+         ////////////////Start unneccessary code///////////////////////////////////////////////////////
+         ///////CAUTION:FIXME:  Note that this is unneccessary and can safely be deleted//////////////
+         // Define groups for fields that have default group property: 
+        //  $this->addField(Group::make([
+        //      'name'=>GROUP::DEFAULT_GROUP_NAME,
+        //      'label'=>'__Unknown__',
+        //      'order'=>1000,//Any large number to make it come last
+        //      ]));
+        /////////////////////////End uneccessary code///////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
      }
 
      /**
@@ -126,9 +175,9 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
     }
 
      /**
-      * Add fields
+      * Add field /group/fieldset
       *
-      * @param FormItem $field
+      * @param FormItem $field Any Formitem not just Field
       * @return void
       */
      public function addField(FormItem $field){
@@ -137,12 +186,11 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
 
      /**
       * Get all the fields registered for this form based on the form tag
-      *
       * @return Collection
       */
      public function getRegisteredFields(){
         
-        return FormManager::getRegisteredFields($this->pack,$this->tag);
+        return FormManager::getRegisteredFields($this->pack,$this->tag,$this->mode);
      }
 
 
@@ -154,9 +202,9 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
      public function getFields($with_registered=true){
          $fields=$this->fields;
 
-         //Is this an form  a  Fieldable ?
+         //Is this form  a  Fieldable ?
          if($this instanceof  Fieldable ){
-             $fields=$fields->merge($this->all($this->pack,$this->tag));
+             $fields=$fields->merge($this->all($this->pack,$this->tag,$this->mode));//NOTE: In this was Autoform which are fieldables can be included in the list of fieldables, so no need to implement the getField() function for Autoforms
          }
 
          if($with_registered){
@@ -164,6 +212,22 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
          }
          
          return $fields->sortBy('order')->values();
+     }
+
+     /**
+      * Check if form has fields
+      *
+      * @param boolean $with_registered
+      * @return boolean
+      */
+     public function isEmpty($with_registered=true){
+         if(count($this->getFields(false))){
+             return false;
+         }
+         if($with_registered){
+            return !count($this->getFields($with_registered));
+         }
+        
      }
 
      /**
@@ -176,20 +240,61 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
         $fields=$fields->groupBy('group');
 
         if($fields->has(FormItem::GROUP_GROUP_NAME)){
-            return $fields[FormItem::GROUP_GROUP_NAME];
+            //dd($fields[FormItem::GROUP_GROUP_NAME]->sortBy('order')->values());
+            return $fields[FormItem::GROUP_GROUP_NAME]->sortBy('order')->values();
         }
         return new Collection;
      }
 
        /**
-      * Get a collection of groups(a collection) of field. The fields are grouped  in a collection of collection with each indexed by their group name.
+      * Get a collection of ordered groups(a collection) of field. The fields are grouped  in a collection of collection with each indexed by their group name.
       * @param boolean $with_registered return also all the registered groups when true
       * @return Collection
       */
       public function getGroupedFields($with_registered=true){
         $fields=$this->getFields($with_registered);
-        return $fields->groupBy('group');
+        
+        $groups=$fields->groupBy('group');
+        
+        //Do not return the Group group
+         $groups->forget(Group::GROUP_GROUP_NAME);
 
+         //Now we will order the groups
+
+         
+        foreach($groups as $group_name=>$group){
+            $g=$this->getGroup($group_name,$with_registered);
+            if($g){
+                $order=$g->order;
+            }else{
+                $order=$group->min('order');// Use the order of the filed with list order;
+            }
+            $group->put('order',$order);//attach order to the outer collection, we will delete later
+                
+        }
+         // Now sort with the attached order and remove it.
+         $groups=$groups->sortBy('order');//
+
+         foreach($groups as $group){
+             $group->forget('order');
+         }
+         return $groups;
+         
+        // $group_names=new Collection();
+        // foreach($groups->keys() as $group_name){
+        //     $g=$this->getGroup($group_name,$with_registered);
+        //     if($g){
+        //         $order=$g->order;
+        //     }else{
+        //         $order=2000;//Something very large to make undefined group order later than default group 
+        //     }
+        //     $group_names->push(['name'=>$group_name,'order'=>$order]);  
+        // }
+        // $ordered_groups=new Collection();
+        // foreach($group_names->sortBy('order') as $group_name){
+        //     $ordered_groups->put($group_name['name'],$groups[$group_name['name']]);
+        // }
+        // return $ordered_groups;
      }
 
           /**
@@ -277,11 +382,11 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
 
         //Is this an form  a  Fieldable ?
         if($this instanceof Fieldable ){
-            $fieldables->push($this);
+            $fieldables->push($this); // This makes sure that Autoforms are also processed as fieldables which they are. TODO: but it will be nice to do this outside the Form so that form does not have to think about it
         }
 
         foreach($fieldables as $fieldable){
-            $fields=$fieldable->all($this->pack,$this->tag);
+            $fields=$fieldable->all($this->pack,$this->tag,$this->mode);
             foreach($fields as $field){
                 switch($field->type){
                     case FormItem::GROUP:
@@ -308,7 +413,7 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
         }
      }
      /**
-      * Call handles of fieldables
+      * Call handle of a fieldable
       *
       * @param Fieldable $fieldable
       * @param string $tag
@@ -317,14 +422,71 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
       * @return int Returns 0=>Fail, 1=>success, -1=>unchanged/unknown field
       */
      private function storeFieldableField(Fieldable $fieldable,Field $field,Request $request){
-        if($request->has($field->name) and strcmp($field->name,$request->input($field->name))){
-            $field->value=$request->input($field->name);
+         
+        
+            
+        if($request->has($field->name) ){//and strcmp($field->value,$request->input($field->name))){
+            
+            if(!strcmp($field->type,Field::IMAGE)){
+                $field->value=$request->{$field->name};// All field types can be retrieved this way avoiding the else statement below, but we will leave it just to emphasize that image field type will not work like in the else statement
+            }else{
+                $field->value=$request->input($field->name);
+            }
            return $fieldable->handle($this->pack,$this->tag,$field);
         }
         return -1;
      }
 
-     
+     /**
+     * Returns the route to go when form is closed
+     *
+     * @return string
+     */
+    public function getNavCloseLink(){
+        return $this->getLink();
+    }
+
+    /**
+     * Gets the url for form
+     *
+     * @return string
+     */
+    public function getLink(){
+        return $this->link;
+    }
+    
+
+    /**
+     * Gets the url for editing form
+     *
+     * @return string
+     */
+    public function getEditLink(){
+        return $this->editLink;
+    }
+
+     /**
+      * Make a navigation using all the form in the specified pack and return the menu tag
+      * @param string $base_url The base url of the for the pack such that each form can be reached thus: $base_url/pack/{tag}
+      * @param string $parent_tag Tag/dot.separeted tag to a navigation item that the new natigation should be a child of. If not given a new menu is created instead. 
+      * @return string
+      */
+     public function packToMenu($base_url,$parent_tag=null){
+         $pack=$this->pack;
+        $forms_nav_tag='__form_'.$pack.'__';
+        if($parent_tag){
+            $forms_nav_tag=$parent_tag;
+        }
+        // Create a menu for user settings forms from registered filedables
+        $fieldables=$this->manager()->getFieldableNames($pack);
+          foreach($fieldables as $f_tag=>$fieldable){
+                $pack_tag=$pack.$f_tag;
+                $route=$base_url.'/'.$pack.'/'.$f_tag;
+                self::manager()->navigation()->create(ucfirst(str_replace('_',' ',$f_tag)),$pack_tag,$forms_nav_tag,[
+                'url'=>$route,'iconClass'=>'fab fa-wpforms']);
+          }
+          return  $forms_nav_tag;
+     }
 
      /**
       * Returns a view file for the top of index page
@@ -361,7 +523,38 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
     public function getEditBottom(){
         return null;
    }
+   /**
+    * Check if a given set of fields contain one of type IMAGE
+    *
+    * @param Collection $fields
+    * @return boolean
+    */
+   public static function hasImageField(Collection $fields){
+        foreach($fields as $field){
+            switch($field->type){
+                case FormItem::IMAGE:
+                    return true;
+                    break;
+                case FormItem::FIELDSET:
+                    if(self::hasImageField($field->getFields())){
+                        return true;
+                    }
+                    break;
+                default:
+            }
+        }
+        return false;          
 
+   }
+/**
+   * CHeck if a filed is image
+   *
+   * @param Field $field
+   * @return boolean
+   */
+  public static function isImageField(Field $field){
+      return str_is($field->type,Field::IMAGE);
+  }
    /**
     * Return form manager
     *
@@ -370,5 +563,8 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
   public static function manager(){
       return app('laradmin')->formManager;
   }
-     
+
+
+  
+
  }

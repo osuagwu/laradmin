@@ -6,6 +6,7 @@ use BethelChika\Laradmin\Form\FormItem;
 use BethelChika\Laradmin\Form\Contracts\AutoForm;
 use BethelChika\Laradmin\Form\Group;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 
 class ComicpicAutoform extends Autoform{
@@ -13,7 +14,7 @@ class ComicpicAutoform extends Autoform{
      * @inheritdoc
      */
     function gate(User $user){
-        return true;
+        return Auth::user()->id==$user->id;
     }
     /**
      * 
@@ -24,18 +25,15 @@ class ComicpicAutoform extends Autoform{
         
         //print_r($field);
         //dd(\Auth::user());
+        switch($field->name){
+            case 'comicpic_avatar':
+                //dd($field);
+                break;
+        }
         return 1;
     }
 
-    /**
-     * 
-     *
-     * @inheritdoc
-     */
-
-    public function show($pack,$tag,Field $field){
-
-    }
+  
 
     /**
      * 
@@ -57,26 +55,34 @@ class ComicpicAutoform extends Autoform{
      *
      * @inheritdoc
      */
-    public function all($pack,$tag){
-        $field=FormItem::make([   'type'=>'text',
+    public function all($pack,$tag,$mode){
+        $field=FormItem::make([   'type'=>'select',
         'name'=>'comicpic_auto_feeds',
         'label'=>'Automatically post a feed',
-        'group'=>'comipic_settings',
+        //'group'=>'comipic_settings',
         'order'=>0,
         'help'=>'Do you want this item to be posted to feed when published?',
         'placeholder'=>'Please choose',
         'class'=>'',
         'unit'=>'',
         'value'=>'yes',
-        'options'=>['yes','no'],
+        'options'=>['yes'=>'Yes','no'=>'No'],
         'rules' => 'required',
         'messages'=>['required'=>'Please specify if you want automatic feeds when you publish',
                     ]
         ]);
+        $f0=Field::make([
+            'name'=>'comicpic_avatar',
+            'type'=>Field::IMAGE,
+            'value'=>Auth::user()->avatar,
+            'label'=>'Comicpic avatar',
+            'group'=>'comicpic_author',
+            'order'=>9,
+            'rules'=>'nullable|image|mimes:jpg,jpeg,png,bmp,gif|max:1000',
+        ]);
+        $group1=Group::make(['name'=>'comicpic_author','label'=>'Comicpic author','order'=>-10]);
         
-        
-        return collect([$field]);
-
+        return collect([$group1,$field,$f0]);
 
     }
 
@@ -99,7 +105,7 @@ class ComicpicAutoform extends Autoform{
         $this->name="Automatic feeds";
         
         if(str_is($this->getTag(),"user_settings2")){
-            $this->name="Test form";
+            $this->name="Replicated form just for testing autoform menus";
         }
         return $this->name;
     }

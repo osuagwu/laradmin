@@ -1,41 +1,43 @@
 <?php 
 namespace BethelChika\Laradmin\Form;
-class Field extends FormItem{
-    //TODO: Perhaps add a js field like in menuitem
-        /**
+
+class Field extends FormItem
+{
+    //TODO: Perhaps add a $js property like in menuitem| ALSO ADD $id property for html id parameter of th einput
+    /**
      * Hel message
      *
      * @var string
      */
     public $help;
-     /**
+    /**
      * Input placeholder text
      *
      * @var string
      */
-    public $placeholder=null;
+    public $placeholder = null;
 
 
-     /**
+    /**
      * The unit of the field (e.g $,£,cm, etc.)
      *
      * @var string
      */
-    public $unit=null;
+    public $unit = null;
 
     /**
      * CSS class for the box arround the field overall box
      *
      * @var string
      */
-    public $class=null;
+    public $class = null;
 
     /**
      * Inline style for the field html element
      *
      * @var string
      */
-    public $style=null;
+    public $style = null;
 
     /**
      * Current value of the field
@@ -65,7 +67,7 @@ class Field extends FormItem{
      *      ]
      * @var array
      */
-    public $messages=[];
+    public $messages = [];
 
 
     /**
@@ -74,11 +76,15 @@ class Field extends FormItem{
      * @param string $name
      * @param string $type
      */
-    public function __construct($name,$type=null){
-        $this->name=$name;
-        $this->type=$type;
-        if(!$type){
-            $this->type=FormItem::TEXT;
+    public function __construct($name, $type = null)
+    {
+        $this->name = $name;
+        $this->type = $type;
+        if (!$type) {
+            $this->type = FormItem::TEXT;
         }
     }
+
+ 
 }
+

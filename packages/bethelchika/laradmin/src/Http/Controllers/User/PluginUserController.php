@@ -27,7 +27,7 @@ class PluginUserController extends Controller
 
 
     /**
-     * Settings for inividual plugins from a pluging developer
+     * Settings for individual plugins from a pluging developer
      * @param string $viewname View name
      * @param array $data View data
      * @return \Illuminate\Http\Response

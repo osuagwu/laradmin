@@ -210,6 +210,13 @@ class Navigation{
         return $menu->getChildByTag(implode('.',$tags));   
     }
 
+    // public static function order(NavigationItem $item){
+    //     if (!$item->hasChildren()){
+    //         return $item;
+    //     }
+    //     dd( collect($item));
+    // }
+
     /**
      * Checks if menu is empty
      *

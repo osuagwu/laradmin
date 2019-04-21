@@ -4,7 +4,7 @@
         <select class="form-control" id="{{$id??$name}}" name="{{$name}}"  
         style="{{$style??''}}">
             <option value="" {{!strcmp(old($name,$value),'')? 'selected':''}}>Please select</option>
-            @foreach($options as $option_key=>$option)
+            @foreach($options as $option_key=>$option){{--Note, if options is not assoc, then the value of the <option> is integer starting from zero --}}
                 <option value="{{$option_key}}" {{!strcmp(old($name,$value),$option_key)? 'selected':''}}>{{$option}}</option>
             @endforeach
         </select>

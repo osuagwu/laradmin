@@ -51,6 +51,14 @@ class MenuItem extends NavigationItem
     public $urlFragment='';
 
     /**
+     * The order of the item. The intial value here is set arbitrarily 
+     * large so items without explicit order set will be sorted last.
+     *
+     * @var float
+     */
+    public $order=100;
+
+    /**
      * The menu item's class for icon with font-awesome for example. Example ='fas fa-home'
      *
      * @var string

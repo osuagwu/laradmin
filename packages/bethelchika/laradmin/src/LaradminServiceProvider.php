@@ -82,6 +82,12 @@ class LaradminServiceProvider extends ServiceProvider
             }
         }
 
+        // Register fieldables
+        $laradmin->formManager->registerFieldable('user_settings','personal',\BethelChika\Laradmin\Tools\Forms\ProfileFieldable::class);
+        $laradmin->formManager->registerFieldable('user_settings','contacts',\BethelChika\Laradmin\Tools\Forms\ProfileContactsFieldable::class);
+        
+        
+
 
         //Share a view of list of plugins
         //$this->sharePluginsList($laradmin,$view);

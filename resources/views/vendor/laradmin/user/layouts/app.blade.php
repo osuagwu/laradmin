@@ -59,7 +59,7 @@
                         </button>
 
                         <!---Sidebar control------->                            
-                        @stack('sidebar-control')
+                        {{--@stack('sidebar-control') Disabling for now b/c it seem it doesn't make site look good may be--}}
 
                         <!-- Branding Image -->
                         <a class=" navbar-brand " href="{{ url('/') }}">

@@ -1,5 +1,5 @@
 <?php
-namespace BethelChika\Laradmin\Form\DefaultForms;
+namespace BethelChika\Laradmin\Form\ExampleForms;
 use BethelChika\Laradmin\User;
 use BethelChika\Laradmin\Form\Field;
 use BethelChika\Laradmin\Form\FormItem;
@@ -25,15 +25,7 @@ class UserSettingsAutoform extends Autoform{
         return 1;
     }
 
-    /**
-     * 
-     *
-     * @inheritdoc
-     */
 
-    public function show($pack,$tag,Field $field){
-
-    }
 
     /**
      * 
@@ -58,7 +50,7 @@ class UserSettingsAutoform extends Autoform{
      *
      * @inheritdoc
      */
-    function all($pack,$tag=true){
+    function all($pack,$tag,$mode){
         
 
       //Fields  

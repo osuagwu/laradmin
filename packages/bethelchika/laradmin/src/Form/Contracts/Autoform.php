@@ -36,7 +36,7 @@ abstract class Autoform  extends Form implements Fieldable{
     abstract function gate(User $user);
 
     /**
-     * Provide a chance make settings for the form
+     * Provide a chance to make settings for the form
      *
      * @return void
      */

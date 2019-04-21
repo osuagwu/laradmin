@@ -6,7 +6,7 @@
 <section class="section section-primary " style="">
     <div class="container-fluid">
         <nav>
-            <ul class="nav nav-tabs nav-flat ">
+            <ul class="nav nav-tabs nav-flat nav-flat-md">
                 <li class="title" role="presentation"><span >User settings</span></li>
                 @include('laradmin::menu',['tag'=>'user_settings'])
             </ul>
