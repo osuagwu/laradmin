@@ -16,12 +16,12 @@ class AssetManager
      */
     private static $logoType = '';
 
-      /**
+    /**
      * The navbar class the defines the look and feel of the main navigation
      *
      * @var string Possible values include bootsrap brand classes ={primary,danger,success,warning,info}; although some of these may not be implemented
      */
-     private static $mainNavClass = '';
+    private static $mainNavClass = '';
 
     /**
      * A holistic var for any asset string allowing the programmer to include whatever as asset.
@@ -42,7 +42,7 @@ class AssetManager
         'meta',
     ];
 
-    
+
 
     /**
      * Body class
@@ -74,7 +74,7 @@ class AssetManager
      *
      * @var string {'hero','hero-super'}
      */
-    public static $heroType=null;
+    public static $heroType = null;
 
     /**
      * Adds an asset
@@ -118,7 +118,6 @@ class AssetManager
     public static function getAssetString($stack, $tag)
     {
         return self::$assets[$stack][$tag]['content'];
-
     }
 
     /**
@@ -137,6 +136,9 @@ class AssetManager
      * sidebar-white : makes side bg white
      * header-transparent: makes the main menu transparent
      * main-nav-no-border-bottom: This class allows you to add 'main-nav-no-border-bottom' to the body tag to remove the border bottom on the main menu
+     * has-sidebar: The doc has sidebar.
+     * has-minor-nav: The doc has minor navigation
+     * navbar-$scheme: The scheme of the main nav. Where $scheme ={primary,subtle,etc.}
      * 
      * @param string $class
      * @return void
@@ -175,13 +177,12 @@ class AssetManager
      */
     public function setContainerType($type = 'fluid', $isImportant = false)
     {
-        if (!$isImportant and self::$containerType[1]) {//You can only overide an important setting with an important setting.
+        if (!$isImportant and self::$containerType[1]) { //You can only overide an important setting with an important setting.
             return false;
         }
 
         if (!strcmp($type, 'fluid')) {
             self::$containerType[0] = 'fluid';
-
         } elseif (!strcmp($type, 'static')) {
             self::$containerType[0] = 'static';
         } else {
@@ -206,12 +207,13 @@ class AssetManager
      * @param mixed $onfalse Variable to return on false
      * @return boolean|$ontrue|$onfalse
      */
-    public static function isContainerFluid($ontrue=null,$onfalse=null){
-        $q=!strcmp(self::getContainerType(),'fluid');
-        if($q and $ontrue){
+    public static function isContainerFluid($ontrue = null, $onfalse = null)
+    {
+        $q = !strcmp(self::getContainerType(), 'fluid');
+        if ($q and $ontrue) {
             return $ontrue;
         }
-        if(!$q and $onfalse){
+        if (!$q and $onfalse) {
             return $onfalse;
         }
         return $q;
@@ -241,8 +243,8 @@ class AssetManager
      */
     public static function colorLuminance($hex, $percent)
     {
-	
-	// validate hex string
+
+        // validate hex string
 
         $hex = preg_replace('/[^0-9a-f]/i', '', $hex);
         $new_hex = '#';
@@ -250,8 +252,8 @@ class AssetManager
         if (strlen($hex) < 6) {
             $hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
         }
-	
-	// convert to decimal and change luminosity
+
+        // convert to decimal and change luminosity
         for ($i = 0; $i < 3; $i++) {
             $dec = hexdec(substr($hex, $i * 2, 2));
             $dec = min(max(0, $dec + $dec * $percent), 255);
@@ -276,117 +278,137 @@ class AssetManager
      * @param string $type
      * @return void
      */
-     public static function registerLogoType($type)
-     {
-         self::$logoType = $type;
-     }
-     /**
+    public static function registerLogoType($type)
+    {
+        self::$logoType = $type;
+    }
+    /**
       * Has the logo type been set?
       *
       * @return boolean
       */
-     public static function hasLogoType()
-     {
-         return self::$logoType ? true : false;
-     }
-     /**
+    public static function hasLogoType()
+    {
+        return self::$logoType ? true : false;
+    }
+    /**
       * Gets the logo type
       * @param $append string Optional string to be appended to the begining of the output
       * @return string
       */
-     public static function getLogoType($append = '')
-     {
-         if (self::hasLogoType()) {
-             return $append . self::$logoType;
-         } else {
-             return self::$logoType;
-         }
- 
-     }
+    public static function getLogoType($append = '')
+    {
+        if (self::hasLogoType()) {
+            return $append . self::$logoType;
+        } else {
+            return self::$logoType;
+        }
+    }
 
 
 
-      /**
+    /**
      * Register navbar class on the body thus <body class="navbar-{{$class}}"> and then registeres a suitable logo. The current implementation is that logo.ext is normal ($class= default,subtle) or logo-white.ext for {$class=primary,danger,info,success,warning}. 
      *  TODO: Implement such that the corresponding logo is 'logo-{{$class}}.ext'
      * @param string $class
      * @return void
      */
-     public static function registerMainNavScheme($class)
-     {
-         self::$mainNavClass = $class;
-         self::registerBodyClass('navbar-'.$class);
+    public static function registerMainNavScheme($class)
+    {
+        self::$mainNavClass = $class;
+        self::registerBodyClass('navbar-' . $class);
 
-         switch(strtolower($class)){
-             case 'default':
-             case 'subtle':
+        switch (strtolower($class)) {
+            case 'default':
+            case 'subtle':
                 break;
             default:
                 self::registerLogoType('white');
-         }
-     }
-     /**
+        }
+    }
+    /**
       * Has the navbar class been set?
       *
       * @return boolean
       */
-     public static function hasMainNavClass()
-     {
-         return self::$logoType ? true : false;
-     }
-     /**
+    public static function hasMainNavClass()
+    {
+        return self::$logoType ? true : false;
+    }
+    /**
       * Gets the navbar class
       *
       * @return string
       */
-     public static function getMainNavClass()
-     {
-         if (self::hasMainNavClass()) {
-             return self::$mainNavClass;
-         } else {
-             return '';
-         }
- 
-     }
+    public static function getMainNavClass()
+    {
+        if (self::hasMainNavClass()) {
+            return self::$mainNavClass;
+        } else {
+            return '';
+        }
+    }
 
-     /**
+    /**
       * Setup hero page
       *
       * @param string $img_url
       * @param string $type The hero type {see self::$heroType for example values}
       * @return void
       */
-     public static function registerHero($img_url=null,$type='hero'){
-        self::$heroType=$type;
+    public static function registerHero($img_url = null, $type = null)
+    {
+        if (!$type) {
+            $type = 'hero';
+        }
+        self::$heroType = $type;
         //self::registerLogoType('white');
-        
+
         self::registerBodyClass('main-nav-no-border-bottom');
-        if(str_contains($type,'super')){
+        if (str_contains($type, 'super')) {
             self::registerBodyClass('hero hero-super');
             self::registerBodyClass('header-transparent');
-        }else{
+        } else {
             self::registerBodyClass('hero');
         }
-        
 
-        if($img_url){
-            $css='<style type="text/css">.section.hero{
-                    background-image: url('.$img_url.');
+
+        if ($img_url) {
+            $css = '<style type="text/css">.section.hero{
+                    background-image: url(' . $img_url . ');
                 }  
                 </style>';
-            self::registerAsset('head-styles','hero_image',$css);
+            self::registerAsset('head-styles', 'hero_image', $css);
         }
-     }
-    
-       /**
+    }
+
+    /**
       * Gets the Hero type
       *
       * @return string
       */
-      public static function getHeroType()
-      {
-          return self::$heroType;  
-      }
-        
+    public static function getHeroType()
+    {
+        return self::$heroType;
+    }
 
+    /**
+     * Check if page is defined as having a super hero
+     *
+     * @param mixed $ontrue Variable to return on true
+     * @param mixed $onfalse Variable to return on false
+     * @return boolean|$ontrue|$onfalse
+     */
+    public static function isSuperHero($ontrue = null, $onfalse = null)
+    {
+
+        $q = str_contains(self::$heroType, 'super');
+        if ($q and $ontrue) {
+            return $ontrue;
+        }
+        if (!$q and $onfalse) {
+            return $onfalse;
+        }
+        return $q;
+    }
 }

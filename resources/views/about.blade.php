@@ -23,14 +23,14 @@
 </section>
 <section class="section section-default section-extra-padding-bottom">     
     <div class="container">
-        <h2 class="content-title text-center ">This is a section titleThis is a section titleThis is a y</h2>
+        <h2 class="content-title text-center ">This is a section title. A section that follows just after the first</h2>
         <div class="row">
             <div class="col-md-4 block-content">
                 <h3 class="block-title">
                     <span class="block-icon"> <i class="fa fa-phone"></i></span> 
                     <span>This is the header</span>
                 </h3>
-                <p class="block-para"> This is a test paragrapThis is a test paragrap This is a test paragrap</p>
+                <p class="block-para"> This is a test paragrap, It shows how more test can be added just below the header</p>
                 <a href="#" class="block-link btn-skeleton-primary-inverse">Block link</a>
             </div>
 
@@ -39,7 +39,7 @@
                     <span class="block-icon"> <i class="fa fa-car"></i></span> 
                     <span>This is the header</span>
                 </h3>
-                <p class="block-para"> This is a test paragrap This is a test paragrap This is a test paragrap</p>
+                <p class="block-para"> This is a test paragrap. It shows how more test can be added just below the header</p>
                 <a href="#" class="block-link btn-skeleton-warning-inverse">Block link</a>
             </div>
             <div class="col-md-4 block-content last">
@@ -47,7 +47,7 @@
                     <span class="block-icon"> <i class="fa fa-envelope"></i></span> 
                     <span>This is the header</span>
                 </h3>
-                <p class="block-para"> This is a test paragrapThis is a test paragrap This is a test paragrap</p>
+                <p class="block-para"> This is a test paragrap. It shows how more test can be added just below the header</p>
                 <a href="#" class="block-link btn-skeleton-inverse">Block link</a>
             </div>
         </div>
@@ -56,7 +56,7 @@
 
 <section class="section section-info section-extra-padding-bottom">     
     <div class="container">
-            <h2 class="heading-3 text-center section-extra-padding-top">This is a section title This is a section title This is a y <a class="btn btn-primary  inline-space" >Click here</a></h2>
+            <h2 class="heading-3 text-center section-extra-padding-top">This is a section title. It is just a simple section with a call to action <a class="btn btn-primary  inline-space" >Click here</a></h2>
     </div>
 </section>
 @endsection

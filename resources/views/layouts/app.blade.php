@@ -34,104 +34,106 @@
     @include('laradmin::user.partials.social.facebook_js_sdk')
     <div id="app">
         <div id="site-top-and-content">
-            <nav class="navbar navbar-default navbar-static-top main-nav">
-                <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
-                    <div class="navbar-header">
+            <header role="banner">
+                <nav class="navbar navbar-default navbar-static-top main-nav">
+                    <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
+                        <div class="navbar-header">
 
-                        <!-- Collapsed Hamburger -->
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                            <span class="sr-only">Toggle Navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
+                            <!-- Collapsed Hamburger -->
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                                <span class="sr-only">Toggle Navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
 
-                        <!---Sidebar control------->
-                        @stack('sidebar-control')
+                            <!---Sidebar control------->
+                            @stack('sidebar-control')
 
-                        <!-- Branding Image -->
-                        <a class=" navbar-brand " href="{{ url('/') }}">
-                            @if(str_contains($laradmin->assetManager->getHeroType(),'super'))  {{--print the special logo for hero --}}
-                            <div class="logo-hero-super visible-md visible-lg">{{-- The visibility class here is not required as this has already been done in the css file--}}
-                                <img class="logo " src="/img/logo-hero-super.svg" alt="{{ config('app.name', 'Laradmin')}}" />
-                            </div>
-                            @endif
-                            
-                            <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) visible-sm visible-xs @endif">{{--if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file--}}
-                                <img class="logo " src="/img/logo{{$laradmin->assetManager->getLogoType('-')}}.svg" alt="{{ config('app.name', 'Laradmin')}}" />
-                            </div>
-                        </a>
-                        @if($laradmin->contentManager->hasSubAppName()) 
-                        
-                        <a  class="navbar-brand" href="{{$laradmin->contentManager->getSubAppUrl('/')}}">
-                            <span class="sub-app-brand">
-                                <span class="sub-app-name">{{$laradmin->contentManager->getSubAppName()}}</span>
-                            </span>
-                        </a>
-                        
-                        @endif
-                    </div>
-
-                    <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                        <!-- Left Side Of Navbar -->
-                        
-                        <ul class="nav navbar-nav">
-                            {{--@include('laradmin::user.partials.plugins_menu')--}}
-                            
-                            
-                            @include('laradmin::menu', ['tag' => 'primary'])
-                            
-                        </ul>
-
-                        <!-- Right Side Of Navbar -->
-                        <ul class="nav navbar-nav navbar-right">
-                            
-
-                            <!-- Authentication Links -->
-                            @if (Auth::guest())
-                                <li class="guest-login-menu-item"><a class="guest-nav-link" href="{{ route('login') }}">Login</a></li>
-                                <li class="guest-register-menu-item"><a class="guest-nav-link" href="{{ route('register') }}">Register</a></li>
-                            @else
-                                @include('laradmin::inc.user_alerts_badge')
+                            <!-- Branding Image -->
+                            <a class=" navbar-brand " href="{{ url('/') }}">
+                                @if(str_contains($laradmin->assetManager->getHeroType(),'super'))  {{--print the special logo for hero --}}
+                                <div class="logo-hero-super visible-md visible-lg">{{-- The visibility class here is not required as this has already been done in the css file--}}
+                                    <img class="logo " src="/img/logo-hero-super.svg" alt="{{ config('app.name', 'Laradmin')}}" />
+                                </div>
+                                @endif
                                 
-                                <li class="dropdown">
+                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) visible-sm visible-xs @endif">{{--if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file--}}
+                                    <img class="logo " src="/img/logo{{$laradmin->assetManager->getLogoType('-')}}.svg" alt="{{ config('app.name', 'Laradmin')}}" />
+                                </div>
+                            </a>
+                            @if($laradmin->contentManager->hasSubAppName()) 
+                            
+                            <a  class="navbar-brand" href="{{$laradmin->contentManager->getSubAppUrl('/')}}">
+                                <span class="sub-app-brand">
+                                    <span class="sub-app-name">{{$laradmin->contentManager->getSubAppName()}}</span>
+                                </span>
+                            </a>
+                            
+                            @endif
+                        </div>
+
+                        <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                            <!-- Left Side Of Navbar -->
+                            
+                            <ul class="nav navbar-nav">
+                                {{--@include('laradmin::user.partials.plugins_menu')--}}
+                                
+                                
+                                @include('laradmin::menu', ['tag' => 'primary'])
+                                
+                            </ul>
+
+                            <!-- Right Side Of Navbar -->
+                            <ul class="nav navbar-nav navbar-right">
+                                
+
+                                <!-- Authentication Links -->
+                                @if (Auth::guest())
+                                    <li class="guest-login-menu-item"><a class="guest-nav-link" href="{{ route('login') }}">Login</a></li>
+                                    <li class="guest-register-menu-item"><a class="guest-nav-link" href="{{ route('register') }}">Register</a></li>
+                                @else
+                                    @include('laradmin::inc.user_alerts_badge')
+                                    
+                                    
                                     @include('laradmin::inc.message_nav_item')
-                                </li>
-                                <li><a href="{{ route('user-notification-index') }}" class="bubble-nav-link"> @include('laradmin::inc.notifications_badge')</a></li>
-                                
-                                <li class="dropdown login-menu-item ">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                            <i class="far fa-user"></i> {{ str_limit(Auth::user()->name,6,'...') }} 
-                                            <span class="custom-caret">
-                                                <span class="iconify" data-icon="entypo-chevron-thin-down" data-inline="false"></span>
-                                            </span>
-                                            <noscript><span class="caret"></span></noscript> 
-                                    </a>
+                                    
+                                    @include('laradmin::inc.notifications_badge')
+                                    
+                                    <li class="dropdown login-menu-item ">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                                <i class="far fa-user"></i> {{ str_limit(Auth::user()->name,6,'...') }} 
+                                                <span class="custom-caret">
+                                                    <span class="iconify" data-icon="entypo-chevron-thin-down" data-inline="false"></span>
+                                                </span>
+                                                <noscript><span class="caret"></span></noscript> 
+                                        </a>
 
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{route('user-home')}}">Dashboard</a></li>
-                                        <li><a href="{{route('user-settings')}}">Settings</a></li>
-                                        @can('cp') 
-                                            <li><a href="{{route('cp')}}">Control panel</a></li>
-                                        @endcan
-                                        <li>
-                                            <a href="{{ route('logout') }}"
-                                                onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">
-                                                Logout
-                                            </a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="{{route('user-home')}}">Dashboard</a></li>
+                                            <li><a href="{{route('user-settings')}}">Settings</a></li>
+                                            @can('cp') 
+                                                <li><a href="{{route('cp')}}">Control panel</a></li>
+                                            @endcan
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault();
+                                                            document.getElementById('logout-form').submit();">
+                                                    Logout
+                                                </a>
 
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                {{ csrf_field() }}
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endif
-                        </ul>
+                                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                    {{ csrf_field() }}
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+            </header>
             <div class="site-content">
                 @yield('content')
             </div>

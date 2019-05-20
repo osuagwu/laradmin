@@ -19,11 +19,11 @@
     
 
     font-size: 12px;
-    color:#888;
+    color:darken($gray-light,5%);//#616161;
     -webkit-transition: 0.1s linear color;
     transition: 0.1s linear color;
 
-    background-color: #f5f5f5;
+    background-color: $gray-lighter;//#f2f2f2;
     //background-color: #000;
   }
 
@@ -39,6 +39,14 @@
     background-position: bottom left;
     background-repeat-y: no-repeat;
 }
+
+#footer {
+  hr{
+    border-color:darken($gray-lighter,15%);
+    
+  }
+}
+
 #footer .copyright{
 
 }
@@ -47,11 +55,11 @@
 #footer .nav > li > a {
     padding:0 5px 0 5px;
     
-    color:#888;
+    color:darken($gray-light,5%);
 }
 
 
-#footer .nav > li > a:hover,
+#footer .nav > li > a:hover
 {
   @extend .text-primary;
  
@@ -60,7 +68,7 @@
 #footer p:hover,
 #footer span:hover
 {
-  color:#363636;
+  color:$gray-dark;
  
 }
 

@@ -81,13 +81,13 @@
     color: #fff;
     text-decoration: none;
 }
-.sidebar-nav li.active a {
+.sidebar-nav li.active > a {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
     text-decoration: none;
 }
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
+.sidebar-nav li > a:active,
+.sidebar-nav li > a:focus {
     text-decoration: none;
 }
 

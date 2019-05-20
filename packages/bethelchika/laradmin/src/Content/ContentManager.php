@@ -1,6 +1,8 @@
 <?php
 namespace BethelChika\Laradmin\Content;
 
+use BethelChika\Laradmin\Source;
+
 class ContentManager
 {
     /**
@@ -226,6 +228,24 @@ class ContentManager
             'namedRoute'=>'cp-settings-edit',
             'iconClass'=>'far fa-hdd',
             ]);
+
+        // Source types
+        $navigation->create('Types','types','admin.sources',[
+            'namedRoute'=>'cp-source-types',
+            ]);
+        
+        foreach(Source::$DEFAULT_TYPES as $type=>$label){
+            //$type=strtolower($type);
+            $route='cp-source-type';
+            $route_params=[$type];
+            if(in_array($type,['table','route','route_prefix','page'])){
+                $route=$route.'-'.$type;
+                $route_params=[];
+            }
+            $navigation->create($label,$type,'admin.sources.types',[
+                'namedRoute'=>$route,'namedRouteParams'=>$route_params,
+                ]);
+        }
     }
 
     /**
@@ -264,8 +284,8 @@ class ContentManager
                 //External accounts
                 $navigation->create('External','external_accounts','user_settings',[
                     'namedRoute'=>'social-user-external' ,'iconClass'=>'fas fa-share','order'=>3.0,'comment'=>'Connect and manage social and email accounts linked to this account']);
-                $navigation->create('External accounts','external_accounts2','user_settings.external_accounts',[
-                    'namedRoute'=>'social-user-external','iconClass'=>'fas fa-external-link-alt']);
+                //$navigation->create('External accounts','external_accounts2','user_settings.external_accounts',[
+                //    'namedRoute'=>'social-user-external','iconClass'=>'fas fa-external-link-alt']);
                 $navigation->create('Social User accounts','social_user_accounts','user_settings.external_accounts',[
                     'namedRoute'=>'social-user','iconClass'=>'fas fa-share-alt']);
                 $navigation->create('Emails addresses','emails','user_settings.external_accounts',[
@@ -278,7 +298,7 @@ class ContentManager
 
             case 'primary':
             default:
-            die('Loading menu '. $name .' with ContentManager is not implemented yet');
+                die('Loading menu '. $name .' with ContentManager is not implemented yet');
         }
 
     }

@@ -16,6 +16,7 @@ body.navbar-primary .main-nav.navbar-default,
       color: $colDefault;
       .sub-app-name{
         color: $colDefault;
+        //&:before{border-left-width:0px;}
       }
     }
     &:hover, &:focus {
@@ -24,19 +25,26 @@ body.navbar-primary .main-nav.navbar-default,
     color: $colDefault; }
   .navbar-nav {
     > li {
-      > a {
+      color: $colDefault;
+      > a{
         color: $colDefault;
+        opacity: 0.6;
+        //font-size: 16px;
+        &.call-to-action{opacity: 1;}
         &:hover,  &:focus {
-          color: $colHighlight; }}
+          color: $colHighlight; 
+          opacity:1;}}
       @if $dropDown {
         > .dropdown-menu {
           background-color: $bgDefault;
           > li {
+            color: $colDefault;
             > a {
               color: $colDefault;
               &:hover,  &:focus {
                 color: $colHighlight;
-                background-color: $bgHighlight; }}
+                background-color: $bgHighlight; 
+                }}
             &.divider {
               background-color: $bgHighlight;}}}}}
     @if $dropDown {
@@ -47,7 +55,9 @@ body.navbar-primary .main-nav.navbar-default,
     > .active {
       > a, > a:hover, > a:focus {
         color: $colHighlight;
-        background-color: $bgHighlight; }}
+        background-color: $bgHighlight; //you can use media query to restrict this to small screen if the menu higlight is not nice on desktop
+        opacity: 1;}}
+        
     > .open {
       > a, > a:hover, > a:focus {
         color: $colHighlight;
@@ -69,6 +79,9 @@ body.navbar-primary .main-nav.navbar-default,
 @media (max-width: 767px) {
   body.navbar-primary .main-nav.navbar-default .navbar-nav .open .dropdown-menu,
   .minor-nav-primary.navbar-default .navbar-nav .open .dropdown-menu{
+    li{
+      color: $colDefault;
+    }
     > li > a {
       color: $colDefault;
       &:hover, &:focus {

@@ -18,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         'BethelChika\Laradmin\UserGroupMap'=>'BethelChika\Laradmin\Policies\UserGroupMapPolicy',
         'BethelChika\Laradmin\User'=>'BethelChika\Laradmin\Policies\UserPolicy',
         'BethelChika\Laradmin\UserMessage'=>'BethelChika\Laradmin\Policies\UserMessagePolicy',
+        'BethelChika\Laradmin\WP\Models\Page'=>'BethelChika\Laradmin\WP\Policies\PagePolicy',
 
     ];
 
@@ -32,5 +33,10 @@ class AuthServiceProvider extends ServiceProvider
 
         //Gate for control pannel access
         Gate::define('cp', 'BethelChika\Laradmin\Policies\ControlPanelPolicy@view');
-    }
+
+        //  //Gate for users
+        //  Gate::define('edit-page', 'BethelChika\Laradmin\Policies\UserGates@editPage');
+
+        //  Gate::policy();
+    } 
 }

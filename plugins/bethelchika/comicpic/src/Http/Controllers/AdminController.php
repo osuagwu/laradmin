@@ -24,7 +24,8 @@ class AdminController extends Controller
      */
     public function __construct(Laradmin $laradmin)
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','pre-authorise']);
+        
         $this->laradmin = $laradmin;
         $this->appname = Cache::get('comicpic.appname', 'Comicpic');
     }

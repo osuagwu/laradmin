@@ -70,4 +70,14 @@ class Post extends CorcelPost
         return $thumb;
         
     }
+
+    /**
+     * Get the URL for editing a page
+     *
+     * @return string
+     */
+    public function getEditLink(){
+        return config('laradmin.wp_rpath').'/wp-admin/post.php?post='.$this->ID.'&action=edit';
+                        
+    }
 }

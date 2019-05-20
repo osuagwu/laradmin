@@ -23,6 +23,7 @@ class AutoformController extends Controller
      */
     public function __construct(Laradmin $laradmin)
     {
+        parent::__construct();
         $this->middleware('auth');
         $this->middleware('re-auth:30')->only(['edit']);
 

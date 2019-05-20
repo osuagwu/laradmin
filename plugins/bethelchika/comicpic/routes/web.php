@@ -22,7 +22,7 @@ Route::group(['middleware' => ['web']], function () {
     //\admin setitngs
     Route::get('/comicpic/admin', $CR.'AdminController@index')->name('comicpic.admin');
     Route::get('/comicpic/admin/create', $CR.'AdminController@create')->name('comicpic.admin-create');
-    Route::post('/comicpic/admin/create', $CR.'AdminController@store')->name('comicpic.admin-create');
+    Route::post('/comicpic/admin/create', $CR.'AdminController@store');
     Route::get('/comicpic/admin/show/{comicpic}', $CR.'AdminController@show')->name('comicpic.admin-show');
     Route::delete('/comicpic/admin/deletes', $CR.'AdminController@destroys')->name('comicpic.admin-deletes');
     Route::delete('/comicpic/admin/delete/{comicpic}', $CR.'AdminController@destroy')->name('comicpic.admin-delete');

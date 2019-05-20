@@ -66,7 +66,7 @@ Navigation::clearAll();
 ```
 
 ### Remove specific items
-The `Menu` and `MenuItem methods for removing selected items exists but are not tested.
+The `Menu` and `MenuItem` methods for removing selected items exists but are not tested.
 
 ## Storing
 You can store the current menu to disk so that it can be loaded again on start up thus:
@@ -113,3 +113,31 @@ The 'hidden' property has 4 possible values, thus:
 1:Hidden from signed in users only
 2:hidden from guest users only
 3:hidden from everyone
+
+## Dummies
+Sometimes you may require a dummy menu item. They are menu items which are not displayed, but they can be activated just like any other item. A use case is when one wants the parent of the dummy menu item activated when the dummy item is visited but do not want the dummy to be displayed as a menu item. You can make any regular menu item a dummy by setting its isDummy property to true. Suppose you have a parametised route and a menu item thus:
+```php
+Route::get('/feeds/{feed}','FeedsController@show')->name('feeds.show');
+...
+Navigation::create('Feeds','feeds','primary');
+```
+You can create a dummy menu item that will make Feeds menu item active when any individual feed is visited according the route, perhaps to show that the individual item is one of feeds. Thus:
+```php
+Navigation::create('somename','sometag','primary.feeds',['namedRoute'=>'feeds.show','namedRouteParams'=[0],'isDummy'=>true]);
+```
+Note the the namedRouteParams property has to be provided if the route needs parameter but the values can be any thing here since only the route name is relevant here.
+
+A more efficient way to add dummy like behaviour with creating new items is to add dummy route names to to an item uisng addDummyNamedRoutes method:
+
+```php
+$admin_nav=$laradmin->navigation->create('Comicpic','comicpic','admin.apps',[
+            'cssClass'=>'',
+            'namedRoute'=>'comicpic.admin',
+            'iconClass'=>'far fa-laugh-wink',
+            ]);
+$admin_nav->addDummyNamedRoutes([
+        'comicpic.admin-edit-settings',
+        'comicpic.admin-show',
+        'comicpic.admin-create']);
+```
+The argument is the named routes which can be an array or comma separated list.

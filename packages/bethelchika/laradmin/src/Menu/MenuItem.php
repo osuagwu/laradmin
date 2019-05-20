@@ -1,10 +1,8 @@
 <?php
 namespace BethelChika\Laradmin\Menu;
 
-use Illuminate\Routing\Route;
 
-
-
+use Illuminate\Support\Facades\Route;
 
 class MenuItem extends NavigationItem
 {
@@ -72,6 +70,27 @@ class MenuItem extends NavigationItem
      */
     public $iconImage;
 
+    /**
+     * Specifies a dummy item
+     *
+     * @var boolean
+     */
+    public $isDummy=false;
+
+    /**
+     * List of routes that are virtually connected to the the item. The item is activated whenever any of the routes are active
+     *
+     * @var array
+     */
+    public $dummyNamedRoutes=[];
+
+    /**
+     * Contruct item
+     *
+     * @param string $name
+     * @param string $tag
+     * @param string $namedroute
+     */
     public function __construct($name, $tag, $namedroute = null)
     {
         parent::__construct($name, $tag);
@@ -322,6 +341,30 @@ class MenuItem extends NavigationItem
             
         }
 
+        ///////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        //check if any od the dummy route matches the current route
+        if(!$isactive){
+            foreach($item->dummyNamedRoutes as $d_route){
+                if(!strcmp($d_route,Route::currentRouteName())){
+                    $isactive=true;
+                    break;
+                }
+            }
+        }
+
+        // special activation for dummy item
+        if(!$isactive){
+            if($item->isDummy and  $item->namedRoute){//Note that we must always activate by route name if the item is dummy otherwise dummy routes with parameters will not work well since url changes based on parameters while route name stays the same
+                $isactive=!strcmp($item->namedRoute,Route::currentRouteName());    
+            }
+        }
+        //////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////
+        
+
         if ($isactive) {
             $item->active = true;
             self::navigation()->addActiveTags($item->getTags());//keepping all active items in navigation
@@ -368,6 +411,30 @@ class MenuItem extends NavigationItem
         }
         
     }
+
+    /**
+     * Add dummy routes 
+     *
+     * @param mixed $named_routes Array or comma separated list of route names
+     * @return void
+     */
+    public function addDummyNamedRoutes($named_routes=[]){
+        if(!is_array($named_routes)){
+            $named_routes=explode(',',$named_routes);
+        }
+        $this->dummyNamedRoutes=array_unique(array_merge( $this->dummyNamedRoutes,$named_routes));
+        
+        // for($i=0;$i<count($named_routes);$i++) {
+        //     $d=new MenuItem($named_routes[$i],$named_routes[$i],$named_routes[$i]);//use the route name for 'name' and 'tag' since anything unique among the sibilings will work given this is a dummy
+        //     $d->isDummy=true;
+        //     if(count($route_parameters)>=$i+1){
+        //         $d->namedRouteParams=$route_parameters[$i];
+        //     }
+        //     $this->addChild($d);
+        // }
+        //* @param array $route_parameters The entries must correspond to that of $named_routes but can be less inwhich case later values of $named routes ar assumed to have no parameters. to $named_routes. Note that each route parameter is an array so this is array of arrays
+    }
+        
 
 }
 

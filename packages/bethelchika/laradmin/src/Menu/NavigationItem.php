@@ -270,9 +270,17 @@ abstract class NavigationItem
         return false;
     }
 
+      /**
+     * Return the id of this item
+     *
+     * @return string
+     */
+    public function getId(){
+        return $this->id;
+    }
 
     /**
-     * Return the tag of this itme
+     * Return the tag of this item
      *
      * @return string
      */

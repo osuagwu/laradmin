@@ -38,11 +38,16 @@ class ComicpicServiceProvider extends ServiceProvider
         $laradmin->feedManager->registerFeedable(ComicpicDynamicFeedable::class);
 
         //Create admin menu
-        $laradmin->navigation->create('Comicpic','comicpic','admin.apps',[
+        $admin_nav=$laradmin->navigation->create('Comicpic','comicpic','admin.apps',[
             'cssClass'=>'',
             'namedRoute'=>'comicpic.admin',
             'iconClass'=>'far fa-laugh-wink',
             ]);
+        $admin_nav->addDummyNamedRoutes([
+            'comicpic.admin-edit-settings',
+            'comicpic.admin-show',
+            'comicpic.admin-create']);
+
 
         // Create menu item
         $appname=Cache::get('comicpic.appname','Comicpic');

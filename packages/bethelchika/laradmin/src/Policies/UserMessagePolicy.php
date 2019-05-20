@@ -4,9 +4,12 @@ namespace BethelChika\Laradmin\Policies;
 
 use BethelChika\Laradmin\User;
 use BethelChika\Laradmin\UserMessage;
-use BethelChika\Laradmin\Permission\Permission;
+//use BethelChika\Laradmin\Permission\Permission;
 use Illuminate\Auth\Access\HandlesAuthorization;
- 
+use BethelChika\Laradmin\Source;
+use BethelChika\Laradmin\Laradmin;
+use Illuminate\Database\Eloquent\Model;
+
 class UserMessagePolicy
 {
     use HandlesAuthorization;
@@ -17,15 +20,25 @@ class UserMessagePolicy
     */
     public $perm;
 
-    
+    /**
+     * The key for accessing permission, comprising source type key and the table name
+     *
+     * @var string
+     */
+    public $tableAccessString;
 
     /**
     * Create a new policy instance.
-    *
+   * @param Laradmin $laradmin
     * @return void
     */
-    public function __construct(Permission $perm){
-        $this->perm=$perm;
+    public function __construct(Laradmin $laradmin){
+        $this->perm=$laradmin->permission;
+
+        //Get table info
+        $temp_user_msg=new UserMessage();
+        $this->tableAccessString=Source::getTableAccessString($temp_user_msg);
+        unset($temp_user_msg);
     }
     public function before(User $user){
         
@@ -77,7 +90,17 @@ class UserMessagePolicy
      */
     public function cpView(User $user, UserMessage $userMessage)
     {
-        return $this->perm->can($user,'table:user_messages','read',$userMessage);
+        //Check at the Table level
+        if(!$this->perm->can($user,$this->tableAccessString,'read',$userMessage)){
+            return false;
+        }
+
+        //Check at the model level
+        if(!$this->modelCheckHelper($user,'read',$userMessage)){
+            return false;
+        }
+ 
+         return true;
     }
 
      /**
@@ -89,7 +112,17 @@ class UserMessagePolicy
      */
      public function cpViews(User $user)
      {
-        return $this->perm->can($user,'table:user_messages','read');
+         //Check at the table level
+         if(!$this->perm->can($user,$this->tableAccessString,'read')){
+             return false;
+         }
+
+        //Check at the model level
+        if(!$this->modelCheckHelper($user,'read')){
+            return false;
+        }
+ 
+         return true;
         
      }
 
@@ -101,8 +134,17 @@ class UserMessagePolicy
      */
     public function cpCreate(User $user)
     {
-        //$perm=new Permission;
-        return $this->perm->can($user,'table:user_messages','create');
+        //Check at the table level
+        if(!$this->perm->can($user,$this->tableAccessString,'create')){
+            return false;
+        }
+
+        //Check at the model level
+        if(!$this->modelCheckHelper($user,'create')){
+            return false;
+        }
+ 
+         return true;
     }
 
     /**
@@ -114,8 +156,17 @@ class UserMessagePolicy
      */
     public function cpUpdate(User $user, UserMessage $userMessage)
     {
-        
-        return $this->perm->can($user,'table:user_messages','update',$userMessage);
+        //Check at the table level
+        if(!$this->perm->can($user,$this->tableAccessString,'update',$userMessage)){
+            return false;
+        }
+
+        //Check at the model level
+        if(!$this->modelCheckHelper($user,'update',$userMessage)){
+            return false;
+        }
+ 
+         return true;
         
     }
 
@@ -128,10 +179,21 @@ class UserMessagePolicy
      */
     public function cpDelete(User $user, UserMessage $userMessage)
     {
-        
-        return $this->perm->can($user,'table:user_messages','delete',$userMessage);
+        //Check at table level
+        if(!$this->perm->can($user,$this->tableAccessString,'delete',$userMessage)){
+            return false;
+        }
+
+        //Check at the model level
+        if(!$this->modelCheckHelper($user,'delete',$userMessage)){
+            return false;
+        }
+ 
+         return true;
 
     }
+
+    
       
     /* *************************************************************************************/
     /* Authorising normal Users ************************************************************* */
@@ -148,15 +210,17 @@ class UserMessagePolicy
     public function view(User $user, UserMessage $userMessage)
     {
         
-        return $this->isMy($user,$userMessage)  and !$this->perm->isDisallowed($user,'table:user_messages','read',$userMessage);
+        return $this->isMy($user,$userMessage)  and 
+        !$this->perm->isDisallowed($user,$this->tableAccessString,'read',$userMessage) and
+        !$this->modelCheckHelper($user,'read',$userMessage,'isDisallowed');
         
     }
 
      /**
-     * Determine whether the user can view listings of userMessages. This function only checks that access 
-     * is not explicitly denied on the message table and not access to individual message. Should not be used for 
-     * authoissing reading of message content. It should only be used when the listng of message is
-     * limited to those of the logged in user, in which case the authorisation is already done by
+     * Determines whether the user can view listings of userMessages. This function only checks that access 
+     * is not explicitly denied on the message table and not access to individual message. Should not be 
+     * used for authorising reading of the message content. It should only be used when the listng of 
+     * message is limited to those of the logged in user, in which case the authorisation is already done by
      * limiting the message to those that belong to the current user
      *
      * @param  \BethelChika\Laradmin\User  $user
@@ -164,7 +228,8 @@ class UserMessagePolicy
      */
      public function views(User $user)
      {
-        return !$this->perm->isDisallowed($user,'table:user_messages','read');
+        return !$this->perm->isDisallowed($user,$this->tableAccessString,'read') and
+                !$this->modelCheckHelper($user,'read',null,'isDisallowed');
         
      }
 
@@ -176,7 +241,8 @@ class UserMessagePolicy
      */
     public function create(User $user)
     {
-        return !$this->perm->isDisallowed($user,'table:user_messages','create');
+        return !$this->perm->isDisallowed($user,$this->tableAccessString,'create') and
+                !$this->modelCheckHelper($user,'create',null,'isDisallowed');;
     }
 
     /**
@@ -189,7 +255,9 @@ class UserMessagePolicy
     public function update(User $user, UserMessage $userMessage)
     {
         
-        return $this->isMy($user,$userMessage)  and !$this->perm->isDisallowed($user,'table:user_messages','update',$userMessage);
+        return $this->isMy($user,$userMessage)  and 
+                !$this->perm->isDisallowed($user,$this->tableAccessString,'update',$userMessage) and
+                !$this->modelCheckHelper($user,'update',$userMessage,'isDisallowed');
         
     }
 
@@ -203,7 +271,40 @@ class UserMessagePolicy
     public function delete(User $user, UserMessage $userMessage)
     {
         
-        return $this->isMy($user,$userMessage)  and !$this->perm->isDisallowed($user,'table:user_messages','delete',$userMessage);
+        return $this->isMy($user,$userMessage)  and 
+                !$this->perm->isDisallowed($user,$this->tableAccessString,'delete',$userMessage) and 
+                !$this->modelCheckHelper($user,'delete',$userMessage,'isDisallowed');;
 
     }
+
+    /*///////////////////////////////////////////////////////////////////////
+    /*////////////Helprs////////////
+    /*/////////////////////////////////////////////////////////
+     /**
+     * A helper for cheking permission at the model level
+     *
+     * @param User $user
+     * @param string $action
+     * @param Model $model The resource
+     * @param string $method {'can','isDisallowed'}
+     * @return boolean
+     */
+    private function modelCheckHelper(User $user, $action,Model $model=null,$method='can'){
+        //Check at the model level
+        $source=Source::where('type','model')->where('name',UserMessage::class)->first();
+        if($source){
+            $access_string=Source::getTypeKey().':'.$source->id;
+            if(str_is($method,'can')){
+                if(!$this->perm->can($user,$access_string,$action,$model)){
+                    return false;
+                }
+            }else{
+                if($this->perm->isDisallowed($user,$access_string,$action,$model)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+   }
 }

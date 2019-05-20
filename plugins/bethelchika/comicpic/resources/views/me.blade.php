@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @include('comicpic::scripts')
 @section('content')
-<section class="section section-danger   section-title section-diffuse section-light-bg">
+<section class="section section-danger   section-title  ">
     <div class="container">
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">Comicpic</a></li>
@@ -109,19 +109,21 @@
                     </div>
                     <div class="content-bottom">
                         <div class="">
-                            @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'class'=>'avatar-primary'])
+                            @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'class'=>'avatar-subtle'])
                             @endcomponent
                         </div>
                         
                         <div class="social-panel social-panel-sm">
 
-                            <a href="#" class="" tabindex="0" title="Share" role="button" data-html="true" data-toggle="popover" data-placement="auto bottom" data-content="<iframe scrolling='no'  src='{{route('comicpic.og',$comicpic->id)}}'></iframe>" data-trigger="click"><i class="fas fa-share"></i></a>
+                            <a href="#" class="text-muted" tabindex="0"  role="button" data-html="true" data-toggle="popover" data-placement="auto bottom" data-content="<iframe scrolling='no'  src='{{route('comicpic.og',$comicpic->id)}}'></iframe>" data-trigger="click">
+                                <i class="fas fa-share" title="Share"></i>
+                            </a>
                                 
                                 
                             
                             @if(!Auth::guest() and $comicpic->user_id==Auth::user()->id)
                             
-                            <a class="social-panel-item" title="Edit" href="{{route('comicpic.edit',$comicpic->id)}}"><i class="fa fa-edit text-muted"></i></a>
+                            <a class="social-panel-item" title="Edit" href="{{route('comicpic.edit',$comicpic->id)}}"><i class="fa fa-pen text-muted"></i></a>
                             <form  method="POST" action="{{route('comicpic.delete',$comicpic->id)}}">
                                 {{method_field('DELETE')}}
                                 {{csrf_field()}}

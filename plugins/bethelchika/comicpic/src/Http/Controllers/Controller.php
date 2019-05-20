@@ -14,6 +14,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function __construct(Laradmin $laradmin){
+        $this->middleware('pre-authorise');
         $laradmin->assetManager->registerBodyClass('comicpic');
         $laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
         $appname=Cache::get('comicpic.appname','Comicpic');

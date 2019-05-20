@@ -6,7 +6,7 @@
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item active">Comicpic</li>
         </ol>
-        <h1 class="heading-3 content-title   ">Welcome to ComicPic</h1>
+        <h1 class="heading-3 content-title  skinny  ">Welcome to ComicPic</h1>
         <nav>
             <ul class="nav nav-tabs nav-flat">
                 @include('laradmin::menu',['tag'=>'primary.comicpic'])
@@ -14,7 +14,7 @@
         </nav>
     </div>
 </section> 
-<section class="section section-subtle  section-full-height section-extra-padding-bottom section-diffuse section-light-bg ">     
+<section class="section section-subtle  section-full-height section-extra-padding-bottom  ">     
     <div class="container">
         
         {{-- <div class="text-right">
@@ -25,13 +25,13 @@
             </p>
         </div> --}}
         
-        
+        <h2 class="heading-3 text-center">Browse Comicpic</h2>
         @include ('laradmin::inc.msg_board')
         {{$comicpics->links()}}
         @unless(count($comicpics))
         <p class="text-center alert alert-warning"><i class="fas fa-battery-empty"> </i> No item to display</p>
         @endif
-        <div class="row first-content-padding">
+        <div class="row">
             @foreach($comicpics as $comicpic)
                 @if(!Storage::disk('public')->exists($comicpic->medias[0]->getFullName()))
                     @continue;{{--check that the file exists otherwise do not show--}}
@@ -54,17 +54,18 @@
                     </div>
                     <div class="content-bottom">
                         <div class="">
-                            @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name, 'class'=>'avatar-primary'])
+                            @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name, 'class'=>'avatar-subtle'])
                             @endcomponent
                         </div>
                         
                         <div class="social-panel social-panel-sm">
-                            <a href="#" class="btn btn-primary btn-xs" tabindex="0" title="Share" role="button" data-html="true" data-toggle="popover" data-placement="auto bottom" data-content="<iframe scrolling='no'  src='{{route('comicpic.og',$comicpic->id)}}'></iframe>" data-trigger="click"><i class="fas fa-share"></i>
+                            <a href="#" class="text-muted" tabindex="0" role="button" data-html="true" data-toggle="popover" data-placement="auto bottom" data-content="<iframe scrolling='no'  src='{{route('comicpic.og',$comicpic->id)}}'></iframe>" data-trigger="click">
+                                <i class="fas fa-share" title="Share" ></i>
                                 
-                                 Share</a>
+                            </a>
                             @if(!Auth::guest() and $comicpic->user_id==Auth::user()->id)
                             
-                            <a class="social-panel-item" title="Edit" href="{{route('comicpic.edit',$comicpic->id)}}"><i class="fa fa-edit text-muted"></i></a>
+                            <a class="social-panel-item" title="Edit" href="{{route('comicpic.edit',$comicpic->id)}}"><i class="fa fa-pen text-muted"></i></a>
                             <form  method="POST" action="{{route('comicpic.delete',$comicpic->id)}}">
                                 {{method_field('DELETE')}}
                                 {{csrf_field()}}

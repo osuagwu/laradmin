@@ -22,6 +22,7 @@ use BethelChika\Laradmin\Content\ContentManager;
 use BethelChika\Laradmin\Plugin\PluginServiceProvider;
 use BethelChika\Laradmin\WP\WPServiceProvider;
 use BethelChika\Laradmin\Form\FormServiceProvider;
+use BethelChika\Laradmin\Permission\Permission;
 
 class LaradminServiceProvider extends ServiceProvider
 {
@@ -32,12 +33,17 @@ class LaradminServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //Register Laradmin singleton
-        $this->app->singleton('BethelChika\Laradmin\Laradmin', function ($app) {
-            return new Laradmin(new MediaManager($app->make('filesystem')),new FeedManager,new AssetManager, new ContentManager );
-        });
-        $this->app->alias('BethelChika\Laradmin\Laradmin','laradmin');
+        // //Register Laradmin singleton
+        // $this->app->singleton('BethelChika\Laradmin\Laradmin', function ($app) {
+        //     return new Laradmin(new MediaManager($app->make('filesystem')),new FeedManager,new AssetManager, new ContentManager,new Permission );
+        // });
+        // $this->app->alias('BethelChika\Laradmin\Laradmin','laradmin');
  
+         //Register Laradmin singleton
+         $this->app->singleton('laradmin', function ($app) {
+            return new Laradmin(new MediaManager($app->make('filesystem')),new FeedManager,new AssetManager, new ContentManager,new Permission );
+        });
+        $this->app->alias('laradmin','BethelChika\Laradmin\Laradmin');
 
         //Register providers
         $this->app->register(EventServiceProvider::class);
@@ -111,16 +117,24 @@ class LaradminServiceProvider extends ServiceProvider
         
 
 
-        // Publish things __________________________________________________
+        // Publish things & loading__________________________________________________
         
         $laradminPath=dirname(__DIR__);
 
         // Middlewares
         $router->aliasMiddleware('re-auth',CheckReAuthentication::class);
+        $router->aliasMiddleware('pre-authorise','BethelChika\Laradmin\Permission\Http\Middleware\PreAuthorise');
+
+        
+        // Register Global Middleware
+        //$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
+        //$kernel->pushMiddleware('BethelChika\Laradmin\Http\Middleware\Url');
+        //$kernel->pushMiddleware('BethelChika\Laradmin\Http\Middleware\Route');
+
 
         // Publish confi
         $this->publishes(
-            [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')]
+            [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')], 'laradmin_config'
         );
 
         // Load route
@@ -136,7 +150,7 @@ class LaradminServiceProvider extends ServiceProvider
         
         $this->publishes([
             $laradminPath.'/resources/lang' => resource_path('lang/vendor/laradmin'),
-        ]);
+        ],'laradmin_lang');
 
 
         // Views
@@ -144,13 +158,13 @@ class LaradminServiceProvider extends ServiceProvider
         
         $this->publishes([
             $laradminPath.'/resources/views' => resource_path('views/vendor/laradmin'),
-        ]);
+        ], 'laradmin_view');
         
 
         // Assets
         $this->publishes([
             $laradminPath.'/publishable/assets' => public_path('vendor/laradmin'),
-        ], 'public');
+        ], 'laradmin_asset');
 
 
         

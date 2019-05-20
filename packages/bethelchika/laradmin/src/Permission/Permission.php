@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission 
 {  
-
+    use Traits\Helpers;
+    
+    
 
     /**
      * Construct a new permission.
@@ -40,8 +42,8 @@ class Permission
     /**
      * Find the collection of group models a user belongs to.
      *
-     * @param BethelChika\Laradmin\User $user
-     * @return Illuminate\Support\Collection
+     * @param \BethelChika\Laradmin\User $user
+     * @return \Illuminate\Support\Collection
      */
     private function getUserGroups(User $user){
         $userGroups=[];
@@ -115,8 +117,21 @@ class Permission
             return $perm->$action;
         else return false;
     }
+
+
+    /**
+     * Checks if there is at least one entry for a given resource and action
+     *
+     * @param string $resource Example 'table:users'
+     * @param string $action Example Any of 'create','read', 'update' and 'delete'
+     * @return boolean
+     */
+    public function hasEntry($resource,$action){
+        return !!MainPermission::where('source',$resource)->select($action)->first();
+    }
+
      /**
-     * CHeck if a user has special super powers
+     * Check if a user has special super powers
      *
      * @param BethelChika\Laradmin\User $user
      * @return boolean
@@ -172,7 +187,7 @@ class Permission
      */
      private function isMe(User $user,Model $model){
         //Check if this user is the same as the model () and that the model is not Super user (prevent super from altering/viewing itself; i know its a little strange that it cannot even alter/view itself)
-        if($user->is($model)){
+        if($user->is($model) and str_is(get_class($user),get_class($model))){//it may not be needed but we also test that the $model have the same class as $user using get_class
             //if ($user->id==$model->id){
                 if($user->id!=$user->getSuperId()){
                     return true;
@@ -220,9 +235,11 @@ class Permission
     }
 
     /**
-     * Check if the specified user is disabled. Note that if the user is actually disabled,
-     * she might be forced to logout before this function gets to execute. So this function might
-     * never get to be be called unless the user is not forced to log out.
+     * Check if the specified user is disabled. Note that if the user is 
+     * actually disabled then he/she might be forced to logout before 
+     * this function gets to execute. So this function might never 
+     * get to be be called unless the user is not forced to log 
+     * out.
      *
      * @param BethelChika\Laradmin\User $user
      * @return boolean
@@ -236,13 +253,15 @@ class Permission
     }
 
      /**
-     * CHeck if a User is allowed to perform a given action
+     * CHeck if a User is allowed to perform a given action. Unless the user 
+     * is Super, non-explictly disallowed admin or owner, then given user 
+     * must have explicit permission to access 
      *
      * @param BethelChika\Laradmin\User $user
      * @param string $resource Example 'table:users'
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @param Illuminate\Database\Eloquent\Model $model
-     * @return string
+     * @return boolean True if the user can do the given action on the resource
      */
     public function can(User $user,$resource,$action,Model $model=null){
         //first and foremost
@@ -302,6 +321,7 @@ class Permission
         if($model){
             if($this->isMe($user,$model)){
                 return true;
+                
             }
         }
 
@@ -320,7 +340,7 @@ class Permission
             }
         }
 
-        //user is admin who is not restricted
+        //user is allwed or is admin who is not restricted
         return true;
 
     }
@@ -333,8 +353,8 @@ class Permission
      * @param BethelChika\Laradmin\User $user
      * @param string $resource Example 'table:users'
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
-     * @param Illuminate\Database\Eloquent\Model $model
-     * @return boolean
+     * @param Illuminate\Database\Eloquent\Model $model TODO:[THIS PARAM IS NOT USED YET]
+     * @return boolean True is the user is disallowed
      */
      public function isDisallowed(User $user,$resource,$action,Model $model=null){
         //first and foremost

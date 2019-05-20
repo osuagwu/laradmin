@@ -10,17 +10,34 @@ $body-bg:#fff; //#f5f8fa;
 //$panel-inner-border: $laradmin-border-color;
 
 // Possible scheems
-// Base=[E2271A] => paletton.com 
+// Base=[E2271A] => paletton.com  
+
+//Another good generator:
+//https://coolors.co
+
+/*NOTE: list of main colors that need to be found and can be used to generate other colors
+1: $brand-primary
+2: $brand secondary // Must be based on $brand-primary
+3: $gray-dark // Must be based on $brand-primary
+*/
+
+//## Gray 
+$gray-dark:              #353535;// Must be supper good for text on gray-light bg
+$gray:                  #585858;// Must be good for text on $gray-lighter bg
+$gray-light:              #757575; // Must be OK for text on white bg
+$gray-lighter:             #f4f4f4;// For backgrounds. Not right for text on white bg.
 
 // Brands
-$brand-primary:#135B7A;//#5782c3; //#3097D1;
-$brand-info:#7f8fa6 ;//#8eb4cb;
-$brand-success: #108C42;//#2ab27b;
-$brand-warning: #C27116;
-$brand-danger: #C23716;//#bf5329;
-$brand-subtle:#f4f4f4;//#f1f1f1f1;
+$brand-primary:#4A4A7F;
+$brand-info:#7EA3CC;
+$brand-success: #00cc66;
+$brand-warning: #F4A261;
+$brand-danger: #ed6a5a;
+$brand-subtle:$gray-lighter;
+$brand-secondary:#D17A22; 
 
-$brand-subtle2:#e2ebf7;//NOTE: unused randome color
+
+
 
 $defaut-logo-url:"/img/logo.svg";
 
@@ -29,7 +46,7 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 $font-family-sans-serif: "Raleway", sans-serif;
 $font-size-base: 15px;
 $line-height-base: 1.6;
-$text-color:#000;// #636b6f;//,#111;
+$text-color:$gray-dark;// #636b6f;//,#111;
 
 // Navbar
 $navbar-default-bg: #fff;

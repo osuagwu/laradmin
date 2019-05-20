@@ -27,18 +27,175 @@ body.has-sidebar{
 // p,li,div,span{
 //     font-size: inherit;
 // }
+
+// Heading_____________________________________________________
+//_______________________________________________________________
 h1, h2, h3, h4, h5, h6 {
     
-    &.heading-slashes:before{
+    &.slashes:before{
         content:'//';
         color: #ddd;
         display: inline-block;
         margin-right: 4px;
     }
+    &.underscore{
+        position:relative;
+        &:before{
+            right: auto;
+            left: 0px;
+            bottom: -4px;
+            content: " ";
+            display: block;
+            width: 30px;
+            position: absolute;
+            background: $brand-danger;
+            height: 3px;
+        }
+    }
 }
+
+
+h1,h2,h3,h4,h5,h6{
+    font-weight:600;
+}
+h1{
+
+    font-size: 1.79rem;
+}
+h2{
+  
+    font-size: 1.72rem;
+}
+h3{
+
+    font-size: 1.50rem;
+}
+h4{
+ 
+    font-size: 1.31rem;
+}
+h5{
+   
+    font-size: 1.15rem;
+}
+h6{  
+    font-size: 1.05rem;
+}
+
+
+
+.heading-giant,
+.heading-huge,
+.heading-big,
+.heading-0,
+.heading-1,
+.heading-2,
+.heading-3,
+.heading-4
+{
+    font-weight:100;
+    &.strong{font-weight:500}
+    &.stronger{font-weight:700}
+    
+}
+
+
+.heading-5,
+.heading-6{
+    font-weight:500;
+}
+
+
+.heading-giant{
+    @extend .h1;
+    font-size:3.38rem;
+}
+.heading-huge{
+    @extend .h1;
+    font-size:2.95rem;
+}
+.heading-big{
+    @extend .h1;
+    font-size:2.58rem;
+}
+.heading-0{
+    @extend .h1;
+
+    font-size:2.25rem;
+}
+.heading-1{
+    @extend .h1;
+
+    font-size: 1.79rem;
+}
+.heading-2{
+    @extend .h2;
+  
+    font-size: 1.72rem;
+}
+.heading-3{
+    @extend .h3;
+
+    font-size: 1.50rem;
+}
+.heading-4{
+    @extend .h4;
+ 
+    font-size: 1.31rem;
+}
+.heading-5{
+    @extend .h5;
+   
+    font-size: 1.15rem;
+}
+.heading-6{
+    @extend .h6;
+    
+    font-size: 1.05rem;
+}
+// @media (max-width: 768px){
+//     .heading-giant{font-size:3.00rem;}
+//     .heading-huge{font-size:2.57rem;}
+//     .heading-big{font-size:2.20rem;}
+//     .heading-0{font-size:1.87rem;}
+//     .heading-1{font-size: 1.41rem;}
+//     .heading-2{font-size: 1.34rem;}
+//     .heading-3{font-size: 1.20rem;}
+//     .heading-4{font-size: 1.10rem;}
+//     .heading-5{font-size: 1.01rem;}
+//     .heading-6{font-size: 1.00rem;}
+// }
+
+
+
+
+
+.heading-1-padding{
+    
+    
+    padding-bottom:23px;
+    padding-top: 30px;
+    
+}
+.heading-2-padding{
+    
+    
+    padding-bottom:15px;
+}
+.heading-3-padding{
+    
+    padding-bottom:10px;
+}
+
+pre{
+    border:none;
+}
+
+
 strong, .strong{
     font-weight: 500;
 }
+
 
 ul{
     @if $ubr==0 {
@@ -57,6 +214,12 @@ ul{
 }
 
 // Nav______________________________________________________________
+.nav{
+    //external links
+    .external-link,.custom-caret{
+        font-size:75%;
+    }
+}
 .navbar-default .navbar-nav > li > a {
     color: lighten($text-color,15);
 }
@@ -66,6 +229,58 @@ ul{
         padding-bottom: 14px;
     }
 }
+
+//modification of nav to allow a separate button for dropdown menu*************************************
+.nav {
+    //Give those with children more space for a dropdown button
+    @media(min-width: 768px) {
+        li.has-children > a{
+            padding-right:29px;
+        }
+    }
+    
+    .custom-dropdown-toggle{
+        position: absolute;
+        right: 2px;
+        top: 12px;
+            
+        padding: 0 5px;    
+        @media (max-width: 768px){
+            border: 1px solid;
+            padding: 1px 7px;
+            right: 11px;
+            top: 11px;
+        }
+
+    }
+    button.custom-dropdown-toggle{
+        background-color: transparent;
+        border: none;
+        &:hover{
+            background-color: #f5f5f5;
+        }
+    }
+    
+    //COSMTIC------------------------------------------------
+    //Hover on large devices which will likely have mouse. TODO: I don't think popup on over is that important as users can use the dropdown custom-dropdown-toggle button. Also with hover, the popup states may not be properly be accounced to ARIA. So we should probably remove the hover css as it only cosmetic
+    @media (min-width: 768px){
+        .dropdown:hover .dropdown-menu {// Note that vertical menus are not included here
+            display: block;
+            margin-top: 0; // remove the gap so it doesn't close
+        } 
+     }
+     //END COSMETIC-----------------------------------------------------
+}
+// Correct custom dropdown for specific navs
+.main-nav .nav .custom-dropdown-toggle{
+    top: 16px;
+}
+.minor-nav .nav .custom-dropdown-toggle{
+    top: 10px;
+}
+//******************************************************************
+
+
 
 
 // Main nav
@@ -82,12 +297,20 @@ ul{
     }
 }
 
+
+
+
 @media (min-width: 768px){
+
     .main-nav.navbar .navbar-nav > .active > a{
-        border-bottom:1px solid lighten($brand-primary,20%);
-        background-color: transparent;
+        //border-bottom:1px solid lighten($brand-primary,20%);
+       // background-color: transparent;
     }
 }
+
+
+
+
 
 @media (min-width: 768px){
     body.header-transparent .main-nav{
@@ -95,24 +318,36 @@ ul{
         border-color:rgba(#fff,0.3);
         //box-shadow: 0px 0px 0px lighten($gray-light,80%);
     }
-    body.header-transparent .main-nav .navbar-nav > li > a{
+    body.header-transparent .main-nav .navbar-nav > li {
         color:#fff;
+        > a{
+            color:#fff;
+            opacity: 0.6;
+            border-bottom:1px solid transparent;
+        &.call-to-action{
+            opacity:0.9;
+        }
+        }
+        
     }
     body.header-transparent .main-nav .nav li.login-menu-item > a{
         //background-color:transparent;
     }
-    body.header-transparent .main-nav .navbar-nav > li.active > a {
-        color:#fff;
-        border-bottom:1px solid #fff;
-        background-color: transparent;
+    body.header-transparent .main-nav .navbar-nav > li {
+        &.active > a, >a:hover{
+            color:#fff;
+            border-bottom:1px solid #fff;
+            background-color: transparent;
+            opacity:1;
+        }
     }
+    // body.header-transparent .main-nav .navbar-brand .sub-app-brand .sub-app-name{
+    //     color:#fff;
+    // }
     body.header-transparent .main-nav .navbar-brand .sub-app-brand .sub-app-name{
-        color:#fff;
-    }
-    body.header-transparent .main-nav .navbar-brand .sub-app-brand .sub-app-name{
-        border-left-color: rgba(255, 255, 255, 0.521);
-        color:#fff;
         
+        color:#fff;
+        //&:before{border-left-width:0px;}
     }
     
 }
@@ -120,11 +355,7 @@ ul{
 
 
 //___________________________________________________________________
-.nav{
-    .external-link,.custom-caret{
-        font-size:75%;
-    }
-}
+
 body.main-nav-no-border-bottom .main-nav.navbar,
 body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add 'main-nav-no-border-bottom' to the body tag to remove the border bottom on the main menu and minor nav
     border-bottom-width:0px;
@@ -173,7 +404,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
     position:relative;
 }
 .main-nav .navbar-brand .sub-app-brand .sub-app-name:before{
-    content:'';
+  /*  content:'';
   position:absolute;
   top:0;
   right:0;
@@ -181,6 +412,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
   left:14px;
   border-left:2px solid;
   //opacity:.7;
+  */
 }
 @media only screen  and (max-width : 1440px) {/* Desktops and laptops ----------- */
     .main-nav li a{
@@ -219,7 +451,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
 
 
 .minor-nav li a{
-    font-size:11px;
+    font-size:13px;
     border-bottom: 2px solid transparent;
 }
 .minor-nav .navbar-nav > li > a {
@@ -321,7 +553,25 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
 
 .page-title{
     margin-bottom: 15px;
+    //color:$brand-primary;
 }
+body.navbar-primary .page-title{
+    //color:$text-color;
+}
+.heading-0,
+.heading-1,
+.heading-2,
+.heading-3,
+.heading-4{
+    &.page-title,&.content-title{
+        font-weight: 300;
+        &.strong{font-weight:500}
+        &.stronger{font-weight:700}
+        &.slim{font-weight:200}
+        &.skinny{font-weight:100}
+    }
+}
+
 
 .title-legend{
     margin-top: -11px;
@@ -334,146 +584,6 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
 
 
 
-
-// Heading_____________________________________________________
-//_______________________________________________________________
-
-h1,h2,h3,h4,h5,h6{
-    font-weight:600;
-}
-h1{
-
-    font-size: 1.79rem;
-}
-h2{
-  
-    font-size: 1.72rem;
-}
-h3{
-
-    font-size: 1.50rem;
-}
-h4{
- 
-    font-size: 1.31rem;
-}
-h5{
-   
-    font-size: 1.15rem;
-}
-h6{  
-    font-size: 1.05rem;
-}
-
-
-
-.heading-giant,
-.heading-huge,
-.heading-big,
-.heading-0,
-.heading-1,
-.heading-2,
-.heading-3
-{
-    font-weight:100;
-}
-
-.heading-4,
-.heading-5,
-.heading-6{
-    font-weight:500;
-}
-
-.heading-giant{
-    @extend .h1;
-    font-size:3.38rem;
-}
-.heading-huge{
-    @extend .h1;
-    font-size:2.95rem;
-}
-.heading-big{
-    @extend .h1;
-    font-size:2.58rem;
-}
-.heading-0{
-    @extend .h1;
-
-    font-size:2.25rem;
-}
-.heading-1{
-    @extend .h1;
-
-    font-size: 1.79rem;
-}
-.heading-2{
-    @extend .h2;
-  
-    font-size: 1.72rem;
-}
-.heading-3{
-    @extend .h3;
-
-    font-size: 1.50rem;
-}
-.heading-4{
-    @extend .h4;
- 
-    font-size: 1.31rem;
-}
-.heading-5{
-    @extend .h5;
-   
-    font-size: 1.15rem;
-}
-.heading-6{
-    @extend .h6;
-    
-    font-size: 1.05rem;
-}
-@media (max-width: 768px){
-    .heading-giant{font-size:3.00rem;}
-    .heading-huge{font-size:2.57rem;}
-    .heading-big{font-size:2.20rem;}
-    .heading-0{font-size:1.87rem;}
-    .heading-1{font-size: 1.41rem;}
-    .heading-2{font-size: 1.34rem;}
-    .heading-3{font-size: 1.20rem;}
-    .heading-4{font-size: 1.10rem;}
-    .heading-5{font-size: 1.01rem;}
-    .heading-6{font-size: 1.00rem;}
-}
-
-.heading-0,
-.heading-1,
-.heading-2,
-.heading-3,
-.heading-4{
-    &.page-title,&.content-title{
-        font-weight: 400;
-        
-    }
-}
-
-
-
-
-.heading-1-padding{
-    
-    
-    padding-bottom:23px;
-    padding-top: 30px;
-    
-}
-.heading-2-padding{
-    
-    
-    padding-bottom:15px;
-}
-.heading-3-padding{
-    
-    padding-bottom:10px;
-}
 
 
 
@@ -504,7 +614,7 @@ section{
 
 @mixin section-diffuse($brand-name,$brand){
     /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)
@@ -776,46 +886,6 @@ section{
 
 
 
-
-
-//
-
-//***************************************************************
-
-
-
-// .section-primary .section-page-title,
-// .section-info .section-page-title,
-// .section-success .section-page-title,
-// .section-danger .section-page-title,
-// .section-warning .section-page-title,
-// {
-    
-//     color:#fff;
-
-// }
-// .section-primary .section-legend.faded,
-// .section-info .section-legend.faded,
-// .section-success .section-legend.faded,
-// .section-danger .section-legend.faded,
-// .section-warning .section-legend.faded,
-// {
-    
-//     color:rgba(255, 255, 255, 0.76) !important;
-
-// }
-
-// .section-primary .section-page-title-lg,
-// .section-info .section-page-title-lg,
-// .section-success .section-page-title-lg,
-// .section-danger .section-page-title-lg,
-// .section-warning .section-page-title-lg,
-// {
-    
-//     color:#fff;
-    
-// }
-
 // Section stripe
 .section-title{// useful for ribbon title in a page
     
@@ -890,7 +960,7 @@ section{
 * Allows us to among others put a bigger padding at the bottom of page to separate border
 */
 .section-last{
-    padding-bottom:50px;
+    margin-bottom:50px;
     
 }
 .section-last .sidebar{
@@ -958,12 +1028,14 @@ section{
 .hero-content-box{
     padding: 15px;
 }
-//hero content positioning
+//hero headline positioning
 @media(min-width:768px){
     .hero-content-box{
         padding: 30px;
         display: flex;
         flex-direction: row;
+
+    // Justification
     &.left{
         justify-content: flex-start;
     }
@@ -973,11 +1045,24 @@ section{
     &.right{
         justify-content: flex-end;
     }
+
+    //Alignment
+    &.top{
+        align-items: flex-start;
+    }
+    &.middle{
+        align-items: center;
+    }
+    &.bottom{
+        align-items: flex-end;
+    }
     
-        .hero-content{
-            flex: initial;
-            
-        }
+    .hero-content{
+        flex: initial;
+        
+    }
+
+    
     }
   
 }
@@ -1032,6 +1117,7 @@ section{
     .section.hero .hero-headline{
         
         width:100%;
+        max-width:100%;
     }
     .section.hero.hero-super .hero-headline{
         margin-top: 0px;
@@ -1273,9 +1359,15 @@ section{
 .mainbar aside .right{
     padding:1px 15px;
     margin-top: 30px;
-    background-color: #f5f5f5;
-    h3,h4,.heading-3,.heading-4{
+    color:$gray;
+    background-color: $gray-lighter;
+    font-size: 0.875rem;
+    h1,h2,h3,h4,h5,h6{
+        color:$gray-dark;
+        margin-bottom: 10px;
+        margin-top: 10px;
         font-weight: 400;
+        line-height: 1.28;
     }
 }
 
@@ -1314,40 +1406,44 @@ section{
     min-width: 250px;
     max-width: 250px;
     
-
+    //height: calc( 100vh - 5px - 50px );// The subraction is the estimated height  of the site-top/main-nav and a bit more. 
     transition: all 0.3s;
     //border-right:1px solid #ddd;
     margin-left: -15px;
     padding-left: 15px;
-    background-color: #f5f5f5;
-    padding-top:30px;
-    padding-bottom: 5vh;
+    background-color: $gray-lighter;
+    padding-top:42px;
+    padding-bottom: 15px;
+    font-size:0.875rem;
+    color: $gray;
+
+    
 }
 body.sidebar-white .sidebar {
     background-color: #fff;
     border-right:none;
+    color: $gray-light;
 }
 body.sidebar-white .sidebar .list-separator{
     //border-color: #eee;
 }
+body.has-minor-nav .sidebar {
+    //height: calc( 100vh - 5px - 104px );// / The subraction is the estimated height of the site-top/main-nav and minor-nav and a bit more; although not neccessarily accurate we assume that this hieght is always the same and the minor-nave is always present (consequence is that the footer will be forced a bit lower deu to too much height of sidebar). 
+}
 
-
+.sidebar{
+    h1,h2,h3,h4,h5,h6{
+        font-weight:400;
+        color:$gray-dark;
+    }
+}
 
 .sidebar .sidebar-title{
     
     font-size: 1.3rem;
 }
 
-.sidebar .heading-3,
-.sidebar .heading-4,
-.sidebar .heading-5,
-.sidebar .heading-6{
-    color:lighten($text-color, 10);
-    margin-bottom: 10px;
-    margin-top: 10px;
-    font-weight: 400;
-    line-height: 1.28;
-}
+
 .sidebar .sidebar-content{
     max-width:100%;
     //max-height: 75vh;//helps to force scrolling before content are out of view in case of sidebar with lots of content
@@ -1362,14 +1458,13 @@ body.sidebar-white .sidebar .list-separator{
 
 .sidebar ul li a .far,
 .sidebar ul li a .fas{
-    color:rgba(0,0,0,0.68);//#262626;
+    color:$gray;//#262626;
 }
 .sidebar ul li a {
     //padding: 5px;
     //padding-right:52px; //prevent long menu items from running into th menu collaps arrows
-    color:lighten($text-color,47);
-    //color:darken($brand-info,10%);
-    //color:rgba(0,0,0,0.87);
+    color:$gray;
+    
     display: block;
     font-weight:400;
     font-size: $font-size-base - 1;
@@ -1379,6 +1474,10 @@ body.sidebar-white .sidebar .list-separator{
     //max-width:220px; 
       
 }
+body.sidebar-white .sidebar ul li a {
+    color: $gray-light;
+}
+
 .sidebar .nav > li > a {
     padding-left:2px;
     padding-top:5px;
@@ -1389,15 +1488,11 @@ body.sidebar-white .sidebar .list-separator{
 .sidebar li:not(.has-children).active > a{ //NOTE: the not selector is not so important and can be removed if it is cause undesirablr=e behavior. It prevent active looks when an item has children
     position:relative;
     font-weight: 700;
-    color:lighten($text-color, 15)
+    color:$gray-dark;
     //background-color: #eeeeee;
 }
 
-.sidebar ul li a .far,
-.sidebar ul li a .fas
-{
-    color:rgba(0,0,0,0.5)
-}
+
 .sidebar ul li.title { 
     margin-bottom:26px;
     
@@ -1409,41 +1504,28 @@ body.sidebar-white .sidebar .list-separator{
 }
 
 
-// .sidebar .vertical-nav .vertical-nav-item{
-//     padding-left:15px;
-//     margin-bottom:8px;
-    
-// }
-// .sidebar .vertical-nav .vertical-nav-item a{
-//     font-weight:normal;
-//     color:lighten($text-color,2%);
-//     //color: rgba(0,0,0,0.65);
-//     min-width: auto;
-//     max-width:auto;
-//     font-size:14px;
 
-// }
 
 .sidebar .dropdown-submenu>a:after {
     border-left-color:$text-color;
 }
 .sidebar .dropdown-submenu:hover>a:after {
-    border-left-color:#333;
+    border-left-color:$gray-dark;
 }
 
 
 // Vertical menu item---------
 //// USE THESE
-// .sidebar ul li.vertical-menu-item.active{  
-//     border-left:2px solid $brand-primary;
-//         padding-left: 7px;
-// }.sidebar ul li.level-1.vertical-menu-item.active{ 
-//     border-left:2px solid $brand-warning;
-// }.sidebar ul li.level-2.vertical-menu-item.active{ 
-//     border-left:2px solid $brand-danger;
-// }.sidebar ul li.level-3.vertical-menu-item.active{ 
-//     border-left:2px solid $brand-success;
-// }
+.sidebar ul li.vertical-menu-item.active{  
+    border-left:2px solid lighten($gray-light,32%);
+        padding-left: 7px;
+}.sidebar ul li.level-1.vertical-menu-item.active{ 
+    border-left:2px solid lighten($gray,32%);
+}.sidebar ul li.level-2.vertical-menu-item.active{ 
+    border-left:2px solid lighten($gray-dark,32%);
+}.sidebar ul li.level-3.vertical-menu-item.active{ 
+    border-left:2px solid lighten($text-color,32%);
+}
 
 // OR THESE:  
 // You can open and use the style below as they are much cleaner
@@ -1452,7 +1534,7 @@ body.sidebar-white .sidebar .list-separator{
 //     height: 10px;
 //     width: 8px;
 //     content: '';
-//     border-left:2px solid $brand-primary;
+//     border-left:2px solid $gray-light;
 // }
 
 // End vertical menu item
@@ -1530,7 +1612,7 @@ body.sidebar-white .sidebar .list-separator{
 
 .sidebar-close-btn{
     display: none;
-    color:#ccc;
+    color:$gray;
     font-weight:100;
     font-size: 18px;
     position: relative;
@@ -1556,9 +1638,7 @@ body.sidebar-white .sidebar .list-separator{
 .sidebar .back-to-usettings:hover{
     opacity: 1;
 }
-.sidebar .back-to-usettings a{
-    font-size: 1rem;
-}
+
 
 
 
@@ -1603,7 +1683,7 @@ body.sidebar-white .sidebar .list-separator{
 .sidebar-mainbar .sidebar-control{
     position:absolute;
     display: inline-block;
-    margin-top: -8px;
+    margin-top: -5px;
     //margin-left: -7px;
     z-index: 1;
     
@@ -1707,7 +1787,7 @@ body.sidebar-white .sidebar .list-separator{
     box-shadow:-5px 2px 11px 2px rgba(204, 204, 204, 0.64);
 }
 .sidebar .scroll-y-full{
-    max-height:95vh;
+    max-height:99vh;
 }
 .sidebar .scroll-y-lg{
     max-height:50vh;
@@ -1850,7 +1930,7 @@ form.message-reply .control-label{
     font-size: 120%;
     text-align: center;
     border-radius: 3px*$ubr;
-    color:rgba(51, 51, 51, 0.55);
+    color:$gray;
 }
 .with-bg .social-button a{
     width: 52px;
@@ -1858,11 +1938,11 @@ form.message-reply .control-label{
 
 .social-button:hover a{
     color:#fff;
-    background-color:#615f5d;//rgba(51, 51, 51, 0.55);
+    background-color:$gray;
 }
 .with-bg .social-button a{
     color:#fff;
-    background-color:#615f5d;//rgba(51, 51, 51, 0.55);
+    background-color:$gray;//rgba(51, 51, 51, 0.55);
 }
 
 //facebook
@@ -2412,12 +2492,19 @@ body.has-sidebar .breadcrumb{
  // Buttons__________________________________________________________________________
  //______________________________________________________________________________
 
- //btn subtle
-//  .btn-subtle {
-//     color: #ddd;
-//     background-color: #666666;
-//     border-color: #000000;
-// }
+ //secondary
+.btn-secondary {
+    color: #fff;
+    background-color:$brand-secondary;
+    border-color:darken($brand-secondary,5%);
+}.btn-secondary{
+    &:hover,&:active {
+        color: #fff;
+        background-color: darken($brand-secondary,10%);
+    }
+}
+
+//subtle
 .btn-subtle {
     color: $text-color;
     background-color:$brand-subtle;
@@ -2617,7 +2704,13 @@ body.has-sidebar .breadcrumb{
     position:absolute;
 }
 .avatar.avatar-default{
-    
+    color: $text-color;
+    border-color:$text-color;
+}
+.avatar.avatar-subtle{
+    color: $text-color;
+    border-color:darken($brand-subtle,5%);
+    background-color: $brand-subtle;
 }
 .avatar.avatar-primary{
     @extend .bg-primary;
@@ -2772,13 +2865,29 @@ body.has-sidebar .breadcrumb{
  */#site-top-and-content{
     min-height:100vh;
  }
-
+ 
+ /**
+ *Skinny weight
+ */
+ .skinny{font-weight:100 !important;}
+ 
+ /**
+ * Slim weight
+ */
+ .slim{font-weight:200 !important;}
  /**
  * Strong
  */
  .strong{
-     font-weight: 500;
+     font-weight: 500 !important;
  }
+
+  /**
+ * Stronger
+ */
+ .stronger{
+    font-weight: 700 !important;
+}
  /**
  * Generis image class for all site
  */.img{
@@ -2836,7 +2945,27 @@ body.has-sidebar .breadcrumb{
     border-bottom: 1px solid rgba(0,0,0,0.12);
     padding-bottom:5px;
 }
+/**
+* Used to force dark gray text;
+*/.text-gray-dark{ 
+    color:$gray-dark !important;
+}
 
+/**
+* Used to force gray text;
+*/.text-gray{ 
+    color:$gray !important;
+}
+/**
+* Used to force light gray text;
+*/.text-gray-light{ 
+    color:$gray-light !important;
+}
+/**
+* Used to force secondary text color
+*/.text-secondary{ 
+    color:$brand-secondary !important;
+}
 /**
 * Used to force white text;
 */.text-white{ 
@@ -2858,10 +2987,48 @@ body.has-sidebar .breadcrumb{
     // }
 }
 /**
+* Used to force dark gray bg;
+*/.bg-gray-dark{ 
+    background-color:$gray-dark !important;
+}
+/**
+* Used to force gray bg;
+*/.bg-gray{ 
+    background-color:$gray !important;
+}
+/**
+* Used to force gray-light bg;
+*/.bg-gray-light{ 
+    background-color:$gray-light !important;
+}
+/**
+* Used to force gray-lighter bg;
+*/.bg-gray-lighter{ 
+    background-color:$gray-lighter !important;
+}
+/**
+* Used to force secondary bg color
+*/.bg-secondary{ 
+    background-color:$brand-secondary !important;
+}
+/**
 * Used to force white bg;
 */.bg-white{
     background-color: #fff !important;
 }
+/**
+* Label subtle;
+*/.label.label-subtle{
+    color:$text-color;
+    background-color: $brand-subtle;
+}
+/**
+* Label secondary;
+*/.label.label-secondary{
+    color:#fff;
+    background-color: $brand-secondary;
+}
+
 
 /**
 * Rule for separating lists
@@ -3032,45 +3199,45 @@ body.has-sidebar .breadcrumb{
 }
 
 /**
-* shortcut to .row.row-content-wrapper-default
+* Shorter shortcut to .row.row-content-wrapper-default
 */
 .row.row-c{
     @extend .row.row-content-wrapper-default;
 }
 
 /**
-* A short cut to pull all the classes to make a row a content wrapper
+* A  Shorter short cut to pull all the classes to make a row a content wrapper
 */.row.row-c-subtle{
     @extend .row.row-content-wrapper-default;
     background-color: $brand-subtle;
 }
 /**
-* A short cut to pull all the classes to make a row a content wrapper
+* A Shorter short cut to pull all the classes to make a row a content wrapper
 */.row.row-c-primary{
     @extend .row.row-content-wrapper-default;
     background-color: $brand-primary;
 }
 
 /**
-* A short cut to pull all the classes to make a row a content wrapper
+* A Shorter short cut to pull all the classes to make a row a content wrapper
 */.row.row-c-info{
     @extend .row.row-content-wrapper-default;
     background-color: $brand-info;
 }
 /**
-* A short cut to pull all the classes to make a row a content wrapper
+* A Shorter short cut to pull all the classes to make a row a content wrapper
 */.row.row-c-warning{
     @extend .row.row-content-wrapper-default;
     background-color: $brand-warning;
 }
 /**
-* A short cut to pull all the classes to make a row a content wrapper
+* A Shorter short cut to pull all the classes to make a row a content wrapper
 */.row.row-c-danger{
     @extend .row.row-content-wrapper-default;
     background-color: $brand-danger;
 }
 /**
-* A short cut to pull all the classes to make a row a content wrapper
+* A Shorter short cut to pull all the classes to make a row a content wrapper
 */.row.row-c-success{
     @extend .row.row-content-wrapper-default;
     background-color: $brand-success;
@@ -3408,8 +3575,10 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
                 //     width: 66.66666%;
                 // }
                 .title{
-                    font-size: 1.05rem;
+                    font-size: 1.0rem;
                     margin:3px 0 2px 0;
+                    font-weight:700;
+                    line-height: 1.25rem;
                     // @media (max-width: 768px){
                     //     margin-top: 0px;
                     // }
@@ -3419,9 +3588,13 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
                 }
                 .summary{
                     display: block;
+                    color:$gray-light;
+                    line-height: 1.125rem;
+                    font-size: 0.875rem;
                 }
                 .date{
                     color:$brand-warning;
+                    font-size: 75%;
                 }
             }
             .blog-post-inner-item{
@@ -3508,21 +3681,28 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
             .caption{
                 flex: 2 1 140px;
                 .title{
-                    font-size: 1.15rem;
+                    font-size: 1.0rem;
                     margin:3px 0 2px 0;
-                    font-weight: 500;
+                    font-weight: 700;
+                    line-height: 1.25rem;
                     a{
                         color:$text-color;
                     }
                 }
                 .summary{
                     display: none;
+                    color:$gray-light;
+                    line-height: 1.125rem;
+                    font-size: 0.875rem;
                     @media (max-width: 991.98px) { 
                         display: block;
                     }
                 }
                 .date{
                     color:$brand-warning;
+                    @media (min-width: 991.98px) { 
+                        display: none;
+                    }
                 }
             }
             .blog-post-inner-item{
@@ -3537,131 +3717,6 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
 }
 
 
-// article.blog-posts.horizontal{
-    
-// }
-// article.blog-post{
-//     .thumbnail{
-//         padding:0;
-//         //margin:15px 0 0 0;
-//         //max-width:300px;
-//     }
-//     .caption{
-//         max-height:200px;
-//         max-width:100%;
-        
-//         h3{
-//             font-size:16px;
-//             margin:5px 0 2px 0;
-//             padding:0;
-//             font-weight:500;
-//             a{
-//                 color:$text-color;
-//                 &:hover{
-//                 color:$brand-primary;
-//             }
-//             }
-            
-//         }
-//         p{
-//             font-size:13px;
-//         }
-//     }
-// &:hover{
-//     box-shadow: 0 0px 2px rgba(5, 5, 5, 0.055), 0 1px 3px rgba(134, 80, 80, 0.034);
-// }
-// &.flat{ //remove border and bg
-//     .thumbnail{
-//         border:none;
-//         background-color:transparent;
-//     }
-//     .caption{
-//         padding:2px 0 2px 0;
-//     }
-// }
-// &.no-border .thumbnail{border:none;}
-// &.blog-post-md .thumbnail img{ //medium size
-//         width:270px;
-//         height:150px;
-//     }
-// &.blog-post-sm {//small size
-        
-//         .thumbnail {
-//             padding: 4px;
-//             img{
-//                 width:204px;
-//                 height:115px;
-//             }
-//         }
-//     }
-// &.blog-post-xm {//extra small size
-//         text-align:center;
-//         .thumbnail {
-//             padding: 4px;
-//             img{
-//                 width:133px;
-//                 height:75px;
-//             }
-//         }
-//     }
-// }
-// @media (min-width: 768px) {//layout
-//     article.blog-post{
-//     // A general layout where thumbnail is floated 
-//     &.v0{
-//         &.blog-post-xs{
-//             text-align: unset;
-//         }
-//         .thumbnail{
-//             max-width:100%;
-            
-//         &:after{
-//             display: table;
-//             clear:left;
-//             content:" ";
-//         }
-//             .img-box{
-//                 float: left;
-//                 margin-right: 15px;
-//             }
-//         }
-//     }
-    
-//     //Use when thumb images do not have same dimension
-//     &.horizontal-1 .thumbnail{
-//         .img-box{
-//             height: 224px;
-//             overflow: hidden;
-//         }
-//         .caption h3{
-//             height: 40px;
-//             overflow: hidden;
-//         }
-//         .caption p{
-//             height: 50px;
-//             overflow: hidden;
-//         }
-//     } 
-//     //Use when thumb images have same dimension
-//     &.horizontal-2 .thumbnail{
-//         .caption h3{
-//             height: 40px;
-//             overflow: hidden;
-//         }
-//         .caption p{
-//             height: 50px;
-//             overflow: hidden;
-//         }
-//     } 
-//     }
-// }
-// @media (max-width: 768px) {
-// article.blog-post{
-//     .thumbnail{
-//         text-align: center;
-//     }
-// }
-// }
 
 //Form_______________________________________________
 //_____________ ___________________________________________
@@ -3733,10 +3788,12 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
        }
     }
     .field{
-        opacity:0.6;
+        opacity:0.85;
+        &:hover{opacity:1;}
     }
     .value{
-        opacity:0.6;
+        opacity:0.9;
+        &:hover{opacity:1;}
     }
     fieldset{
         margin-top: 25px;

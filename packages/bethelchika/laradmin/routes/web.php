@@ -189,8 +189,23 @@ Route::group(['middleware' => ['web']], function () {
 
     // Sources
     $LCR=class_exists($LCR_EXT.'CP\SourceController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/sources/',$LCR.'CP\SourceController@index')->name('cp-sources');
-    Route::get('/cp/source/table/{table}',$LCR.'CP\SourceController@showTable')->name('cp-source-table');
+    Route::get('/cp/source/create',$LCR.'CP\SourceController@create')->name('cp-source-create');
+    Route::post('/cp/source/create',$LCR.'CP\SourceController@store');
+    //Route::get('/cp/sources/',$LCR.'CP\SourceController@index')->name('cp-sources');
+    ////Types of sources
+    Route::get('/cp/source/types',$LCR.'CP\SourceController@types')->name('cp-source-types');
+    Route::get('/cp/source/types/table',$LCR.'CP\SourceController@tables')->name('cp-source-type-table');
+    Route::get('/cp/source/types/route',$LCR.'CP\SourceController@routes')->name('cp-source-type-route');
+    Route::get('/cp/source/types/route_prefix',$LCR.'CP\SourceController@routePrefixes')->name('cp-source-type-route_prefix');
+    Route::get('/cp/source/types/page',$LCR.'CP\SourceController@pages')->name('cp-source-type-page');
+    Route::get('/cp/source/types/{type}',$LCR.'CP\SourceController@type')->name('cp-source-type');//shows any source without its own specific route definition
+    ////individual source
+    Route::get('/cp/source/show/table/{name}',$LCR.'CP\SourceController@showTable')->name('cp-source-show-table');
+    Route::get('/cp/source/show/route/',$LCR.'CP\SourceController@showRoute')->name('cp-source-show-route');
+    Route::get('/cp/source/show/route_prefix/',$LCR.'CP\SourceController@showRoutePrefix')->name('cp-source-show-route_prefix');
+    Route::get('/cp/source/show/page/{id}',$LCR.'CP\SourceController@showPage')->name('cp-source-show-page');
+    Route::get('/cp/source/show/{id}',$LCR.'CP\SourceController@show')->name('cp-source-show');
+    
     Route::put('/cp/source/permissions',$LCR.'CP\SourceController@updatePermission')->name('cp-source-permission-update');
     Route::get('/cp/source/permissions/search-users',$LCR.'CP\SourceController@searchUsers')->name('cp-source-permission-search-users');
     Route::post('/cp/source/permissions/store-permission',$LCR.'CP\SourceController@storePermission')->name('cp-source-permission-store');
@@ -238,6 +253,7 @@ Route::group(['middleware' => ['web']], function () {
      Route::put('/cp/plugin/update',$LCR.'CP\PluginAdminController@update');
      Route::delete('/cp/plugin/update',$LCR.'CP\PluginAdminController@updateCancel');
 
+     
 });
 
 

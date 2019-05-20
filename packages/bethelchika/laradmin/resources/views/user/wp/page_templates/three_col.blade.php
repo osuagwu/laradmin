@@ -1,21 +1,19 @@
 @extends('laradmin::user.layouts.app')
+
 @include('laradmin::user.partials.social.metas', ['metas'=>$metas])
 @section('content')
-<section class="section @if($page->meta->minor_nav_scheme)section-{{$page->meta->minor_nav_scheme}}@else section-subtle @endif section-diffuse">
-    @if(!str_is(strtolower($page->meta->minor_nav),'off'))
-        @if(isset($has_page_family) and $has_page_family)
-            @include('laradmin::user.partials.minor_nav',['scheme'=>$page->meta->minor_nav_scheme])
-        
-        @endif
-    @endif
+@if(!str_is(strtolower($page->meta->minor_nav),'off')) 
+<section class="section @if($page->meta->minor_nav_scheme)section-{{$page->meta->minor_nav_scheme}}@else section-subtle @endif">
+    @include('laradmin::user.partials.minor_nav',['scheme'=>$page->meta->minor_nav_scheme])
 </section>
-<section class="section section-default   ">
+@endif
+<section class="section section-default section-last   ">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="sidebar-mainbar">
             {{-- sidebar control --}}
             @include('laradmin::user.partials.sidebar.init')
 
-            <aside class="sidebar text-reset">
+            <aside class="sidebar" role="presentation">
                 
                 <div class="sidebar-content ">
                     {{-- sidebar content --}}
@@ -25,6 +23,7 @@
                         
                     
                     
+                    {!!$page->getSidebar()!!}
 
                     <h4 class="heading-4">In this section</h4>
                     <div class="scroll-y-lg no-scroll-x mCustomScrollbar" data-mcs-theme="minimal-dark" >
@@ -43,7 +42,7 @@
                                 <div class="blog-listing">
                                     @foreach($posts as $post)
                                         
-                                        @include('laradmin::user.partials.wp.blog_post',['post'=>$post,'class'=>'flat'])
+                                        @include('laradmin::user.wp.partials.blog_post',['post'=>$post,'class'=>'flat'])
                                         
                                     @endforeach
                                     
@@ -56,7 +55,7 @@
             </aside>
     
                 <!-- Page Content Holder -->
-            <div class="mainbar"> 
+            <div class="mainbar" role="main"> 
                 {{--NOTE nothing is wrong with this commented code; it is an example of how to add minor nav inside mainbar  --}}
                 {{-- @if(!str_is(strtolower($page->meta->minor_nav),'off'))
                     @if(isset($has_page_family) and $has_page_family)
@@ -67,11 +66,11 @@
 
 
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <div class="left">
                             <article class="page" role="presentation">
                                 <header>
-                                    <h1 class="heading-huge page-title ">{{$page->title}}</h1>
+                                    <h1 class="heading-huge page-title " >{{$page->title}}</h1>
                                     
                                     
                                 </header>
@@ -92,16 +91,16 @@
                                 <div class=" article-footer padding-top-x10 padding-bottom-x10">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h4 class="heading-4">In this section</h4> 
-                                            <ul class="nav vertical-list">                            
+                                            <h4 class="heading-4 text-gray-light">Related</h4> 
+                                            <ul class="nav vertical-list bg-gray-lighter">                            
                                                 @include('laradmin::menu', ['tag' => 'page_family','layout'=>'vertical'])
                                             </ul>
                                         </div>
                                         <div class="col-md-6 text-right ">
-                                            <h4 class=" heading-4 fainted-08">Share this page</h4>
+                                            <h4 class=" heading-4 strong text-gray-light">Share this page</h4>
                                             @include('laradmin::user.partials.social.share',['share'=>$metas])
                                             {{--  <hr class=" top-rule">  --}}
-                                            <div class="fainted-04">
+                                            <div class="text-gray-light">
                                                 <small>Date created: <time datetime="{{$page->created_at}}">{{$page->created_at->format('l jS \\of F Y h:i:s A')}}</time></small>; 
                                                 <br>
                                                 <small>Last updated: {{$page->updated_at}}.</small>
@@ -116,8 +115,8 @@
                             </article>
                         </div>
                     </div>
-                    
-                    <aside class="col-md-3">
+                    @if(!str_is(strtolower($page->meta->rightbar),'off'))
+                    <aside class="col-md-4">
                         <div class="right">
                             {!!$page->getRightbar()!!}
                              {{--<h3 class="heading-3">In this section</h3> 
@@ -133,7 +132,7 @@
                                 <h4 class="heading-4 ">Blog and latest news</h4>
                                 <div class="blog-posts blog-posts-v0">
                                     @foreach($posts as $post)
-                                        @include('laradmin::user.partials.wp.blog_post',['post'=>$post])
+                                        @include('laradmin::user.wp.partials.blog_post',['post'=>$post])
                                     @endforeach
                                 </div>
                                 @endif
@@ -141,6 +140,7 @@
                             @endif
                         </div>
                     </aside>
+                    @endif
                 </div>
 
 
@@ -154,21 +154,23 @@
     </div>
 </section>
 @if(str_contains(strtolower($page->meta->blog_listing),'bottom'))
-<section class="section section-subtle  section-last section-extra-padding-top">
+<section class="section section-default ">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="blog-listing ">
             @if($posts->count())
-            <h3 class="heading-3 heading-underline text-center extra-padding-bottom">Blog and latest news</h3>
+            <h3 class="heading-3 strong underscore  ">Blog and latest news</h3>
             <div class="blog-posts blog-posts-h0">
                 @foreach($posts as $post)
                     
-                    @include('laradmin::user.partials.wp.blog_post',['post'=>$post, 'summary'=>1])
+                    @include('laradmin::user.wp.partials.blog_post',['post'=>$post, 'summary'=>1])
                     
                 @endforeach
             </div>
             @endif
         </div>
+        
     </div>
+    
 </section>
 @endif
 @endsection

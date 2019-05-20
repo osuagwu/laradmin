@@ -13,13 +13,13 @@ trait UserManagement
     * Special groups ID of Banned USERGROUP
     * @var int
     */
-    private $BANNED_USERGROUP_ID=1;
+    private static $BANNED_USERGROUP_ID=1;
     
     /**
     * Special groups ID of ADMIN USERGROUP
     * @var int
     */
-    private $ADMIN_USERGROUP_ID=2;
+    private static $ADMIN_USERGROUP_ID=2;
 
     
     /**
@@ -28,27 +28,27 @@ trait UserManagement
     * sary, e.g receives messages sent to the site. 
     * People shouldn't logon with this user
     */
-    private $CP_ID=1;
+    private static $CP_ID=1;
 
     /**
     * The ID of super user who has all rights and cannot be banned or edited
     * @var int
     */
-    private $SUPER_ID=2;
+    private static $SUPER_ID=2;
     
     /**
     * The ID of everyguest user
     * @var int
     */
-    private $GUEST_ID=5; 
+    private static  $GUEST_ID=5; 
 
     /**
      * Returns the ID of super user
      *
      * @return int
      */
-    function getSuperId(){
-        return config('super_id',$this->SUPER_ID);
+    public static function getSuperId(){
+        return config('super_id',static::$SUPER_ID);
     }
 
     /**
@@ -56,8 +56,8 @@ trait UserManagement
      *
      * @return int
      */
-     function getCPId(){
-        return config('cp_id',$this->CP_ID);
+    public static function getCPId(){
+        return config('cp_id',static::$CP_ID);
     }
 
     /**
@@ -65,8 +65,8 @@ trait UserManagement
      *
      * @return int
      */
-    function getGuestId(){
-        return config('guest_id',$this->GUEST_ID);
+    public static function getGuestId(){
+        return config('guest_id',static::$GUEST_ID);
     }
 
     /**
@@ -74,16 +74,16 @@ trait UserManagement
      *
      * @return int
      */
-     function getSystemId(){
-        return $this->getCPId();
+    public  static function getSystemId(){
+        return static::getCPId();
     }
      /**
      * Returns the super User object
      *
      * @return \BethelChika\Laradmin\User
      */
-    function getSuperUser(){
-        return User::findOrFail($this->getSuperId());
+    public static function getSuperUser(){
+        return User::findOrFail(static::getSuperId());
     }
 
     /**
@@ -91,16 +91,16 @@ trait UserManagement
      *
      * @return \BethelChika\Laradmin\User
      */
-     function getCPUser(){
-        return User::findOrFail($this->getCPId());
+    public  static function getCPUser(){
+        return User::findOrFail(static::getCPId());
     }
     /**
      * An alias of getCPUser()
      *
      * @return \BethelChika\Laradmin\User
      */
-     function getSystemUser(){
-        return $this->getCPUser();
+    public static function getSystemUser(){
+        return static::getCPUser();
     }
 
     /**
@@ -108,8 +108,8 @@ trait UserManagement
      *
      * @return \BethelChika\Laradmin\User
      */
-    function getGuestUser(){
-        return User::findOrFail($this->getGuestId());
+    public static function getGuestUser(){
+        return User::findOrFail(static::getGuestId());
     }
 
      /**
@@ -117,8 +117,8 @@ trait UserManagement
      *
      * @return int
      */
-    function getAdminUserGroupId(){
-        return config('admin_usergroup_id',$this->ADMIN_USERGROUP_ID);
+    public static function getAdminUserGroupId(){
+        return config('admin_usergroup_id',static::$ADMIN_USERGROUP_ID);
     } 
 
     /**
@@ -126,8 +126,8 @@ trait UserManagement
      *
      * @return int
      */
-     function getBannedUserGroupId(){
-        return config('banned_usergroup_id',$this->BANNED_USERGROUP_ID);
+    public static function getBannedUserGroupId(){
+        return config('banned_usergroup_id',static::$BANNED_USERGROUP_ID);
     } 
 
 

@@ -44,7 +44,7 @@
         @include ('laradmin::inc.msg_board')
         <div class="row">
             <div class="col-md-6">
-                <div class="sub-content with-padding">
+                <div class="sub-content with-padding no-elevation">
                     
                     <form class="form-horizontal" role="form" method="POST" action="{{route('comicpic.update')}}">     
                         {{ method_field('PUT') }}
@@ -75,7 +75,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="show-box show-box-edit sub-content">
+                <div class="show-box show-box-edit sub-content no-elevation">
                     <div class="content-top">
                         
                         <form class="text-right"  role="form" method="POST" action="@if($comicpic->published_at){{route('comicpic.unpublish',$comicpic->id)}} @else {{route('comicpic.publish',$comicpic->id)}} @endif"> 

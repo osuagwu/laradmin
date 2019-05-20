@@ -59,9 +59,13 @@ trait Helper
 
         $i = 0;
         $er=0;
+        
         foreach ($comicpic_ids as $comicpic_id) {
             $comicpic = Comicpic::find($comicpic_id);
 
+            if(!$comicpic){
+                continue;
+            }
 
             if ($comicpic->delete()) {
                 $i = $i + 1;

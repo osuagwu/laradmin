@@ -1,6 +1,11 @@
-<footer id="footer" >
+<footer id="footer" role="presentation">
         
         <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
+
+            @if(isset($page)){!!$page->getFooter()!!} <hr> @endif
+
+            {{-- <p class="cookies-use">This site rely on cookies for normal functioning. By using this site, you agree we can set and use cookies.</p> --}}
+
             <div class="row">
                 <div class="col-xs-6 col-md-4">
                     <span class="copyright">&copy; {{date('Y')}} {{ config('app.name', 'Laravel') }} </span>
@@ -52,8 +57,8 @@
                 
                 </div>
             </div>
-            @if(isset($page)){!!$page->getFooter()!!} @endif
-            <p class="cookies-use">This site rely on cookies for normal functioning. By using this site, you agree we can set and use cookies.</p>
+            
+            
     
         </div>
      

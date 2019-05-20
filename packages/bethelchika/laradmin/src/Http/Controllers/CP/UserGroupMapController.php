@@ -140,7 +140,7 @@ class UserGroupMapController extends Controller
         $this->authorize('updates',['BethelChika\Laradmin\UserGroupMap',$user]);
 
         $this->validate($request, [
-            'member_of' => 'required|string|max:255',
+            'member_of' => 'nullable|string|max:255',
           ]);
 
         //exit(var_dump(strcmp(strtolower($user->name),'super user')));
@@ -150,8 +150,11 @@ class UserGroupMapController extends Controller
         //}
         
 
-        $new_user_maps=explode(',',$request->member_of);
-        array_walk($new_user_maps,function(&$val,$key){$val=intval($val);});
+        $new_user_maps=[];
+        if($request->member_of){
+            $new_user_maps=explode(',',$request->member_of);
+            array_walk($new_user_maps,function(&$val,$key){$val=intval($val);});
+        }
 
         $user_maps=$user->userGroupMap;
         $changes=0;
@@ -168,7 +171,7 @@ class UserGroupMapController extends Controller
                 $changes++;
             }
         }
-
+        
         //now add any remaning new maps to db
         foreach($new_user_maps as $new_user_map){ 
             $ugm=new UserGroupMap();

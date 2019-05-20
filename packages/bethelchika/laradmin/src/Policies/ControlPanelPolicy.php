@@ -3,8 +3,9 @@
 namespace BethelChika\Laradmin\Policies;
 
 use BethelChika\Laradmin\User;
-use BethelChika\Laradmin\Permission\Permission;
+//use BethelChika\Laradmin\Permission\Permission;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use BethelChika\Laradmin\Laradmin;
 
 class ControlPanelPolicy
 {
@@ -17,11 +18,11 @@ class ControlPanelPolicy
     
     /**
     * Create a new policy instance.
-    *
+    * @param Laradmin $laradmin
     * @return void
     */
-    public function __construct(Permission $perm){
-        $this->perm=$perm;
+    public function __construct(Laradmin $laradmin){
+        $this->perm=$laradmin->permission;
         //dd($perm);
     }
     

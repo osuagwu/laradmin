@@ -15,15 +15,17 @@ class CreateMainPermissionsTable extends Migration
     {
         Schema::create('main_permissions', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-            $table->string('source');
+            
+            $table->string('source');//delete this
+            $table->string('source_type');//new
+            $table->string('source_id');//new
             $table->integer('user_id')->nullable();
             $table->integer('user_group_id')->nullable();
             $table->boolean('create');
             $table->boolean('read');
             $table->boolean('update');
             $table->boolean('delete');
-
+            $table->timestamps();
             $table->foreign('user_id')
             ->references('id')->on('users')
             ->onDelete('cascade');

@@ -26,9 +26,10 @@ class UserController extends Controller
     public function __construct(Laradmin $laradmin)
     {
         $this->middleware('auth');
+        parent::__construct($laradmin);
         $this->mediaManager=$laradmin->mediaManager;
         $this->laradmin=$laradmin;
-        parent::__construct($laradmin);
+        
         
     }
 

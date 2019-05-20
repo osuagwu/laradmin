@@ -1,5 +1,8 @@
 <?php
 namespace BethelChika\Laradmin\WP\Models;
+
+use BethelChika\Laradmin\Source;
+
 //use \Corcel\Model\Page as CorcelPage;
 //use \Corcel\Model\Post as CorcelPost;
 
@@ -52,5 +55,34 @@ class Page extends Post
         return Post::where('post_type','laradmin_page_part')->where('post_name', 'footer')->first()->content;
     }
 
+    /**
+     * Check if authentication/authorisation is needed. If a page has at least one 
+     * entry then it requires authentication since it will be required in order 
+     * to authorise the entry.
+     *
+     * @return boolean
+     */
+    public function needsAuth(){
+        // Check at the table and page level
+        $access_string=Source::getTableAccessString($this);
+        $perm=app('laradmin')->permission;
+        $page_access_string=Source::getPageTypeKey().':'.$this->getKey();
+        if ($perm->hasEntry($access_string,'read') or 
+            $perm->hasEntry($page_access_string,'read')){
+            return true;
+        }
 
+        //Check at the model level
+        $source=Source::where('type','model')->where('name',get_class())->first();
+        if($source){
+            $model_access_string=Source::getTypeKey().':'.$source->id;
+            if ($perm->hasEntry($model_access_string,'read')) {
+                return true;
+            }
+        }
+
+
+        // Does not need auth
+        return false;
+    }
 }

@@ -33,7 +33,7 @@
                     @component('laradmin::blade_components.input_text',['name'=>'name','value'=>$user->name,'label'=>'Name (Screen name)','required'=>'required'])
                     @endcomponent 
 
-                    @component('laradmin::blade_components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
+                    {{--  @component('laradmin::blade_components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
                     @endcomponent 
 
                     @component('laradmin::blade_components.input_text',['name'=>'last_name','value'=>$user->last_name,'label'=>'Last name'])
@@ -49,7 +49,7 @@
                     @endcomponent
 
                     @component('laradmin::blade_components.input_select',['name'=>'faith','value'=>$user->faith,'options'=>$faiths,])
-                    @endcomponent
+                    @endcomponent  --}}
                     
                     <hr class="hr">
                     @component('laradmin::blade_components.input_password',['name'=>'new_password','label'=>'New password'])

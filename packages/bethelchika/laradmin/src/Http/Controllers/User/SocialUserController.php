@@ -17,12 +17,15 @@ class SocialUserController extends Controller
     use ReAuthController;
 
     private $socialUserManager;
+    private $laradmin;
 
     public function __construct(SocialUserManager $socialUserManager, Laradmin $laradmin)
     {
        $this->middleware('re-auth')->only('index');
        $this->middleware('auth')->only(['index','unlinkSocialUser']);
        $this->socialUserManager=$socialUserManager;
+
+       $this->laradmin=$laradmin;
 
        // Load menu item for user settings
        $laradmin->contentManager->loadMenu('user_settings');
@@ -32,11 +35,17 @@ class SocialUserController extends Controller
 
        // Set container fluid
        $laradmin->assetManager->setContainerType('fluid');
+
+       
+       
+       $this->laradmin->assetManager->registerBodyClass('has-minor-nav') ;
     }
 
     public function index(Request $request){
         $user=Auth::user();
         $this->authorize('update',$user);
+
+        
 
         $socialUsers=$user->socialUsers()->where('provider','!=','email')->get();
         $pageTitle='Social user account';
@@ -203,6 +212,7 @@ class SocialUserController extends Controller
     public function externalAccounts(){
         $user=Auth::user();
         $this->authorize('delete', $user);
+        $this->laradmin->assetManager->registerBodyClass('sidebar-white') ;
         
         $pageTitle='External accounts';
         return view('laradmin::user.social_user.external_accounts',compact('pageTitle'));

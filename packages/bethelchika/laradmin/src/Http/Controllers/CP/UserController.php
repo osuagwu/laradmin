@@ -91,29 +91,29 @@ class UserController extends Controller
         $this->validate($request, [
             'email' => 'required|string|email|max:255|unique:users',
             'name' => 'required|string|max:255',
-            'first_names'=>'nullable|max:255|string',
-            'last_name'=>'nullable|max:255|string',
-            'year_of_birth'=>'nullable|integer|max:10000',
+            //'first_names'=>'nullable|max:255|string',
+            //'last_name'=>'nullable|max:255|string',
+            //'year_of_birth'=>'nullable|integer|max:10000',
             'new_password' => 'required|string|min:6|confirmed|max:255',
-            'gender'=>'nullable|string|max:10000',
-            'faith'=>'nullable|string|max:255',
-            'country'=>'nullable|string|max:255',
+            //'gender'=>'nullable|string|max:10000',
+            //'faith'=>'nullable|string|max:255',
+            //'country'=>'nullable|string|max:255',
           ]);
 
            $user=new User;
            $user->email=$request->email;
            $user->name=$request->name;
-           $user->first_names=$request->first_names;
-           $user->last_name=$request->last_name;
-           $user->year_of_birth=$request->year_of_birth;
-           $user->gender=$request->gender;
-           $user->faith=$request->faith;
-           $user->country=$request->country;
+           //$user->first_names=$request->first_names;
+           //$user->last_name=$request->last_name;
+           //$user->year_of_birth=$request->year_of_birth;
+           //$user->gender=$request->gender;
+           //$user->faith=$request->faith;
+           //$user->country=$request->country;
  
            $user->password=Hash::make($request->new_password);
            $user->save();
            
-           return redirect()->route('cp-user',$user->id)->with('success', 'User create successfully!');
+           return redirect()->route('cp-user',$user->id)->with('success', 'User created successfully!');
     }
 
     /**
@@ -171,25 +171,25 @@ class UserController extends Controller
 
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'first_names'=>'nullable|max:255|string',
-            'last_name'=>'nullable|max:255|string',
-            'year_of_birth'=>'nullable|integer|max:10000',
+            //'first_names'=>'nullable|max:255|string',
+            //'last_name'=>'nullable|max:255|string',
+            //'year_of_birth'=>'nullable|integer|max:10000',
             'new_password' => 'nullable|string|min:6|confirmed|max:255',
-            'gender'=>'nullable|string|max:10000',
-            'faith'=>'nullable|string|max:255',
-            'country'=>'nullable|string|max:255',
+            //'gender'=>'nullable|string|max:10000',
+            //'faith'=>'nullable|string|max:255',
+            //'country'=>'nullable|string|max:255',
           ]);
          // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
           //update the user
 
           //$user=User::find($user->id);
           $user->name=$request->name;
-          $user->first_names=$request->first_names;
-          $user->last_name=$request->last_name;
-          $user->year_of_birth=$request->year_of_birth;
-          $user->gender=$request->gender;
-          $user->faith=$request->faith;
-          $user->country=$request->country;
+          //$user->first_names=$request->first_names;
+          //$user->last_name=$request->last_name;
+          //$user->year_of_birth=$request->year_of_birth;
+          //$user->gender=$request->gender;
+          //$user->faith=$request->faith;
+          //$user->country=$request->country;
 
           if(strcmp($request->new_password,''))$user->password=Hash::make($request->new_password);
           $user->save();

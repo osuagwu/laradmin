@@ -51,5 +51,6 @@
 ## [ perhaps note]make icon for comic pic
 
 ####
-## Make the head dropdown menu item navigatable. Needs to make it work intuitively like in wordpress native theme which work with mouseover on desktop and have a different element for collapsing the dropdown and another (i.e main link text) for visiting the head menu item link
+## [DONE]Make the head dropdown menu item navigatable. Needs to make it work intuitively like in wordpress native theme which work with mouseover on desktop and have a different element for collapsing the dropdown and another (i.e main link text) for visiting the head menu item link
+## Perhaps force banned user to Logout like disabled user.
 
