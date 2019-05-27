@@ -5,9 +5,9 @@
 <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{route('cp')}}">Control panel</a></li>
     <li class="breadcrumb-item "><a href="{{route('cp-users')}}">Source</a></li>
-    <li class="breadcrumb-item active">Link a source</a></li>
+    <li class="breadcrumb-item active">Edit a source</a></li>
 </ol>
-<h1 class="page-title">Link Source</h1>
+<h1 class="page-title">Edit Source</h1>
 @endsection
 
 @section('content')         
@@ -16,25 +16,25 @@
 
             @component('laradmin::blade_components.panel')
                 @slot('title')
-                    Link source form
+                    Edit source form
                 @endslot 
                
 
 
 
 
-                <form class="form-horizontal" role="form" method="POST" action="{{route('cp-source-create')}}">
+                <form class="form-horizontal" role="form" method="POST" action="{{route('cp-source-edit',$source->id)}}">
                    
                     {{ csrf_field() }}
-
+                    @method('put')
                     
 
-                    @component('laradmin::form.components.input_text',['name'=>'name','value'=>'','required'=>'required'])
+                    @component('laradmin::form.components.input_text',['name'=>'name','value'=>$source->name,'required'=>'required'])
                     @endcomponent  
-                    @component('laradmin::form.components.input_select',['name'=>'type','value'=>'','required'=>'required','options'=>$source_types])
+                    @component('laradmin::form.components.input_select',['name'=>'type','value'=>$source->type,'required'=>'required','options'=>$source_types])
                     @endcomponent                   
 
-                    @component('laradmin::form.components.textarea',['name'=>'description','value'=>'','required'=>'required'])
+                    @component('laradmin::form.components.textarea',['name'=>'description','value'=>$source->description,'required'=>'required'])
                     @endcomponent  
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">
@@ -43,7 +43,7 @@
                                 Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                Link
+                                Update
                             </button>
                         </div>
                     </div>

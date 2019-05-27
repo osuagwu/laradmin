@@ -81,11 +81,11 @@ class TablesSeeder extends Seeder {
 
            
 
-            // #5 Guest user 
-            $users['guest']=User::create(['email' => 'guest@naemail.com',
+            // #5 Guest user, any person who visits the site without login in
+            $users['guest']=User::create(['email' => 'guest'.str_random(5).'@naemail.com',
                         'name'=>'Guest user',
-                        'is_active'=>0,
-                        'password'=>bcrypt('guest'),
+                        'is_active'=>1,
+                        'password'=>bcrypt(str_random(40)),
             ]);
 
 
@@ -148,7 +148,7 @@ class TablesSeeder extends Seeder {
 
         // Check that values in the default groups and users are as aspected and tell the correct value to be put into env file 
         $this->command->info('-');
-        $this->command->info('------------- Insert this in env file, unless you want other values -------------');
+        $this->command->info('------------- Insert (if any) this in env file, unless you want other values -------------');
         if($userGroups['banned']->id !=config('laradmin.banned_usergroup_id',1)){
             $this->command->info(' LARADMIN_BANNED_USERGROUP_ID='.$userGroups['banned']->id);
         }

@@ -21,6 +21,7 @@ class SocialUserController extends Controller
 
     public function __construct(SocialUserManager $socialUserManager, Laradmin $laradmin)
     {
+        parent::__construct();
        $this->middleware('re-auth')->only('index');
        $this->middleware('auth')->only(['index','unlinkSocialUser']);
        $this->socialUserManager=$socialUserManager;

@@ -25,7 +25,14 @@ Edit //config/app.php
 
 
 ## Migrations and vendor publishing,
-php artisan vendor:publish
+Publish config and assets:
+php artisan vendor:publish --tag=laradmin_config
+php artisan vendor:publish --tag=laradmin_asset
+
+If you also want to publish te views:
+php artisan vendor:publish --tag=laradmin_view
+
+Migration:
 php artisan migrate
 php artisan db:seed --class="BethelChika\Laradmin\Seeds\LaradminDatabaseSeeder"
 

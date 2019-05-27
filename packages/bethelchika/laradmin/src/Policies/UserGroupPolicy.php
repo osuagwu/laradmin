@@ -25,7 +25,7 @@ class UserGroupPolicy
      *
      * @var string
      */
-    public $tableAccessString;
+    public $tableSourceId;
     
     /**
     * Create a new policy instance.
@@ -37,7 +37,7 @@ class UserGroupPolicy
         
         //Get table access info
         $temp=new UserGroup();
-        $this->tableAccessString=Source::getTableAccessString($temp);
+        $this->tableSourceId=Source::getTableSourceIdFromModel($temp);
         unset($temp);
     }
     /**
@@ -50,7 +50,7 @@ class UserGroupPolicy
     public function view(User $user, UserGroup $userGroup)
     {
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'read',$userGroup)){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'read',$userGroup)){
             return false;
         }
 
@@ -71,7 +71,7 @@ class UserGroupPolicy
     public function create(User $user)
     {
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'create')){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'create')){
             return false;
         }
 
@@ -93,7 +93,7 @@ class UserGroupPolicy
     public function update(User $user, UserGroup $userGroup)
     {
         //Check at the table level
-        $r= $this->perm->can($user,$this->tableAccessString,'update',$userGroup);
+        $r= $this->perm->can($user,'table',$this->tableSourceId,'update',$userGroup);
 
         //CHeck at the model level
         $m=$this->modelCheckHelper($user,'update',$userGroup);
@@ -117,7 +117,7 @@ class UserGroupPolicy
     public function delete(User $user, UserGroup $userGroup)
     {
         //Check at the table level
-        $r= $this->perm->can($user,$this->tableAccessString,'delete',$userGroup);
+        $r= $this->perm->can($user,'table',$this->tableSourceId,'delete',$userGroup);
 
         //CHeck at the model level
         $m=$this->modelCheckHelper($user,'delete',$userGroup);
@@ -141,7 +141,7 @@ class UserGroupPolicy
      {
         
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'read')){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'read')){
             return false;
         }
 
@@ -168,8 +168,8 @@ class UserGroupPolicy
         //Check at the model level
         $source=Source::where('type','model')->where('name',UserGroup::class)->first();
         if($source){
-            $access_string=Source::getTypeKey().':'.$source->id;
-            if(!$this->perm->can($user,$access_string,$action,$model)){
+            //$access_string=Source::getTypeKey().':'.$source->id;
+            if(!$this->perm->can($user,Source::class,$source->id,$action,$model)){
                 return false;
             }
         }

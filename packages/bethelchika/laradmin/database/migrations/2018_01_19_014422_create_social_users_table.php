@@ -14,6 +14,7 @@ class CreateSocialUsersTable extends Migration
     public function up()
     {
         Schema::create('social_users', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');

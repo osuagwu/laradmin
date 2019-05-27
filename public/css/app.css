@@ -11023,11 +11023,6 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 .page-title {
   margin-bottom: 15px;
-  color: #4A4A7F;
-}
-
-body.navbar-primary .page-title {
-  color: #353535;
 }
 
 .heading-0.page-title,
@@ -11111,6 +11106,13 @@ body.navbar-primary .page-title {
   font-weight: 100;
 }
 
+/**
+    * Helper for creating section overlay
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage : @include section-overlay(primary,$brand-primary);
+    */
+
 .section-primary {
   background-color: #4A4A7F;
   color: #fff;
@@ -11121,7 +11123,7 @@ body.navbar-primary .page-title {
 }
 
 /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)
@@ -11149,6 +11151,34 @@ body.navbar-primary .page-title {
   background-color: rgba(74, 74, 127, 0.2);
 }
 
+@media (min-width: 768px) {
+  .section-primary .section-overlay.section-overlay-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-primary .section-overlay.section-overlay-gradient-angle {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-primary .section-overlay.section-overlay-gradient-smooth {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
+
+  .section-primary .section-overlay.section-overlay-brand-gradient {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(74, 74, 127, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(74, 74, 127, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-primary .section-overlay.section-overlay-brand-gradient-angle {
+    background: linear-gradient(176deg, rgba(74, 74, 127, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-primary .section-overlay.section-overlay-brand-gradient-smooth {
+    background: linear-gradient(176deg, rgba(74, 74, 127, 0.90716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
+}
+
 .section-info {
   background-color: #7EA3CC;
   color: #fff;
@@ -11159,7 +11189,7 @@ body.navbar-primary .page-title {
 }
 
 /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)
@@ -11184,7 +11214,35 @@ body.navbar-primary .page-title {
 }
 
 .section-info .section-overlay {
-  background-color: rgba(126, 163, 204, 0.2);
+  background-color: rgba(74, 74, 127, 0.2);
+}
+
+@media (min-width: 768px) {
+  .section-info .section-overlay.section-overlay-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-info .section-overlay.section-overlay-gradient-angle {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-info .section-overlay.section-overlay-gradient-smooth {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
+
+  .section-info .section-overlay.section-overlay-brand-gradient {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(126, 163, 204, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(126, 163, 204, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-info .section-overlay.section-overlay-brand-gradient-angle {
+    background: linear-gradient(176deg, rgba(126, 163, 204, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-info .section-overlay.section-overlay-brand-gradient-smooth {
+    background: linear-gradient(176deg, rgba(126, 163, 204, 0.90716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
 }
 
 .section-success {
@@ -11197,7 +11255,7 @@ body.navbar-primary .page-title {
 }
 
 /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)
@@ -11222,7 +11280,35 @@ body.navbar-primary .page-title {
 }
 
 .section-success .section-overlay {
-  background-color: rgba(0, 204, 102, 0.2);
+  background-color: rgba(74, 74, 127, 0.2);
+}
+
+@media (min-width: 768px) {
+  .section-success .section-overlay.section-overlay-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-success .section-overlay.section-overlay-gradient-angle {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-success .section-overlay.section-overlay-gradient-smooth {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
+
+  .section-success .section-overlay.section-overlay-brand-gradient {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 204, 102, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 204, 102, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-success .section-overlay.section-overlay-brand-gradient-angle {
+    background: linear-gradient(176deg, rgba(0, 204, 102, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-success .section-overlay.section-overlay-brand-gradient-smooth {
+    background: linear-gradient(176deg, rgba(0, 204, 102, 0.90716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
 }
 
 .section-warning {
@@ -11235,7 +11321,7 @@ body.navbar-primary .page-title {
 }
 
 /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)
@@ -11260,7 +11346,35 @@ body.navbar-primary .page-title {
 }
 
 .section-warning .section-overlay {
-  background-color: rgba(244, 162, 97, 0.2);
+  background-color: rgba(74, 74, 127, 0.2);
+}
+
+@media (min-width: 768px) {
+  .section-warning .section-overlay.section-overlay-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-warning .section-overlay.section-overlay-gradient-angle {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-warning .section-overlay.section-overlay-gradient-smooth {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
+
+  .section-warning .section-overlay.section-overlay-brand-gradient {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(244, 162, 97, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(244, 162, 97, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-warning .section-overlay.section-overlay-brand-gradient-angle {
+    background: linear-gradient(176deg, rgba(244, 162, 97, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-warning .section-overlay.section-overlay-brand-gradient-smooth {
+    background: linear-gradient(176deg, rgba(244, 162, 97, 0.90716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
 }
 
 .section-danger {
@@ -11273,7 +11387,7 @@ body.navbar-primary .page-title {
 }
 
 /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)
@@ -11298,7 +11412,35 @@ body.navbar-primary .page-title {
 }
 
 .section-danger .section-overlay {
-  background-color: rgba(237, 106, 90, 0.2);
+  background-color: rgba(74, 74, 127, 0.2);
+}
+
+@media (min-width: 768px) {
+  .section-danger .section-overlay.section-overlay-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-danger .section-overlay.section-overlay-gradient-angle {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-danger .section-overlay.section-overlay-gradient-smooth {
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
+
+  .section-danger .section-overlay.section-overlay-brand-gradient {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(237, 106, 90, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(237, 106, 90, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  }
+
+  .section-danger .section-overlay.section-overlay-brand-gradient-angle {
+    background: linear-gradient(176deg, rgba(237, 106, 90, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+  }
+
+  .section-danger .section-overlay.section-overlay-brand-gradient-smooth {
+    background: linear-gradient(176deg, rgba(237, 106, 90, 0.90716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+  }
 }
 
 .section-subtle {
@@ -11306,7 +11448,7 @@ body.navbar-primary .page-title {
 }
 
 /**
-    * Helper for creating setion diffuse
+    * Helper for creating section diffuse
     * @param $brand-name Brand name (e.g primary)
     * @param $brand Brand color (e.g $brand-primary)
     * Useage: @include section-diffuse(primary,$brand-primary)

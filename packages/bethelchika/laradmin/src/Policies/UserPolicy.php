@@ -25,7 +25,7 @@ class UserPolicy
      *
      * @var string
      */
-    public $tableAccessString;
+    public $tableSourceId;
 
     /**
     * Create a new policy instance.
@@ -37,7 +37,7 @@ class UserPolicy
 
         //Get table access info
         $temp_user=new User;
-        $this->tableAccessString=Source::getTableAccessString($temp_user);
+        $this->tableSourceId=Source::getTableSourceIdFromModel($temp_user);
         unset($temp_user);
     }
     /**
@@ -50,7 +50,7 @@ class UserPolicy
     public function view(User $user, User $userToView)
     {
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'read',$userToView)){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'read',$userToView)){
             return false;
         }
 
@@ -72,7 +72,7 @@ class UserPolicy
      public function views(User $user)
      {
          //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'read')){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'read')){
             return false;
         }
 
@@ -92,7 +92,7 @@ class UserPolicy
     public function create(User $user)
     {
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'create')){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'create')){
             return false;
         }
 
@@ -117,7 +117,7 @@ class UserPolicy
 
         
         // Check at the table level
-        $r= $this->perm->can($user,$this->tableAccessString,'update',$userToUpdate);
+        $r= $this->perm->can($user,'table',$this->tableSourceId,'update',$userToUpdate);
 
         //Check at the model level
         $m=$this->modelCheckHelper($user,'update',$userToUpdate);
@@ -146,7 +146,7 @@ class UserPolicy
         
 
         //Check at the table level
-        $r= $this->perm->can($user,$this->tableAccessString,'delete',$userToDelete);
+        $r= $this->perm->can($user,'table',$this->tableSourceId,'delete',$userToDelete);
         
         //Check at the model level
         $m=$this->modelCheckHelper($user,'delete',$userToDelete);
@@ -176,8 +176,8 @@ class UserPolicy
         //Check at the model level
         $source=Source::where('type','model')->where('name',User::class)->first();
         if($source){
-            $access_string=Source::getTypeKey().':'.$source->id;
-            if(!$this->perm->can($user,$access_string,$action,$model)){
+            //$access_string=Source::getTypeKey().':'.$source->id;
+            if(!$this->perm->can($user,Source::class,$source->id,$action,$model)){
                 return false;
             }
         }

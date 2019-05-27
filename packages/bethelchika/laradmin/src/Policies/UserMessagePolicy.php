@@ -25,7 +25,7 @@ class UserMessagePolicy
      *
      * @var string
      */
-    public $tableAccessString;
+    public $tableSourceId;
 
     /**
     * Create a new policy instance.
@@ -37,7 +37,7 @@ class UserMessagePolicy
 
         //Get table info
         $temp_user_msg=new UserMessage();
-        $this->tableAccessString=Source::getTableAccessString($temp_user_msg);
+        $this->tableSourceId=Source::getTableSourceIdFromModel($temp_user_msg);
         unset($temp_user_msg);
     }
     public function before(User $user){
@@ -91,7 +91,7 @@ class UserMessagePolicy
     public function cpView(User $user, UserMessage $userMessage)
     {
         //Check at the Table level
-        if(!$this->perm->can($user,$this->tableAccessString,'read',$userMessage)){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'read',$userMessage)){
             return false;
         }
 
@@ -113,7 +113,7 @@ class UserMessagePolicy
      public function cpViews(User $user)
      {
          //Check at the table level
-         if(!$this->perm->can($user,$this->tableAccessString,'read')){
+         if(!$this->perm->can($user,'table',$this->tableSourceId,'read')){
              return false;
          }
 
@@ -135,7 +135,7 @@ class UserMessagePolicy
     public function cpCreate(User $user)
     {
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'create')){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'create')){
             return false;
         }
 
@@ -157,7 +157,7 @@ class UserMessagePolicy
     public function cpUpdate(User $user, UserMessage $userMessage)
     {
         //Check at the table level
-        if(!$this->perm->can($user,$this->tableAccessString,'update',$userMessage)){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'update',$userMessage)){
             return false;
         }
 
@@ -180,7 +180,7 @@ class UserMessagePolicy
     public function cpDelete(User $user, UserMessage $userMessage)
     {
         //Check at table level
-        if(!$this->perm->can($user,$this->tableAccessString,'delete',$userMessage)){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'delete',$userMessage)){
             return false;
         }
 
@@ -211,7 +211,7 @@ class UserMessagePolicy
     {
         
         return $this->isMy($user,$userMessage)  and 
-        !$this->perm->isDisallowed($user,$this->tableAccessString,'read',$userMessage) and
+        !$this->perm->isDisallowed($user,'table',$this->tableSourceId,'read',$userMessage) and
         !$this->modelCheckHelper($user,'read',$userMessage,'isDisallowed');
         
     }
@@ -228,7 +228,7 @@ class UserMessagePolicy
      */
      public function views(User $user)
      {
-        return !$this->perm->isDisallowed($user,$this->tableAccessString,'read') and
+        return !$this->perm->isDisallowed($user,'table',$this->tableSourceId,'read') and
                 !$this->modelCheckHelper($user,'read',null,'isDisallowed');
         
      }
@@ -241,7 +241,7 @@ class UserMessagePolicy
      */
     public function create(User $user)
     {
-        return !$this->perm->isDisallowed($user,$this->tableAccessString,'create') and
+        return !$this->perm->isDisallowed($user,'table',$this->tableSourceId,'create') and
                 !$this->modelCheckHelper($user,'create',null,'isDisallowed');;
     }
 
@@ -256,7 +256,7 @@ class UserMessagePolicy
     {
         
         return $this->isMy($user,$userMessage)  and 
-                !$this->perm->isDisallowed($user,$this->tableAccessString,'update',$userMessage) and
+                !$this->perm->isDisallowed($user,'table',$this->tableSourceId,'update',$userMessage) and
                 !$this->modelCheckHelper($user,'update',$userMessage,'isDisallowed');
         
     }
@@ -272,7 +272,7 @@ class UserMessagePolicy
     {
         
         return $this->isMy($user,$userMessage)  and 
-                !$this->perm->isDisallowed($user,$this->tableAccessString,'delete',$userMessage) and 
+                !$this->perm->isDisallowed($user,'table',$this->tableSourceId,'delete',$userMessage) and 
                 !$this->modelCheckHelper($user,'delete',$userMessage,'isDisallowed');;
 
     }
@@ -293,18 +293,22 @@ class UserMessagePolicy
         //Check at the model level
         $source=Source::where('type','model')->where('name',UserMessage::class)->first();
         if($source){
-            $access_string=Source::getTypeKey().':'.$source->id;
+            //$access_string=Source::getTypeKey().':'.$source->id;
             if(str_is($method,'can')){
-                if(!$this->perm->can($user,$access_string,$action,$model)){
+                if(!$this->perm->can($user,Source::class,$source->id,$action,$model)){
                     return false;
                 }
             }else{
-                if($this->perm->isDisallowed($user,$access_string,$action,$model)){
+                if($this->perm->isDisallowed($user,Source::class,$source->id,$action,$model)){
                     return false;
                 }
             }
         }
 
-        return true;
+        //The user can do it
+        if(str_is($method,'can')){
+            return true;//
+        }
+        return false;//
    }
 }

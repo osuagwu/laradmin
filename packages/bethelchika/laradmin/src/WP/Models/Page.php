@@ -64,19 +64,19 @@ class Page extends Post
      */
     public function needsAuth(){
         // Check at the table and page level
-        $access_string=Source::getTableAccessString($this);
+        $table_source_id=Source::getTableSourceIdFromModel($this);
         $perm=app('laradmin')->permission;
-        $page_access_string=Source::getPageTypeKey().':'.$this->getKey();
-        if ($perm->hasEntry($access_string,'read') or 
-            $perm->hasEntry($page_access_string,'read')){
+        //$page_access_string=Source::getPageTypeKey().':'.$this->getKey();
+        if ($perm->hasEntry('table',$table_source_id,'read') or 
+            $perm->hasEntry(get_class(),$this->getKey(),'read')){
             return true;
         }
 
         //Check at the model level
         $source=Source::where('type','model')->where('name',get_class())->first();
         if($source){
-            $model_access_string=Source::getTypeKey().':'.$source->id;
-            if ($perm->hasEntry($model_access_string,'read')) {
+            //$model_access_string=Source::getTypeKey().':'.$source->id;
+            if ($perm->hasEntry(Source::class,$source->id,'read')) {
                 return true;
             }
         }

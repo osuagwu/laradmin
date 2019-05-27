@@ -54,7 +54,9 @@
                         <div class="text-gray-light">
                             <small>Date created: <time datetime="{{$page->created_at}}">{{$page->created_at->format('l jS \\of F Y h:i:s A')}}</time></small>; 
                             <small>Last updated: {{$page->updated_at}}</small>
-                            <small class="fainted-09"><a class="edit-link" href="{{config('laradmin.wp_rpath')}}/wp-admin/post.php?post={{$page->ID}}&action=edit">Edit</a></small>
+                            @can('update',$page)
+                                <small class="fainted-09"><a class="edit-link" href="{{config('laradmin.wp_rpath')}}/wp-admin/post.php?post={{$page->ID}}&action=edit">Edit</a></small>
+                            @endcan
                         </div>
                     </div>
                 </div>

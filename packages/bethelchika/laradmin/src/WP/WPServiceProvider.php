@@ -17,6 +17,11 @@ class WPServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Do not do anything if wp is not enabled
+        if(!config('laradmin.wp_enable',true)){
+            return;
+        }
+
         //Register providers
         $this->app->register(CorcelServiceProvider::class);
 
@@ -31,6 +36,10 @@ class WPServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
+        // Do not do anything if wp is not enabled
+        if(!config('laradmin.wp_enable',true)){
+            return;
+        }
 
         //Shortcodes
         Post::addShortcode('route', function ($shortcode) {

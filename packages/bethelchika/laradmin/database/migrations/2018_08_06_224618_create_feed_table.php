@@ -14,6 +14,7 @@ class CreateFeedTable extends Migration
     public function up()
     {
         Schema::create('feeds', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');//TODO need to change
 
             /**

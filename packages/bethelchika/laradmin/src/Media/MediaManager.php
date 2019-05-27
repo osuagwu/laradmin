@@ -112,17 +112,20 @@ class MediaManager
         // Make filename unique based on database
             $found = true;
             $c = 0;
+            $name_only_temp=$name_only;
             while ($found) {
-                $found = Media::where('directory',$destination)
-                ->where('filename', $name_only)
-                ->where('extension',$extension)
+                $found = Media::where('dir',$destination)
+                ->where('disk',$disk)// Added on  26/05/2019
+                ->where('fn', $name_only_temp)
+                ->where('ext',$extension)
                 ->count();
                 if ($found) {
                     $c++;
-                    $name_only = $name_only . '_' . $c;
+                    $name_only_temp = $name_only . '_' . $c;
                 }
             }
             // Update name
+            $name_only =$name_only_temp;
             $name=implode('.',[$name_only,$extension]);
 
             $path = $this->filesystem->disk($disk)->put(
@@ -145,13 +148,13 @@ class MediaManager
         }
     //
 
-        $media->directory = $destination;
+        $media->dir = $destination;
         $media->mime_type = $this->filesystem->disk($disk)->mimeType($path);
         $media->size = $this->filesystem->disk($disk)->size($path);
         $media->disk = $disk;
         $media->user_id = $user_id;
-        $media->filename = $name;
-        $media->extension = $extension;
+        $media->fn = $name;
+        $media->ext = $extension;
         $media->save();
         return $media;
     }
@@ -297,7 +300,7 @@ class MediaManager
 
         // Save thumb at the same disk as the media to keep things simple.
         $disk = $media->disk;
-        //dd($this->filesystem->disk($disk)->get($media->filename));
+        //dd($this->filesystem->disk($disk)->get($media->fn));
         $visibility = $this->filesystem->disk($disk)->getVisibility($media->getFullName());
 
         // create new image with transparent background color

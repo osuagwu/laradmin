@@ -17,25 +17,36 @@
                     <thead>
                         <tr>
                            
-                            <th> Source name
+                            <th> Name
                             
                             </th>
-                            <th>Source type</th>
+                            <th>Type</th>
                             <th>Description</th>
+                            <th></th>
                             
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($sources as $source)
                         <tr>
-                            <td><a href="{{route('cp-source-show',[$source->id])}}"><span class="glyphicon glyphicon-th"></span> {{$source->name}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td><a href="{{route('cp-source-show',[$source->id])}}"> {{$source->name}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
                             <td>{{$source->type}}</td>
                             <td>{{$source->description}}</td>
+                            <td>
+                                <a href="{{route('cp-source-edit',$source->id)}}"><i class="fas fa-edit"></i></a>
+                                
+                                @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-source-edit',$source->id)])
+                                @endcomponent
+                            </td>
                         </tr>
+                        
                         
                         @endforeach
                     </tbody>
                 </table>
+                @unless(count($sources))
+                    <p class="alert alert-warning">The are no entries</p>
+                @endunless
             </div>
             {{$sources->links()}}
 

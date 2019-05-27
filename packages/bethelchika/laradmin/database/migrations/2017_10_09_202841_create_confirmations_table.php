@@ -14,8 +14,10 @@ class CreateConfirmationsTable extends Migration
     public function up()
     {
         Schema::create('confirmations', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->increments('id');//TODO: column this is useless but row deletion is not working sqlite if it is removed. Todo will be to remember to reset this auto increment under set management from time to time to avoid the autoincrement overflowing 
-            $table->string('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('type');
             $table->string('user_data')->nullable();
             $table->string('email_to')->nullable();

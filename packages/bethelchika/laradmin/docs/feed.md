@@ -1,5 +1,5 @@
 # Feed
-Feed is managed by FeedManager which can obtained thus:
+Feed is managed by FeedManager which can be obtained thus:
 ```php
 $feedmanager=app('laradmin')->feedManager;
 ```

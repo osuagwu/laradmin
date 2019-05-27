@@ -106,7 +106,9 @@
                                                 <small>Last updated: {{$page->updated_at}}.</small>
                                                 
                                                 {{--  <hr class="mid-rule">  --}}
-                                                <small class="fainted-06"><a class="edit-link" href="{{config('laradmin.wp_rpath')}}/wp-admin/post.php?post={{$page->ID}}&action=edit">Edit</a></small>
+                                                @can('update',$page)
+                                                    <small class="fainted-06"><a class="edit-link" href="{{config('laradmin.wp_rpath')}}/wp-admin/post.php?post={{$page->ID}}&action=edit">Edit</a></small>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>

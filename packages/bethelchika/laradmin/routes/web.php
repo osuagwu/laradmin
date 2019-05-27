@@ -149,109 +149,119 @@ Route::group(['middleware' => ['web']], function () {
 
     //Admin pages ****************************************************************
     //****************************************************************************
-    $LCR=class_exists($LCR_EXT.'CP\ControlPanelController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/index', $LCR.'CP\ControlPanelController@index')->name('cp');
+    Route::prefix('cp')->group(function () use( $LCR_EXT,$LCR_LOCAL){
+        $LCR=class_exists($LCR_EXT.'CP\ControlPanelController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/index', $LCR.'CP\ControlPanelController@index')->name('cp');
+        Route::get('/help', $LCR.'CP\ControlPanelController@help')->name('cp-help');
 
-    // Users
-    $LCR=class_exists($LCR_EXT.'CP\UserController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/users', $LCR.'CP\UserController@index')->name('cp-users');
-    Route::get('/cp/user/{user}/show/', $LCR.'CP\UserController@show')->name('cp-user');
-    Route::get('/cp/user/{user}/edit/', $LCR.'CP\UserController@edit')->name('cp-user-edit');
-    Route::put('/cp/user/{user}/update/', $LCR.'CP\UserController@update')->name('cp-user-update');
+        // Users
+        $LCR=class_exists($LCR_EXT.'CP\UserController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/users', $LCR.'CP\UserController@index')->name('cp-users');
+        Route::get('/user/{user}/show/', $LCR.'CP\UserController@show')->name('cp-user');
+        Route::get('/user/{user}/edit/', $LCR.'CP\UserController@edit')->name('cp-user-edit');
+        Route::put('/user/{user}/update/', $LCR.'CP\UserController@update')->name('cp-user-update');
 
-    Route::get('/cp/user/create/',$LCR.'CP\UserController@create')->name('cp-user-create');
-    Route::post('/cp/user/create/',$LCR.'CP\UserController@store')->name('cp-user-store');
+        Route::get('/user/create/',$LCR.'CP\UserController@create')->name('cp-user-create');
+        Route::post('/user/create/',$LCR.'CP\UserController@store')->name('cp-user-store');
 
-    Route::delete('/cp/user/{user}/',$LCR.'CP\UserController@destroy')->name('cp-user-delete');
-    Route::delete('/cp/users/',$LCR.'CP\UserController@destroys')->name('cp-users-delete');
+        Route::delete('/user/{user}/',$LCR.'CP\UserController@destroy')->name('cp-user-delete');
+        Route::delete('/users/',$LCR.'CP\UserController@destroys')->name('cp-users-delete');
 
-    Route::get('/cp/send-email-confirmation/{user}',$LCR.'CP\UserController@sendEmailConfirmation')->name('cp-send-email-confirmation');
-    Route::get('/cp/email-confirmation/{user}/',$LCR.'CP\UserController@emailConfirmation')->name('cp-email-confirmation');
+        Route::get('/send-email-confirmation/{user}',$LCR.'CP\UserController@sendEmailConfirmation')->name('cp-send-email-confirmation');
+        Route::get('/email-confirmation/{user}/',$LCR.'CP\UserController@emailConfirmation')->name('cp-email-confirmation');
 
-    Route::get('/cp/user/{user}/disable',$LCR.'CP\UserController@disableUser')->name('cp-user-disable');
-    Route::get('/cp/user/{user}/enable',$LCR.'CP\UserController@enableUser')->name('cp-user-enable');
+        Route::get('/user/{user}/disable',$LCR.'CP\UserController@disableUser')->name('cp-user-disable');
+        Route::get('/user/{user}/enable',$LCR.'CP\UserController@enableUser')->name('cp-user-enable');
 
-    //User group map
-    $LCR=class_exists($LCR_EXT.'CP\UserGroupMapController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/user/{user}/group-map/edits/',$LCR.'CP\UserGroupMapController@edits')->name('cp-user-group-map-edits');
-    Route::put('/cp/user/{user}/group-map/updates/',$LCR.'CP\UserGroupMapController@updates')->name('cp-user-group-map-updates');
+        //User group map
+        $LCR=class_exists($LCR_EXT.'CP\UserGroupMapController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/user/{user}/group-map/edits/',$LCR.'CP\UserGroupMapController@edits')->name('cp-user-group-map-edits');
+        Route::put('/user/{user}/group-map/updates/',$LCR.'CP\UserGroupMapController@updates')->name('cp-user-group-map-updates');
 
-    // User groups
-    $LCR=class_exists($LCR_EXT.'CP\UserGroupController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/user-groups/',$LCR.'CP\UserGroupController@index')->name('cp-user-groups');
-    Route::get('/cp/user-group/{userGroup}/show',$LCR.'CP\UserGroupController@show')->name('cp-user-group');
-    Route::get('/cp/user-group/{userGroup}/edit',$LCR.'CP\UserGroupController@edit')->name('cp-user-group-edit');
-    Route::put('/cp/user-group/{userGroup}/',$LCR.'CP\UserGroupController@update')->name('cp-user-group-update');
-    Route::get('/cp/user-group/create/',$LCR.'CP\UserGroupController@create')->name('cp-user-group-create');
-    Route::post('/cp/user-group/create/',$LCR.'CP\UserGroupController@store')->name('cp-user-group-store');
-    Route::delete('/cp/user-group/{userGroup}/',$LCR.'CP\UserGroupController@destroy')->name('cp-user-group-delete');
-    Route::delete('/cp/user-groups/',$LCR.'CP\UserGroupController@destroys')->name('cp-user-groups-delete');
+        // User groups
+        $LCR=class_exists($LCR_EXT.'CP\UserGroupController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/user-groups/',$LCR.'CP\UserGroupController@index')->name('cp-user-groups');
+        Route::get('/user-group/{userGroup}/show',$LCR.'CP\UserGroupController@show')->name('cp-user-group');
+        Route::get('/user-group/{userGroup}/edit',$LCR.'CP\UserGroupController@edit')->name('cp-user-group-edit');
+        Route::put('/user-group/{userGroup}/',$LCR.'CP\UserGroupController@update')->name('cp-user-group-update');
+        Route::get('/user-group/create/',$LCR.'CP\UserGroupController@create')->name('cp-user-group-create');
+        Route::post('/user-group/create/',$LCR.'CP\UserGroupController@store')->name('cp-user-group-store');
+        Route::delete('/user-group/{userGroup}/',$LCR.'CP\UserGroupController@destroy')->name('cp-user-group-delete');
+        Route::delete('/user-groups/',$LCR.'CP\UserGroupController@destroys')->name('cp-user-groups-delete');
 
-    // Sources
-    $LCR=class_exists($LCR_EXT.'CP\SourceController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/source/create',$LCR.'CP\SourceController@create')->name('cp-source-create');
-    Route::post('/cp/source/create',$LCR.'CP\SourceController@store');
-    //Route::get('/cp/sources/',$LCR.'CP\SourceController@index')->name('cp-sources');
-    ////Types of sources
-    Route::get('/cp/source/types',$LCR.'CP\SourceController@types')->name('cp-source-types');
-    Route::get('/cp/source/types/table',$LCR.'CP\SourceController@tables')->name('cp-source-type-table');
-    Route::get('/cp/source/types/route',$LCR.'CP\SourceController@routes')->name('cp-source-type-route');
-    Route::get('/cp/source/types/route_prefix',$LCR.'CP\SourceController@routePrefixes')->name('cp-source-type-route_prefix');
-    Route::get('/cp/source/types/page',$LCR.'CP\SourceController@pages')->name('cp-source-type-page');
-    Route::get('/cp/source/types/{type}',$LCR.'CP\SourceController@type')->name('cp-source-type');//shows any source without its own specific route definition
-    ////individual source
-    Route::get('/cp/source/show/table/{name}',$LCR.'CP\SourceController@showTable')->name('cp-source-show-table');
-    Route::get('/cp/source/show/route/',$LCR.'CP\SourceController@showRoute')->name('cp-source-show-route');
-    Route::get('/cp/source/show/route_prefix/',$LCR.'CP\SourceController@showRoutePrefix')->name('cp-source-show-route_prefix');
-    Route::get('/cp/source/show/page/{id}',$LCR.'CP\SourceController@showPage')->name('cp-source-show-page');
-    Route::get('/cp/source/show/{id}',$LCR.'CP\SourceController@show')->name('cp-source-show');
-    
-    Route::put('/cp/source/permissions',$LCR.'CP\SourceController@updatePermission')->name('cp-source-permission-update');
-    Route::get('/cp/source/permissions/search-users',$LCR.'CP\SourceController@searchUsers')->name('cp-source-permission-search-users');
-    Route::post('/cp/source/permissions/store-permission',$LCR.'CP\SourceController@storePermission')->name('cp-source-permission-store');
-    Route::delete('/cp/source/permissions/delete-permission',$LCR.'CP\SourceController@destroyPermission')->name('cp-source-permission-delete');
+        // Sources
+        $LCR=class_exists($LCR_EXT.'CP\SourceController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/source/create',$LCR.'CP\SourceController@create')->name('cp-source-create');
+        Route::post('/source/create',$LCR.'CP\SourceController@store');
+        //Route::get('/sources/',$LCR.'CP\SourceController@index')->name('cp-sources');
+        ////Types of sources
+        Route::get('/source/types',$LCR.'CP\SourceController@types')->name('cp-source-types');
+        Route::get('/source/types/table',$LCR.'CP\SourceController@tables')->name('cp-source-type-table');
+        Route::get('/source/types/route',$LCR.'CP\SourceController@routes')->name('cp-source-type-route');
+        Route::get('/source/types/route_prefix',$LCR.'CP\SourceController@routePrefixes')->name('cp-source-type-route_prefix');
+        Route::get('/source/types/page',$LCR.'CP\SourceController@pages')->name('cp-source-type-page');
+        Route::get('/source/types/{type}',$LCR.'CP\SourceController@type')->name('cp-source-type');//For any source type without its own specific route definition
+        ////individual source
+        Route::get('/source/show/table/{name}',$LCR.'CP\SourceController@showTable')->name('cp-source-show-table');
+        Route::get('/source/show/route/',$LCR.'CP\SourceController@showRoute')->name('cp-source-show-route');
+        Route::get('/source/show/route_prefix/',$LCR.'CP\SourceController@showRoutePrefix')->name('cp-source-show-route_prefix');
+        Route::get('/source/show/page/{id}',$LCR.'CP\SourceController@showPage')->name('cp-source-show-page');
+        Route::get('/source/show/{id}',$LCR.'CP\SourceController@show')->name('cp-source-show');
+        // updating source
+        Route::get('/source/edit/{source}',$LCR.'CP\SourceController@edit')->name('cp-source-edit');
+        Route::put('/source/edit/{source}',$LCR.'CP\SourceController@update');
+        //Delete source
+        Route::delete('/source/edit/{source}',$LCR.'CP\SourceController@destroy');
+        
+        // Permission ___________
+        $LCR=class_exists($LCR_EXT.'CP\PermissionController')?$LCR_EXT:$LCR_LOCAL;
+        Route::put('/source/permissions',$LCR.'CP\PermissionController@update')->name('cp-source-permission-update');
+        Route::get('/source/permissions/search-users',$LCR.'CP\PermissionController@searchUsers')->name('cp-source-permission-search-users');
+        Route::post('/source/permissions/store-permission',$LCR.'CP\PermissionController@store')->name('cp-source-permission-store');
+        Route::delete('/source/permissions/delete-permission',$LCR.'CP\PermissionController@destroy')->name('cp-source-permission-delete');
 
-    //CP User Message____________
-    $LCR=class_exists($LCR_EXT.'CP\UserMessageController')?$LCR_EXT:$LCR_LOCAL;
-    Route::delete('cp/user-message/' ,$LCR.'CP\UserMessageController@destroys')->name('cp-user-message-deletes');
-    //Resource-------------------------------
-    Route::post ('cp/user-message',$LCR.'CP\UserMessageController@store')->name('cp-user-message-store');
-    Route::get('cp/user-message' ,$LCR.'CP\UserMessageController@index')->name('cp-user-message-index');
-    Route::get('cp/user-message/create' ,$LCR.'CP\UserMessageController@create')->name('cp-user-message-create');
-    Route::delete('cp/user-message/{message}' ,$LCR.'CP\UserMessageController@destroy')->name('cp-user-message-delete');
-    Route::get('cp/user-message/{message}',$LCR.'CP\UserMessageController@show')->name('cp-user-message-show');
-    Route::put('cp/user-message/{message}' ,$LCR.'CP\UserMessageController@update')->name('cp-user-message-update');
-    Route::get('cp/user-message/{message}/edit ',$LCR.'CP\UserMessageController@edit')->name('cp-user-message-edit');
-    //-----------------------------------------------
-    //Route::resource('/cp/message',$LCR.'CP\UserMessageController');
-    Route::put('cp/user-message/mark-as/ajax' ,$LCR.'CP\UserMessageController@markAsAjax')->name('cp-user-message-mark-ajax');
-    Route::post('cp/user-message/reply',$LCR.'CP\UserMessageController@reply')->name('cp-user-message-reply');
+        //CP User Message____________
+        $LCR=class_exists($LCR_EXT.'CP\UserMessageController')?$LCR_EXT:$LCR_LOCAL;
+        Route::delete('/user-message/' ,$LCR.'CP\UserMessageController@destroys')->name('cp-user-message-deletes');
+        //Resource-------------------------------
+        Route::post ('/user-message',$LCR.'CP\UserMessageController@store')->name('cp-user-message-store');
+        Route::get('/user-message' ,$LCR.'CP\UserMessageController@index')->name('cp-user-message-index');
+        Route::get('/user-message/create' ,$LCR.'CP\UserMessageController@create')->name('cp-user-message-create');
+        Route::delete('/user-message/{message}' ,$LCR.'CP\UserMessageController@destroy')->name('cp-user-message-delete');
+        Route::get('/user-message/{message}',$LCR.'CP\UserMessageController@show')->name('cp-user-message-show');
+        Route::put('/user-message/{message}' ,$LCR.'CP\UserMessageController@update')->name('cp-user-message-update');
+        Route::get('/user-message/{message}/edit ',$LCR.'CP\UserMessageController@edit')->name('cp-user-message-edit');
+        //-----------------------------------------------
+        //Route::resource('/cp/message',$LCR.'CP\UserMessageController');
+        Route::put('/user-message/mark-as/ajax' ,$LCR.'CP\UserMessageController@markAsAjax')->name('cp-user-message-mark-ajax');
+        Route::post('/user-message/reply',$LCR.'CP\UserMessageController@reply')->name('cp-user-message-reply');
 
-    // Notifications
-    $LCR=class_exists($LCR_EXT.'CP\NotificationController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/notification/index',$LCR.'CP\NotificationController@index')->name('cp-notification-index');
-    Route::post('/cp/notification/mark-as-ajax',$LCR.'CP\NotificationController@markAsAjax')->name('cp-notification-mark-ajax');
-    Route::delete('/cp/notification/{notification}',$LCR.'CP\NotificationController@destroy')->name('cp-notification-delete');
+        // Notifications
+        $LCR=class_exists($LCR_EXT.'CP\NotificationController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/notification/index',$LCR.'CP\NotificationController@index')->name('cp-notification-index');
+        Route::post('/notification/mark-as-ajax',$LCR.'CP\NotificationController@markAsAjax')->name('cp-notification-mark-ajax');
+        Route::delete('/notification/{notification}',$LCR.'CP\NotificationController@destroy')->name('cp-notification-delete');
 
-    // General seetings
-    $LCR=class_exists($LCR_EXT.'CP\SettingsController')?$LCR_EXT:$LCR_LOCAL;
-    Route::get('/cp/settings/edit',$LCR.'CP\SettingsController@edit')->name('cp-settings-edit');
-    Route::get('/cp/settings/edit/storage-link',$LCR.'CP\SettingsController@storageLink')->name('cp-settings-storage-link');
+        // General seetings
+        $LCR=class_exists($LCR_EXT.'CP\SettingsController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/settings/edit',$LCR.'CP\SettingsController@edit')->name('cp-settings-edit');
+        Route::get('/settings/edit/storage-link',$LCR.'CP\SettingsController@storageLink')->name('cp-settings-storage-link');
 
 
-     // Plugins
-     $LCR=class_exists($LCR_EXT.'CP\PluginAdminController')?$LCR_EXT:$LCR_LOCAL;
-     Route::get('/cp/plugins/index',$LCR.'CP\PluginAdminController@index')->name('cp-plugins');
-     Route::get('/cp/plugin',$LCR.'CP\PluginAdminController@show')->name('cp-plugin');
-     Route::post('/cp/plugin',$LCR.'CP\PluginAdminController@install');
-     Route::put('/cp/plugin/enable',$LCR.'CP\PluginAdminController@enable')->name('cp-plugin-enable');
-     Route::put('/cp/plugin/disable',$LCR.'CP\PluginAdminController@disable')->name('cp-plugin-disable');
-     Route::get('/cp/plugin/publish',$LCR.'CP\PluginAdminController@publishing')->name('cp-plugin-publish');
-     Route::put('/cp/plugin/publish',$LCR.'CP\PluginAdminController@publish');//->name('cp-plugin-publish');
-     Route::delete('/cp/plugin',$LCR.'CP\PluginAdminController@uninstall');
-     Route::get('/cp/plugin/update',$LCR.'CP\PluginAdminController@updating')->name('cp-plugin-update');
-     Route::put('/cp/plugin/update',$LCR.'CP\PluginAdminController@update');
-     Route::delete('/cp/plugin/update',$LCR.'CP\PluginAdminController@updateCancel');
+        // Plugins
+        $LCR=class_exists($LCR_EXT.'CP\PluginAdminController')?$LCR_EXT:$LCR_LOCAL;
+        Route::get('/plugins/index',$LCR.'CP\PluginAdminController@index')->name('cp-plugins');
+        Route::get('/plugin',$LCR.'CP\PluginAdminController@show')->name('cp-plugin');
+        Route::post('/plugin',$LCR.'CP\PluginAdminController@install');
+        Route::put('/plugin/enable',$LCR.'CP\PluginAdminController@enable')->name('cp-plugin-enable');
+        Route::put('/plugin/disable',$LCR.'CP\PluginAdminController@disable')->name('cp-plugin-disable');
+        Route::get('/plugin/publish',$LCR.'CP\PluginAdminController@publishing')->name('cp-plugin-publish');
+        Route::put('/plugin/publish',$LCR.'CP\PluginAdminController@publish');//->name('cp-plugin-publish');
+        Route::delete('/plugin',$LCR.'CP\PluginAdminController@uninstall');
+        Route::get('/plugin/update',$LCR.'CP\PluginAdminController@updating')->name('cp-plugin-update');
+        Route::put('/plugin/update',$LCR.'CP\PluginAdminController@update');
+        Route::delete('/plugin/update',$LCR.'CP\PluginAdminController@updateCancel');
+    });
 
      
 });

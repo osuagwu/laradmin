@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMainPermissionsTable extends Migration
+class CreatePermissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateMainPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('main_permissions', function (Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');
             
-            $table->string('source');//delete this
-            $table->string('source_type');//new
-            $table->string('source_id');//new
-            $table->integer('user_id')->nullable();
-            $table->integer('user_group_id')->nullable();
+            
+            $table->string('source_type');
+            $table->string('source_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedInteger('user_group_id')->nullable();
             $table->boolean('create');
             $table->boolean('read');
             $table->boolean('update');
@@ -45,6 +45,6 @@ class CreateMainPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('main_permissions');
+        Schema::dropIfExists('permissions');
     }
 }

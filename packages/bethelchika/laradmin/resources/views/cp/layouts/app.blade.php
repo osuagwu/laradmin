@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Webferendum').' &#8213; ' }}{{$pageTitle??' '}}</title>
+    <title>@if(isset($pageTitle) and $pageTitle) {{ $pageTitle.' - '}}@endif {{config('app.name', 'Webferendum')}}</title>
 
     <!-- External styles-->
     <!--Fontawesome-->
@@ -58,7 +58,7 @@
                                 <li><a href="{{ route('register') }}">Register</a></li>
                                 
                             @else
-                                <li><a href="#"><span class="glyphicon glyphicon-question-sign text-info" aria-hidden="true"></span> Help</a></li>
+                                <li><a href="{{route('cp-help')}}"><span class="glyphicon glyphicon-question-sign text-info" aria-hidden="true"></span> Help</a></li>
                                 
                                 <li class="">
                                     @include('laradmin::inc.cp_message_nav_item')
@@ -118,7 +118,7 @@
         <div class="container-fluid">
             <!-- Sidebar -->
             <aside role="presentation">
-                <div id="sidebar-wrapper">
+                <div id="sidebar-wrapper" >
                     <nav class="nav">
                         <ul class="sidebar-nav">
                             <li class="sidebar-brand">
@@ -169,9 +169,9 @@
                             <li>
                                 <span class="text-primary">PLUGINS </span>
                             </li>
-                            <li>
+                            {{--  <li>
                                 <a href="{{'route(apps/reincarnate)'}}"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Reincarnate </a>
-                            </li>
+                            </li>  --}}
 
                             @include('laradmin::menu',['tag'=>'admin.apps'])
                         

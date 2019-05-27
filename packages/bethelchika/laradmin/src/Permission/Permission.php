@@ -4,7 +4,7 @@ namespace BethelChika\Laradmin\Permission;
 
 use BethelChika\Laradmin\User;
 use BethelChika\Laradmin\UserGroup;
-use BethelChika\Laradmin\MainPermission;
+use BethelChika\Laradmin\Permission as PermissionModel;
 use Illuminate\Support\Collection;
 use BethelChika\Laradmin\Events\AuthRestrict;
 use Illuminate\Database\Eloquent\Model;
@@ -57,12 +57,16 @@ class Permission
      * For a givn user return permission string
      *
      * @param BethelChika\Laradmin\User $user
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @return mixed
      */
-     private function getUserPermissions(User $user,$resource){
+     private function getUserPermissions(User $user,$source_type,$source_id){
         $select=['create','read','update','delete'];
-        $perm=MainPermission::where('user_id',$user->id)->where('source',$resource)->select($select)->first();
+        $perm=PermissionModel::where('user_id',$user->id)
+        ->where('source_type',$source_type)
+        ->where('source_id',$source_id)
+        ->select($select)->first();
         
         if($perm)
             return $perm->create.$perm->read.$perm->update.$perm->delete;
@@ -73,12 +77,16 @@ class Permission
      * For a given userGroup return permission string
      *
      * @param BethelChika\Laradmin\UserGroup $userGroup
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @return mixed
      */
-     private function getUserGroupPermissions(User $user,$resource){
+     private function getUserGroupPermissions(User $user,$source_type,$source_id){
         $select=['create','read','update','delete'];
-        $perm=MainPermission::where('user_group_id',$user->id)->where('source',$resource)->select($select)->first();
+        $perm=PermissionModel::where('user_group_id',$user->id)
+        ->where('source_type',$source_type)
+        ->where('source_id',$source_id)
+        ->select($select)->first();
         if($perm)
             return $perm->create.$perm->read.$perm->update.$perm->delete;
         else return false;
@@ -90,12 +98,16 @@ class Permission
      * For a givn user return permission string for a perticular action
      *
      * @param BethelChika\Laradmin\User $user
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @return mixed
      */
-     private function getUserPermission(User $user,$resource,$action){
-        $perm=MainPermission::where('user_id',$user->id)->where('source',$resource)->select($action)->first();
+     private function getUserPermission(User $user,$source_type,$source_id,$action){
+        $perm=PermissionModel::where('user_id',$user->id)
+        ->where('source_type',$source_type)
+        ->where('source_id',$source_id)
+        ->select($action)->first();
         //dd($resource);
         if ($perm)
             return $perm->$action;
@@ -105,13 +117,17 @@ class Permission
      * For a given userGroup return permission string for a perticular action
      *
      * @param BethelChika\Laradmin\UserGroup $userGroup
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @return string
      */
-     private function getUserGroupPermission(UserGroup $userGroup,$resource,$action){
+     private function getUserGroupPermission(UserGroup $userGroup,$source_type,$source_id,$action){
         $userGroups=[];
-        $perm=MainPermission::where('user_group_id',$userGroup->id)->where('source',$resource)->select($action)->first();
+        $perm=PermissionModel::where('user_group_id',$userGroup->id)
+        ->where('source_type',$source_type)
+        ->where('source_id',$source_id)
+        ->select($action)->first();
         //dd($perm);
         if ($perm)
             return $perm->$action;
@@ -122,12 +138,15 @@ class Permission
     /**
      * Checks if there is at least one entry for a given resource and action
      *
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @return boolean
      */
-    public function hasEntry($resource,$action){
-        return !!MainPermission::where('source',$resource)->select($action)->first();
+    public function hasEntry($source_type,$source_id,$action){
+        return !!PermissionModel::where('source_type',$source_type)
+        ->where('source_id',$source_id)
+        ->select($action)->first();
     }
 
      /**
@@ -258,12 +277,13 @@ class Permission
      * must have explicit permission to access 
      *
      * @param BethelChika\Laradmin\User $user
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @param Illuminate\Database\Eloquent\Model $model
      * @return boolean True if the user can do the given action on the resource
      */
-    public function can(User $user,$resource,$action,Model $model=null){
+    public function can(User $user,$source_type,$source_id,$action,Model $model=null){
         //first and foremost
         if(!$this->before($user)){
             return false;
@@ -295,7 +315,7 @@ class Permission
 
         
         //Check for personal restriction
-        $permStr=$this->getUserPermission($user,$resource,$action);
+        $permStr=$this->getUserPermission($user,$source_type,$source_id,$action);
         //dd($permStr);
         if($permStr!==false) {
             if(!strcmp($permStr,'0')){
@@ -307,7 +327,7 @@ class Permission
 
         //CHeck for user restriction in the groups
         foreach($userGroups as $userGroup){
-            $permStr=$this->getUserGroupPermission($userGroup,$resource,$action);
+            $permStr=$this->getUserGroupPermission($userGroup,$source_type,$source_id,$action);
            if($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
                 if(!strcmp($permStr,'0')){
                     return false;
@@ -351,12 +371,13 @@ class Permission
      * Check if a User is explicitly disallowed to perform a given action
      *
      * @param BethelChika\Laradmin\User $user
-     * @param string $resource Example 'table:users'
+     * @param string $source_type
+     * @param string $source_id
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @param Illuminate\Database\Eloquent\Model $model TODO:[THIS PARAM IS NOT USED YET]
      * @return boolean True is the user is disallowed
      */
-     public function isDisallowed(User $user,$resource,$action,Model $model=null){
+     public function isDisallowed(User $user,$source_type,$source_id,$action,Model $model=null){
         //first and foremost
         if(!$this->before($user)){
             return true;
@@ -383,7 +404,7 @@ class Permission
 
        
         //Check for personal restriction
-        $permStr=$this->getUserPermission($user,$resource,$action);
+        $permStr=$this->getUserPermission($user,$source_type,$source_id,$action);
         //dd($permStr);
         if($permStr!==false) {
             if(!strcmp($permStr,'0')){
@@ -395,7 +416,7 @@ class Permission
 
         //CHeck for user restriction in the groups
         foreach($userGroups as $userGroup){
-            $permStr=$this->getUserGroupPermission($userGroup,$resource,$action);
+            $permStr=$this->getUserGroupPermission($userGroup,$source_type,$source_id,$action);
            if($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
                 if(!strcmp($permStr,'0')){
                     return true;

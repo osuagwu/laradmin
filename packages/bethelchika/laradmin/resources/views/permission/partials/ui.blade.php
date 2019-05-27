@@ -3,20 +3,20 @@
     
     INPUTS
     $source_type string The source of the source 
-    $source_name string The name of the source
+    $source_id string The identifier of the source
     --}}
 
 
-<h2>Permissions</h2> 
+<h2>Permissions <a href="{{route('cp-help')}}#permission"><i class="far fa-question-circle"></i></a></h2> 
 <form id="permission-form" onsubmit="updatePermissionString()" class="form-horizontal bg-info"  role="form" method="post" action="{{route('cp-source-permission-update')}}">
     {{ method_field('PUT') }}
     {{ csrf_field() }}
     <input id="permission-str" name="permission_str" type="hidden" value="0000"/>
     <div class="form-group">
-        <label  class="col-xs-12" for="permissions-selector" >Users or group names:</label>
+        <label  class="col-xs-12" for="permissions-selector" >Users or group names: </label>
         <div class="col-md-8 col-xs-10">
-            <select class="form-control" name="permission_id"  id="permissions-selector" data-source="{{$source_type.':'.$source_name}}" size="5" onchange="showPermission()">
-                @foreach($laradmin->permission->uiSourcePermissions($source_type,$source_name) as $perm)
+            <select class="form-control" name="permission_id"  id="permissions-selector" data-source_type="{{$source_type}}" data-source_id="{{$source_id}}" size="5" onchange="showPermission()">
+                @foreach($laradmin->permission->uiSourcePermissions($source_type,$source_id) as $perm)
                     <option value="{{$perm->id}}" data-id="{{$perm->data_id}}" data-isgroup="{{$perm->isGroup}}" data-permissions="{{$perm->create.$perm->read.$perm->update.$perm->delete}}"  @if(!strcmp(old('permission_id'),$perm->id)) selected="selected" @endif> {{$perm->name.'<'.$perm->email.'>'}}</option>
                 @endforeach
             </select>
@@ -24,7 +24,7 @@
         <div class="col-md-2 col-xs-2">
             <button title="Add users and groups" type="button" class="btn btn-default" data-toggle="modal" data-target="#user-and-group-search-add"><span class="glyphicon glyphicon-plus-sign"></span></button>
             <br /><br />
-            <button title="Remove users and groups" type="button" class="btn btn-default" onclick="removeUserOrGroup()"><span class="glyphicon glyphicon-minus-sign"></span></button>
+            <button title="Remove selected user or group" type="button" class="btn btn-default" onclick="removeUserOrGroup()"><span class="glyphicon glyphicon-minus-sign"></span></button>
         </div>
     </div>
 
@@ -45,6 +45,7 @@
         </div>
         <div class="col-md-3">
             <br />
+            
             <input type="submit" class="btn btn-primary"  value="Apply permission" />
         </div>
             
@@ -237,7 +238,8 @@ function addSelectedToPermissions(){
         var url='{{route('cp-source-permission-store')}}';
         var jqxhr = $.post(url,{isgroup:isGroup,
                                 data_id:userOrGroupId,
-                                source:$('#permissions-selector').data('source'),
+                                source_type:$('#permissions-selector').data('source_type'),
+                                source_id:$('#permissions-selector').data('source_id'),
                                 '_token': "{{ csrf_token() }}",
                                 
             })

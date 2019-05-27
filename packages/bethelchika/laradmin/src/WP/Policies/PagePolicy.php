@@ -25,7 +25,7 @@ class PagePolicy
      *
      * @var string
      */
-    public $tableAccessString;
+    public $tableSourceId;
 
     /**
     * Create a new policy instance.
@@ -37,7 +37,7 @@ class PagePolicy
 
         //Get table access info
         $temp=new Page();
-        $this->tableAccessString=Source::getTableAccessString($temp);
+        $this->tableSourceId=Source::getTableSourceIdFromModel($temp);
         unset($temp);
 
         
@@ -57,23 +57,23 @@ class PagePolicy
     public function view(User $user,Page $page)
     { 
         //Check at the table level
-        if($this->perm->isDisallowed($user,$this->tableAccessString,'read')){
+        if($this->perm->isDisallowed($user,'table',$this->tableSourceId,'read')){
             return false;
         }
 
         //Check at the model level
         $source=Source::where('type','model')->where('name',get_class($page))->first();
         if($source){
-            $access_string=Source::getTypeKey().':'.$source->id;
-            if($this->perm->isDisallowed($user,$access_string,'read')){
+            //$access_string=Source::getTypeKey().':'.$source->id;
+            if($this->perm->isDisallowed($user,Source::class,$source->id,'read')){
                 return false;
             }
         }
 
         
         // Check at the page level
-        $page_access_string=Source::getPageTypeKey().':'.$page->getKey();
-        if($this->perm->isDisallowed($user,$page_access_string,'read')){
+        //$page_access_string=Source::getPageTypeKey().':'.$page->getKey();
+        if($this->perm->isDisallowed($user,get_class($page),$page->getKey(),'read')){
             return false;
         }
 
@@ -114,7 +114,7 @@ class PagePolicy
     public function update(User $user, Page $page)
     {
         //Check at the table level
-        if($this->perm->isDisallowed($user,$this->tableAccessString,'update')){
+        if(!$this->perm->can($user,'table',$this->tableSourceId,'update')){
             return false;
         }
 
@@ -122,16 +122,16 @@ class PagePolicy
         //Check at the model level
         $source=Source::where('type','model')->where('name',get_class($page))->first();
         if($source){
-            $access_string=Source::getTypeKey().':'.$source->id;
-            if($this->perm->isDisallowed($user,$access_string,'update')){
+            //$access_string=Source::getTypeKey().':'.$source->id;
+            if(!$this->perm->can($user,Source::class,$source->id,'update')){
                 return false;
             }
         }
 
         
         // Check at the page level
-        $page_access_string=Source::getPageTypeKey().':'.$page->getKey();
-        if(!$this->perm->can($user,$page_access_string,'update')){
+        //$page_access_string=Source::getPageTypeKey().':'.$page->getKey();
+        if(!$this->perm->can($user,get_class($page),$page->getKey(),'update')){
             return false;
         }
 

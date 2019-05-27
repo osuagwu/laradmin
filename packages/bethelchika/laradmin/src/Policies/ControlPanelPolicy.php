@@ -6,6 +6,7 @@ use BethelChika\Laradmin\User;
 //use BethelChika\Laradmin\Permission\Permission;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use BethelChika\Laradmin\Laradmin;
+use BethelChika\Laradmin\Source;
 
 class ControlPanelPolicy
 {
@@ -33,9 +34,7 @@ class ControlPanelPolicy
     * @return boolean
     */
     function view(User $user){
-        //var_dump($user);
-        //dd($user);
-        //$perm=new Permission;
-        return $this->perm->can($user,'site:cp','read');
+        //$name=Source::getRoutePrefixTypeKey().':/cp';
+        return $this->perm->can($user,'route_prefix','/cp','read');
     }
 }

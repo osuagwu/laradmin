@@ -15,7 +15,7 @@ class CreateComicpicsTable extends Migration
     {
         Schema::create('comicpics', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('user_id')->unsigned();
+            $table->unsignedBigInteger('user_id')->unsigned();
             //$table->bigInteger('mediable_id')->unsigned();
             $table->string('provider')->default('local');// {'local', 'facebook','google','s3'}
             $table->string('title')->nullable();

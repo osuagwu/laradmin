@@ -30,6 +30,7 @@ class UserProfileController extends Controller
      */
     public function __construct(Laradmin $laradmin)
     {
+        parent::__construct();
         $this->middleware('auth', ['except' => ['emailConfirmation']]);
         $this->middleware('re-auth:10')->only(['edit']);
         $this->middleware('re-auth:1')->only(['editPassword', 'updatePassword', 'initiateSelfDelete', 'selfDeactivate']); //Set a much more strict rerauth params for changing password.

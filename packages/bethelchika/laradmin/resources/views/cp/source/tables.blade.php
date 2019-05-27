@@ -15,7 +15,7 @@
                     <thead>
                         <tr>
                            
-                            <th> Source name
+                            <th> Table name
                             
                             </th>
                             <th>Connection</th>
@@ -26,8 +26,8 @@
                     </thead>
                     <tbody>
                         @foreach($tables as $table)
-                        <tr>
-                            <td><a href="{{route('cp-source-show-table',[$table->name,'connection'=>$table->connection,'prefix'=>$table->connection_info['prefix'],'database'=>$table->connection_info['database']])}}"><span class="glyphicon glyphicon-th"></span> {{$table->label}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                        <tr title="{{$table->connection_info['prefix']}}">
+                            <td><a  href="{{route('cp-source-show-table',[$table->name,'connection'=>$table->connection,'prefix'=>$table->connection_info['prefix'],'database'=>$table->connection_info['database']])}}"><span class="glyphicon glyphicon-th"></span> {{$table->label}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
                             <td>{{$table->connection}}</td>
                             <td>{{$table->connection_info['database']}}</td>
                             

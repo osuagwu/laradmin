@@ -62,35 +62,6 @@
                 <div class="row">
                     
                     <div class="col-md-4 text-center">
-                        <div class="cp-object" >
-                        
-                            <h3><a href="{{'#'}}" style="text-decoration:none;">
-                                    <span class="	glyphicon glyphicon-book"> </span>
-                                    <br>
-                                    Pages 
-                                    <br>
-                                    <span class="small">Manage webpages</span>
-                                </a>
-                            </h3>   
-                        
-                        </div> 
-                                               
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="cp-object" >
-                        
-                            <h3><a href="{{'#'}}" style="text-decoration:none;">
-                                    <span class="	glyphicon glyphicon-phone"> </span>
-                                    <br>
-                                    Posts 
-                                    <br>
-                                    <span class="small">Manage Articles</span>
-                                </a>
-                            </h3>   
-                        
-                        </div>                        
-                    </div>
-                    <div class="col-md-4 text-center">
                          
                         <div class="cp-object" >
                         
@@ -106,12 +77,44 @@
                         </div>                   
                     </div>
                     
+
+                    <div class="col-md-4 text-center"> 
+                        
+                        <div class="cp-object" >
+                        
+                            <h3><a href="{{route('cp-user-message-index')}}" style="text-decoration:none;">
+                                    <span class="	glyphicon glyphicon-envelope"> </span>
+                                    <br>
+                                    c User Message
+                                    <br>
+                                    <span class="small">Control panel message</span>
+                                </a>
+                            </h3>   
+                        
+                        </div>
+                    </div> 
+
+                    <div class="col-md-4 text-center"> 
+                        
+                        <div class="cp-object" >
+                        
+                            <h3><a href="{{route('cp-notification-index')}}" style="text-decoration:none;">
+                                    <span class="	glyphicon glyphicon-bell"> </span>
+                                    <br>
+                                    c Notifications
+                                    <br>
+                                    <span class="small">Control panel notifications</span>
+                                </a>
+                            </h3>   
+                        
+                        </div>
+                    </div> 
                    
                 </div>
 
             
                
-                <div class="row">
+                {{--  <div class="row">
                     <div class="col-md-4 text-center"> 
 
                         <div class="cp-object" >
@@ -155,9 +158,9 @@
                         
                         </div>                    
                     </div>
-                </div> 
+                </div>   --}}
                 <div class="row">
-                    <div class="col-md-4 text-center"> 
+                    {{--  <div class="col-md-4 text-center"> 
                         
                         <div class="cp-object" >
                         
@@ -171,39 +174,41 @@
                             </h3>   
                         
                         </div>                  
+                    </div>  --}}
+
+
+                    @if(config('laradmin.wp_enable',false))
+                    <div class="col-md-4 text-center">
+                        <div class="cp-object" >
+                        
+                            <h3><a href="{{url(config('laradmin.wp_rpath').'/wp-admin')}}/edit.php?post_type=page" style="text-decoration:none;">
+                                    <span class="	glyphicon glyphicon-book"> </span>
+                                    <br>
+                                    Pages <small><i class="fas fa-external-link-alt"></i></small>
+                                    <br>
+                                    <span class="small">Manage webpages</span>
+                                </a>
+                            </h3>   
+                        
+                        </div> 
+                                               
                     </div>
-
-                    <div class="col-md-4 text-center"> 
-                        
+                    <div class="col-md-4 text-center">
                         <div class="cp-object" >
                         
-                            <h3><a href="{{route('cp-user-message-index')}}" style="text-decoration:none;">
-                                    <span class="	glyphicon glyphicon-envelope"> </span>
+                            <h3><a href="{{url(config('laradmin.wp_rpath').'/wp-admin')}}/edit.php?post_type=post" style="text-decoration:none;">
+                                    <span class="	glyphicon glyphicon-phone"> </span>
                                     <br>
-                                    c User Message
+                                    Posts <small><i class="fas fa-external-link-alt"></i></small> 
                                     <br>
-                                    <span class="small">Control panel message</span>
+                                    <span class="small">Manage Posts</span>
                                 </a>
                             </h3>   
                         
-                        </div>
-                    </div> 
-
-                    <div class="col-md-4 text-center"> 
-                        
-                        <div class="cp-object" >
-                        
-                            <h3><a href="{{route('cp-notification-index')}}" style="text-decoration:none;">
-                                    <span class="	glyphicon glyphicon-bell"> </span>
-                                    <br>
-                                    c Notifications
-                                    <br>
-                                    <span class="small">Control panel notifications</span>
-                                </a>
-                            </h3>   
-                        
-                        </div>
-                    </div> 
+                        </div>                        
+                    </div>
+                    @endif
+                    
 
                 </div>   
             

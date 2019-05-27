@@ -12,12 +12,15 @@ trait Helpers
      * Get permissions formatted for ui for a given source
      *
      * @param string $source_type
-     * @param string $source_name
+     * @param string $source_id
      * @return void
      */
-    public function uiSourcePermissions($source_type,$source_name){
-        $sid=$source_type.':'.$source_name;
-        $permissions=DB::table('main_permissions')->where('source','=',$sid)->get();
+    public function uiSourcePermissions($source_type,$source_id){
+        //$sid=$source_type.':'.$source_id;
+        $permissions=DB::table('permissions')
+        ->where('source_type',$source_type)
+        ->where('source_id',$source_id)
+        ->get();
         $temp=[];
         foreach($permissions as $perm){
 

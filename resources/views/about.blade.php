@@ -8,7 +8,7 @@
 @endpush
 @section('content')
 <section class="section section-primary section-first  section-full-height hero hero-super">
-    <div class="section-overlay ">
+    <div class="section-overlay section-overlay-brand-gradient-smooth">
         <div class="container">
             <div class="hero-headline extra-padding-top text-center extra-padding-bottom">
 

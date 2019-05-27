@@ -14,10 +14,9 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                           <th>Methods</th>
+                           
                            <th> Prefix</th>
-                            <th> Uri</th>
-                            <th> Action</th>
+                            
                             
                             
                             
@@ -25,12 +24,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($routes as $route)
+                        @foreach($prefixes as $prefix)
                         <tr>
-                            <td>{{implode('|',$route->methods())}}</td>
-                            <td>{{$route->getPrefix()}}</td>
-                            <td title="{{$route->uri()}}"><a href="{{route('cp-source-show-route',['name'=>$route->getName(),'methods'=>implode('|',$route->methods()),'prefix'=>$route->getPrefix(),'uri'=>$route->uri(),'action'=>$route->getActionName()])}}"><span class="glyphicon glyphicon-th"></span> {{str_limit($route->uri(),35)}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
-                            <td title="{{$route->getActionName()}}">{{str_limit($route->getActionName(),20)}}</td>
+                            
+                            <td>
+                                <a href="{{route('cp-source-show-route_prefix',['name'=>$prefix])}}"> 
+                                    {{$prefix}}
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            </td>
+                            
                         </tr>
                         
                         @endforeach

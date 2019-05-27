@@ -58,6 +58,35 @@ class AddLaradminUserFields extends Migration
             if (!Schema::hasColumn('users', 'self_deactivated_at')) {
                 $table->timestamp('self_deactivated_at')->nullable();
             }
+
+            // Other details
+            if (!Schema::hasColumn('users','first_names')){
+                $table->string('first_names')->nullable();
+            }
+            
+            if (!Schema::hasColumn('users','last_name')){
+                $table->string('last_name')->nullable();
+            }
+
+            if (!Schema::hasColumn('users','year_of_birth')){
+                $table->smallInteger('year_of_birth')->nullable();
+            }
+
+            if (!Schema::hasColumn('users','gender')){
+                $table->string('gender')->nullable();
+            }
+
+            if (!Schema::hasColumn('users','avatar')){
+                $table->string('avatar')->nullable();
+            }
+
+            if (!Schema::hasColumn('users','country')){
+                $table->string('country')->nullable();
+            }
+
+            if (!Schema::hasColumn('users','local')){
+                $table->string('local')->nullable();//
+            }
     
         });
     }

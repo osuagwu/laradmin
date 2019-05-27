@@ -11,7 +11,7 @@
 @section('content')
 
             
-            <p > <strong>Source type key:</strong> {{$source_type}}</p>
+            <p > <strong>Source id:</strong> {{$source_type}}</p>
             <h2>Records</h2>         
             <p > Total number of records:<strong> {{$total_rows}} </strong></p> 
             @if($total_rows)
@@ -65,7 +65,7 @@
             </div>
             @endif
             
-            @include('laradmin::permission.partials.ui',['source_type'=>$source_type,'source_name'=>$source_name])
+            @include('laradmin::permission.partials.ui',['source_type'=>$source_type,'source_id'=>$source_id])
             <p ><a class="btn btn-default" href="{{URL::previous()}}">Back</a></p>
 
            

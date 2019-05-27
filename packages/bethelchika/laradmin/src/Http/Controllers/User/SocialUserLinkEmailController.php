@@ -15,6 +15,7 @@ class SocialUserLinkEmailController extends Controller
 
     public function __construct(LinkEmailManager $linkEmailManager, Laradmin $laradmin)
     {
+        parent::__construct();
         $this->middleware('auth', ['except' => ['linkEmailConfirmation']]);
         $this->middleware('re-auth')->only(['index']);
        $this->linkEmailManager=$linkEmailManager;

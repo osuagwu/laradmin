@@ -29,7 +29,7 @@
                         <tr>
                             <td>{{implode('|',$route->methods())}}</td>
                             <td>{{$route->getPrefix()}}</td>
-                            <td title="{{$route->uri()}}"><a href="{{route('cp-source-show-route',['name'=>$route->getName(),'methods'=>implode('|',$route->methods()),'prefix'=>$route->getPrefix(),'uri'=>$route->uri(),'action'=>$route->getActionName()])}}"><span class="glyphicon glyphicon-th"></span> {{str_limit($route->uri(),35)}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td title="{{$route->uri()}}"><a href="{{route('cp-source-show-route',['name'=>$route->getName(),'methods'=>implode('|',$route->methods()),'prefix'=>$route->getPrefix(),'uri'=>$route->uri(),'action'=>$route->getActionName()])}}"> {{str_limit($route->uri(),35)}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
                             <td title="{{$route->getActionName()}}">{{str_limit($route->getActionName(),20)}}</td>
                         </tr>
                         

@@ -76,7 +76,7 @@ class ComicpicServiceProvider extends ServiceProvider
         // Register fieldables
         $laradmin->formManager->registerFieldable('user_settings','personal',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
         
-        // //delte from here**************************************************************
+        // //delete from here**************************************************************
         // $laradmin->formManager->registerFieldable('user_settings','adresses',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
         // $laradmin->formManager->registerFieldable('user_settings','Loppost',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
         // $laradmin->formManager->registerFieldable('user_settings','credit',\BethelChika\Comicpic\Form\ComicpicFieldable::class);
@@ -100,12 +100,12 @@ class ComicpicServiceProvider extends ServiceProvider
         
         $this->publishes([
             $path.'/resources/views' => resource_path('views/vendor/comicpic'),
-        ]); 
+        ],'laradmin_view'); 
 
         // Assets
         $this->publishes([
             $path.'/publishable' => public_path('vendor/comicpic'),
-        ], 'public');
+        ], 'laradmin_asset');
 
         // Load migrations
         $this->loadMigrationsFrom($path.'/database/migrations');

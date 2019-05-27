@@ -34,6 +34,15 @@ class ControlPanelController extends Controller
     }
 
      
+    /**
+     * Help for control panel
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function help(){
+        $pageTitle="Help";
+        return view('laradmin::cp.help.index',compact('pageTitle'));
+    }
     
 
 

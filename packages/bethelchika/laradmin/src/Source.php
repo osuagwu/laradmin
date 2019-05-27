@@ -3,12 +3,11 @@
 namespace BethelChika\Laradmin;
 
 use Illuminate\Database\Eloquent\Model;
-use BethelChika\Laradmin\Source\Traits\TypeKeys;
-use BethelChika\Laradmin\Source\Traits\AccessString;
+use BethelChika\Laradmin\Source\Traits\idHelper;
 
 class Source extends Model
 {
-    use TypeKeys,AccessString;
+    use idHelper;
 
     protected $guarded = ['id','created_at','updated_at'];
 
@@ -62,9 +61,13 @@ class Source extends Model
         foreach(config('database.connections') as $con=>$con_value){
             $_tables=[];
             try{
-                switch(strtolower($con)){
-                    case 'mysql':
+                switch(strtolower($con_value['driver'])){
+                    case 'mysql': 
                         $_tables = \DB::connection($con)->select('SHOW TABLES'); // returns an array of 
+                        for($i=0;$i<count($_tables);$i++){
+                            $ks=array_keys((array)$_tables[$i]);
+                            $_tables[$i]->name = $_tables[$i]->{$ks[0]};//The first key item seem to always be the tablename is mysql
+                        }
                         break;
                     case 'sqlite':
                         $_tables= \DB::connection($con)->select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");

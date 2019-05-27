@@ -5,7 +5,7 @@ namespace  BethelChika\Laradmin\Http\Controllers\CP;
 use Illuminate\Http\Request;
 
 use DB;
-use BethelChika\Laradmin\MainPermission;
+use BethelChika\Laradmin\Permission;
 use BethelChika\Laradmin\Source;
 use Illuminate\Support\Facades\Gate;
 use BethelChika\Laradmin\Http\Controllers\CP\Controller; //NOTE: This is explicitly imported to avoid wrong use of a controller if this file is coppied elsewhere
@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use BethelChika\Laradmin\WP\Models\Page;
 
 class SourceController extends Controller
-{
+{/*
+    TODO: No policy is applied yet in this controller so their is no authorisation for corresponding table and model
+    */
      /**
      * Create a new controller instance.
      *
@@ -37,6 +39,19 @@ class SourceController extends Controller
         $this->cpAuthorize();
     }
   
+      /**
+     * Display types of sources.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function types()
+    {
+       $this->cpAuthorize();
+       $source_types=Source::$DEFAULT_TYPES;
+        $pageTitle='Source types';
+        return view('laradmin::cp.source.types', compact('pageTitle','source_types'));
+    }
+
   
    /** Display a listing of pages
     *
@@ -67,11 +82,11 @@ class SourceController extends Controller
         if(!$page){
             return redirect()->route('cp-source-type-page')->with('warning','Unknown page. id:'.$id);
         }
-       $source_name=$page->ID;//Note The page ID is used as a name here for main_persion table, just works as a unique id for pages type if source
-       $source_type=Source::getPageTypeKey($page);
+       $source_id=$page->ID;//Note The page ID is used as a name here for main_persion table, just works as a unique id for pages type if source
+       $source_type=get_class($page);
        $pageTitle=$page->title;
        
-       return view('laradmin::cp.source.show_page', compact('pageTitle','source_type','source_name','page'));
+       return view('laradmin::cp.source.show_page', compact('pageTitle','source_type','source_id','page'));
     }
 
       /**
@@ -89,20 +104,8 @@ class SourceController extends Controller
         return view('laradmin::cp.source.type', compact('pageTitle','source_types','sources'));
     }
 
-   
-    /**
-     * Display types of sources.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function types()
-    {
-       $this->cpAuthorize();
-       $source_types=Source::$DEFAULT_TYPES;
-        $pageTitle='Sources types';
-        return view('laradmin::cp.source.types', compact('pageTitle','source_types'));
-    }
-
+    
+  
 
 
     /**
@@ -119,10 +122,10 @@ class SourceController extends Controller
         if(!$source){
             return redirect()->route('cp-source-types')->with('warning','Unknown page. id:'.$id);
         }
-       $source_name=$source->id;
-       $source_type=Source::getTypeKey($source);
+       $source_id=$source->id;
+       $source_type=Source::class;
         $pageTitle=ucfirst($source->type) .' : '.$source->name;
-        return view('laradmin::cp.source.show', compact('pageTitle','source_type','source_name'));
+        return view('laradmin::cp.source.show', compact('pageTitle','source_type','source_id'));
      }
 
      
@@ -148,7 +151,7 @@ class SourceController extends Controller
 
    /**
      * Display a Route source
-     *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function showRoute(Request $request)
@@ -158,6 +161,12 @@ class SourceController extends Controller
        $route_name='';
        if($request->filled('name')){
            $route_name=$request->input('name');
+       }
+
+
+       $prefix='';
+       if($request->filled('prefix')){
+           $prefix=$request->input('prefix');
        }
 
        $methods=$request->input('methods');
@@ -171,6 +180,7 @@ class SourceController extends Controller
                 $_methods=implode('|',$_route->methods());
                 $_action=$_route->getActionName();
                 $_route_name=$_route->getName();
+                $_prefix=$_route->getPrefix();
                 $_uri=$_route->uri();
 
                 $is_route_name=true;
@@ -178,10 +188,16 @@ class SourceController extends Controller
                     $is_route_name=str_is($route_name,$_route_name);
                 }
 
+                $is_prefix=true;
+                if($prefix){
+                    $is_prefix=str_is($prefix,$_prefix);
+                }
+
                 if(str_is($methods,$_methods)
                     and str_is($action,$_action)
                     and str_is($uri,$_uri)
-                    and $is_route_name){
+                    and $is_route_name
+                    and $is_prefix){
                         $route=$_route;
                         break;
                     }
@@ -189,15 +205,15 @@ class SourceController extends Controller
         if(!$route){
             return redirect()->route('cp-source-type-route')->with('warning','Unknown route. uri:'.$uri);
         }
-       $source_name=$route->uri();
-       $source_type=Source::getRouteTypeKey($route);
+       $source_type='route';
+       $source_id=Source::getRouteSourceId($route);
        $pageTitle=$route->uri();
        
-       return view('laradmin::cp.source.show_route', compact('pageTitle','source_type','source_name','route'));
+       return view('laradmin::cp.source.show_route', compact('pageTitle','source_type','source_id','route'));
     }
 
 
-       /** Display a listing of route
+       /** Display a listing of routee with prefix
     *
     * @return \Illuminate\Http\Response
     */
@@ -206,69 +222,50 @@ class SourceController extends Controller
        
        $this->cpAuthorize();
        $routes = app('router')->getRoutes();
-       $route_=[];
+       $prefixes=[];
        foreach($routes as $route){
             if($route->getPrefix()){
-                $route_[]=$route;
+                $prefixes[]=$route->getPrefix();
             }
+            
        }
-       $routes=$route_;
+       $prefixes=array_unique($prefixes);
+       //dd($routes);
        unset($route_);
-       $pageTitle='Routes with prefixes';
-       return view('laradmin::cp.source.routes', compact('pageTitle','routes'));
+       $pageTitle='Routes prefixes';
+       return view('laradmin::cp.source.route_prefixes', compact('pageTitle','prefixes'));
    }
 
     /**
-     * Display a Route source
-     *
+     * Display a Route source with prefix
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function showRoutePrefix(Request $request)
     {
        $this->cpAuthorize();
        
-       $route_name='';
-       if($request->filled('name')){
-           $route_name=$request->input('name');
-       }
+       $name=$request->input('name');
 
-       $methods=$request->input('methods');
-        $action=$request->input('action');
-        $uri=$request->input('uri');
-        $prefix=$request->input('prefix');
-
-       $route=null;
+       $prefix=null;
        $routes = app('router')->getRoutes();
         foreach($routes as $_route){
-            $_methods=implode('|',$_route->methods());
-            $_action=$_route->getActionName();
-            $_route_name=$_route->getName();
-            $_uri=$_route->uri();
             $_prefix=$_route->getPrefix();
 
-            $is_route_name=true;
-            if($route_name){
-                $is_route_name=str_is($route_name,$_route_name);
+            if(str_is($name,$_prefix)){
+                $prefix=$_prefix;
+                break;
             }
-
-            if(str_is($methods,$_methods)
-                and str_is($action,$_action)
-                and str_is($uri,$_uri)
-                and str_is($prefix,$_prefix)
-                and $is_route_name){
-                    $route=$_route;
-                    break;
-                }
         }
 
-        if(!$route){
-            return redirect()->route('cp-source-type-route')->with('warning','Unknown route prefix. route prefix:'.$prefix);
+        if(!$prefix){
+            return redirect()->route('cp-source-type-route_prefix')->with('warning','Unknown route prefix. route prefix:'.$prefix);
         }
-       $source_name=$route->getPrefix();
-       $source_type=Source::getRoutePrefixTypeKey($route);
-       $pageTitle=$route->uri();
+       $source_id=$prefix;
+       $source_type='route_prefix';
+       $pageTitle=$name;
        
-       return view('laradmin::cp.source.show_route', compact('pageTitle','source_type','source_name','route'));
+       return view('laradmin::cp.source.show_route_prefix', compact('pageTitle','source_type','source_id','prefix'));
     }
 
 
@@ -293,7 +290,7 @@ class SourceController extends Controller
 
     /**
      * Display the specified resource.
-     *
+     * @param Request $request
      * @param  string  $name
      * @return \Illuminate\Http\Response
      */
@@ -322,29 +319,41 @@ class SourceController extends Controller
         if(!$table){
             return redirect()->route('cp-source-type-table')->with('warning','No such table: '.$table);
         }
+        
+        $total_rows=null;
+        $latest_update=null;
+        $oldest_update=null;
+        $latest_insert=null;
+        $oldest_insert=null;
+        try{//We try b/c not all tables will have all the fields we are asking for also see todo below about worpress not working
 
-        $total_rows=count(DB::table($table->name)->select('id')->get());
+            //TODO: wordpress table with prefix is not working as Laravel is appending the prefix twice
+            //DB::connection($connection)->setTablePrefix('');
+            //dd(DB::connection($connection)->table($table->name)->get());
+            $total_rows=count(DB::connection($connection)->table($table->name)->select('*')->get());
 
-        $latest_update= DB::table($table->name)
-        ->latest('updated_at')
-        ->first();
+            $latest_update= DB::connection($connection)->table($table->name)
+            ->latest('updated_at')
+            ->first();
 
-        $oldest_update= DB::table($table->name)
-        ->oldest('updated_at')
-        ->first();
+            $oldest_update= DB::connection($connection)->table($table->name)
+            ->oldest('updated_at')
+            ->first();
 
-        $latest_insert= DB::table($table->name)
-        ->latest()
-        ->first();
+            $latest_insert= DB::connection($connection)->table($table->name)
+            ->latest()
+            ->first();
 
-        $oldest_insert= DB::table($table->name)
-        ->oldest()
-        ->first();
+            $oldest_insert= DB::connection($connection)->table($table->name)
+            ->oldest()
+            ->first();
+        }catch(\Illuminate\Database\QueryException $qex){
+        }
 
-        $source_name=$table->name;
-        $source_type=Source::getTableTypeKey($connection,$database,$prefix,$table->name);
+        $source_type='table';
+        $source_id=Source::getTableSourceId($connection,$database,$prefix,$table->name);
         $pageTitle=ucfirst(str_replace('_',' ',$table->name));
-        return view('laradmin::cp.source.show_table',compact('pageTitle','source_name','source_type','table','total_rows','latest_update','oldest_update','latest_insert','oldest_insert','permissions'));
+        return view('laradmin::cp.source.show_table',compact('pageTitle','source_id','source_type','table','total_rows','latest_update','oldest_update','latest_insert','oldest_insert','permissions'));
     }
 
      /**
@@ -387,6 +396,10 @@ class SourceController extends Controller
             $source->name=trim($source->name,'/');
         }
 
+        if(str_is($source->type,'model')){
+            $source->name=trim($source->name,'\\');
+        }
+
         $source->save();
         return redirect()->route('cp-source-type',[$source->type])->with('success','Done');
 
@@ -396,201 +409,64 @@ class SourceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Source $source
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Source $source)
     {
         $this->cpAuthorize();
+        $source_types=Source::$UNGUARDED_DEFAULT_TYPES;
+        $pageTitle='Edit '.$source->name;
+        return view('laradmin::cp.source.edit',compact('pageTitle','source','source_types'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+    * @param  Source $source
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Source $source)
     {
         $this->cpAuthorize();
-    }
+        $source->name=$request->input('name');
+        $source->type=$request->input('type');
+        $source->description=$request->input('description');
 
-
-    /**
-     * Update permission.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-     public function updatePermission(Request $request)
-     {
-        $this->cpAuthorize();
-        //dd($request->permission_str);
-        if($request->permission_id!=0){
-            //$permissions=DB::table('main_permissions')->update($request->permission_id;
-            $perm=MainPermission::findOrFail($request->permission_id);
-            //var_dump($perm->id);
-            //exit();
-            $perm_str=str_split($request->permission_str);
-            //var_dump($request->permission_str);
-            //exit();
-            $perm->create=intval( $perm_str[0]);
-            $perm->read=intval( $perm_str[1]);
-            $perm->update=intval( $perm_str[2]);
-            $perm->delete=intval( $perm_str[3]);
-            $perm->save();
-            $request->flashOnly('permission_id');
-            return back()->with('success','Permission Updated');
-        }else{/*
-            $perm= new MainPermission();
-            if($request->user_id){
-                $perm->user_id=$request->user_id;
-            }elseif($request->user_group_id){
-                $perm->user_group_id=$request->user_group_id;
-            }else{
-                $request->flashOnly('permission_id');
-                return back()->with('warning','No group or user specified for the permission');
-            }
-            $perm_str=str_split($request->permission_str);
-            $perm->create=intval( $perm_str[0]);
-            $perm->read=intval( $perm_str[0]);
-            $perm->update=intval( $perm_str[0]);
-            $perm->delete=intval( $perm_str[0]);
-            $perm->save();
-            $request->flashOnly('permission_id');
-            return back()->with('success','Permission added');
-            */
-
-            $request->flashOnly('permission_id');
-            return back()->with('warning','No group or user specified for the permission');
+        if(str_is($source->type,'url')){
+            $source->name=trim($source->name,'/');
         }
 
-     }
-
-     /**
-     * Find users and groups
-     *@param 
-     * @param  Request $request
-     * @return Illuminate/Http/JsonResponse
-     */
-    public function searchUsers(Request $request)
-    {   
-        $this->cpAuthorize();
-        //$this->validate($request,['name'=>'required']);
-        //abort(422,'data no acess');
-        //return response()->json(['error' => 'Error msg'], 404);
-
-        if (Gate::denies('cp')) {
-            //abort(403);
-            return response()->json(['msg'=>'Access denied'],403);
+        if(str_is($source->type,'model')){
+            $source->name=trim($source->name,'\\');
         }
 
-        if (strlen($request->s)<2){
-            return response()->json([]);
+        if($source->save()){
+            return redirect()->route('cp-source-show',$source->id)->with('success','Done!');
+        }else{
+            return back()->withInput($request->all())->with('danger','Error with saving item');
         }
-
-        $finds=[];
-        $users=DB::table('users')->where('name','like','%'.$request->s.'%')->get();
-        foreach($users as $user){
-            $temp=[];
-            $temp=['id'=>$user->id,'name'=>$user->name,'email'=>$user->email,'isgroup'=>0];
-            
-            $finds[]=$temp;
-        }
-        $groups=DB::table('user_groups')->where('name','like','%'.$request->s.'%')->get();
-
-        foreach($groups as $g){
-            $temp=[];
-            $temp=['id'=>$g->id,'name'=>$g->name,'email'=>'group','isgroup'=>1];
-            
-            $finds[]=$temp;
-        }
-        //dd($finds);
-
-        return response()->json($finds);
-    }
-
-
-     /**
-     * Store a new permision
-     *
-     * @param  Request $request
-     * @return Illuminate/Http/JsonResponse :with newly created permision id on success
-     */
-     public function storePermission(Request $request)
-     {   
-        $this->cpAuthorize();
-
-        if (Gate::denies('cp')) {
-            return response()->json(['msg'=>'Access denied'],403);
-        }
-
-        if(!$request->data_id){
-            //we don't know who to assign the permission to
-            return response()->json(['id'=>-1]);
-        }
-         
-
-        $perm=new MainPermission();
-        if($request->isgroup){
-             //check permission 
-             $permExists=MainPermission::where('source',$request->source)->where('user_group_id',$request->data_id)->first();
-             if($permExists){
-                return response()->json(['id'=>-1]);
-             }
-            $perm->user_group_id=$request->data_id;
-        }
-        else{
-            //check permission 
-            $permExists=MainPermission::where('source',$request->source)->where('user_id',$request->data_id)->first();
-            if($permExists){
-                return response()->json(['id'=>-1]);
-            }
-            $perm->user_id=$request->data_id;
-        }
-        $perm->source=$request->source;
-        $perm->create=0;
-        $perm->read=0;
-        $perm->update=0;
-        $perm->delete=0;
-
-        $perm->save();
-
-        return response()->json( ['id'=>$perm->id]);
-
-     }
-
-     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MainPermission $permission)
-    {
-        $this->cpAuthorize();
-
-        $permission->delete();
-        return back()->with('success','Permission was deleted');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Request $request
-     * @return Illuminate/Http/JsonResponse
-     */
-    public function destroyPermission(Request $request)
-    {
-        $this->cpAuthorize();
         
-        if (Gate::denies('cp')) {
-            return response()->json(['msg'=>'Access denied'],403);
-        }
-
-        $perm=MainPermission::findOrFail($request->id);
-        $perm->delete();
-        return response()->json(['id'=>$perm->id]);
     }
+
+    /**
+     * Delete a source
+     *
+     * @param Source $source
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Source $source){
+        $this->cpAuthorize();
+        $type_key=Source::getTypeKey();
+        if(Permission::unlinkSource($type_key,$source->id)){
+            $type=$source->type;
+            $source->delete();
+            return redirect()->route('cp-source-type',$type)->with('success','Done!');
+        }else{
+            return back()->with('danger','Unable to complete the action');
+        }
+        
+    }
+
+    
 }

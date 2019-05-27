@@ -7,6 +7,16 @@ use BethelChika\Laradmin\Http\Controllers\Controller;
 use BethelChika\Laradmin\Laradmin;
 
 class FeedController extends Controller{
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+       parent::__construct();
+    }
+   
     /**
      * Get feeds for Json style
      *

@@ -18,6 +18,7 @@ class WPController extends Controller
      */
     public function __construct(Laradmin $laradmin)
     {
+        parent::__construct();
         $this->laradmin = $laradmin;
 
         
@@ -37,11 +38,12 @@ class WPController extends Controller
      * main_nav_scheme          | subtle|primary                   | Sets the scheme of the main nav
      * hero_height              | dynamic|full|[Integer]           | Determine if the height of the hero should be made to fill the page height or be dynamic relative to content. If integer it will be interpreted as css vh unit.
      * hero_headline_justify    | left|center|right|               | Horizontal position of the content of a hero
+     * hero_shade               | default(default)|angle|smooth|flat| The shade the help things on the hero like the menu to be seen especially when the hero image is not very dark
      * hero_headline_shade      | on|off                           | When 'on' adds extra shade behind hero content to make it easier to see. Note this is different from section overlay; The default section overlay might already make it easy to see the content.
      * rightbar                 | on|off                           | Enable or disable the right bar
      * wide_screen              | on|off(default)                  | When 'on' bootstraps 'container' is replaced with 'container-fluid'
      * hero_fullscreen          | on|off(default)                  | Makes the hero image full screen     
-     * hero_headline_align     | top|middle|bottom                | Used to verticaly position the headline inside the hero NOTE: you may need to use numeric hero_height to create the enough vertical height for this setting to have effect
+     * hero_headline_align      | top|middle|bottom                | Used to verticaly position the headline inside the hero NOTE: you may need to use numeric hero_height to create the enough vertical height for this setting to have effect
      * hero_type                | super|hero(default)              | Determines the type of hero. Super hero extends to the top nav
      * social_share_top         | on|off                           | Turn on or off social share at page top
      * social_share_bottom      | on|off                           | Turn on or off social share at page bottom

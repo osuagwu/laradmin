@@ -129,7 +129,7 @@ class Media extends Model
      */
     public function getFolderName()
     {
-        return $this->directory;
+        return $this->dir;
         
     }
 
@@ -140,7 +140,7 @@ class Media extends Model
      */
     public function getFileName()
     {
-        return $this->filename;
+        return $this->fn;
         
 
     }
@@ -152,7 +152,7 @@ class Media extends Model
      */
     public function getExtension()
     {
-        return $this->extension;
+        return $this->ext;
         
 
     }

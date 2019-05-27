@@ -24,7 +24,8 @@ class UserGroupMapPolicy
      *
      * @var string
      */
-    public $tableAccessString;
+    public $tableSourceId;
+
     
     /**
     * Create a new policy instance.
@@ -36,7 +37,7 @@ class UserGroupMapPolicy
         
         //Get table access info
         $temp=new UserGroupMap();
-        $this->tableAccessString=Source::getTableAccessString($temp);
+        $this->tableSOurceId=Source::getTableSourceIdFromModel($temp);
         unset($temp);
     }
     /**
@@ -85,7 +86,7 @@ class UserGroupMapPolicy
          
 
         //Check at the table level
-        $r= $this->perm->can($user,$this->tableAccessString,'update');
+        $r= $this->perm->can($user,'table',$this->tableSourceId,'update');
 
         //CHeck at the model level
         $m=$this->modelCheckHelper($user,'update',$userToMap);
@@ -127,8 +128,8 @@ class UserGroupMapPolicy
         //Check at the model level
         $source=Source::where('type','model')->where('name',UserGroup::class)->first();
         if($source){
-            $access_string=Source::getTypeKey().':'.$source->id;
-            if(!$this->perm->can($user,$access_string,$action,$model)){
+            //$access_string=,$source->id;
+            if(!$this->perm->can($user,Source::class,$source->id,$action,$model)){
                 return false;
             }
         }

@@ -16,7 +16,7 @@
 
 /* Show box */
 .comicpic .main-show{
-    margin-top: 15px;
+    margin-top: 60px;/*30px*/
 }
 .comicpic .main-show .mainshot-box{
     padding-bottom: 15px;

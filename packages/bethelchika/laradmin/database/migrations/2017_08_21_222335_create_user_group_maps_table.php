@@ -18,8 +18,8 @@ class CreateUserGroupMapsTable extends Migration
     {
         Schema::create('user_group_maps', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('user_group_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('user_group_id');
             $table->timestamps();
 
             $table->foreign('user_id')

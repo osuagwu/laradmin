@@ -12,7 +12,7 @@
 
 # add reason comments and admin Id who disablled a user's account (comments cann be implemented with a 'note' field on users table) 
 
-# Extend permision to include single objects:  [Note it is probaly better to implement this using main_permission or a second permission table,.No need to worry about the permission tabl growing too large because not all objects will need explicit access definition]
+# Extend permision to include single objects:  [Note it is probaly better to implement this using permission table or a second permission table,.No need to worry about the permission tabl growing too large because not all objects will need explicit access definition]
 
 # Unless its neccessary and will not cause issues, replace all occurance of \BethelChika\Laradmin\User to \App\User expecially in policies and in then in \config\auth.php 
 

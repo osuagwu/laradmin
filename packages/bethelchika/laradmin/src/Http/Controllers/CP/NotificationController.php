@@ -10,7 +10,9 @@ use BethelChika\Laradmin\Notifications\Notice;
 use BethelChika\Laradmin\Http\Controllers\CP\Controller; //NOTE: This is explicitly imported to avoid wrong use of a controller if this file is coppied elsewhere
 
 class NotificationController extends Controller
-{
+{/*
+    TODO: No policy is applied yet in this controller so their is no authorisation for corresponding table and model
+    */
     /**
      * Create a new controller instance.
      *

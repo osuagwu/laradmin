@@ -638,6 +638,49 @@ section{
     //NOTE: You can offset the any padding set in the .section  class here  and tranfer them inside the overlay here if you want the overlay edges to start with the section edges.
      
 }
+    /**
+    * Helper for creating section overlay
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage : @include section-overlay(primary,$brand-primary);
+    */
+@mixin section-overlay($brand-name,$brand){
+
+    .section-#{$brand-name} .section-overlay{
+        background-color:rgba($brand-primary,0.2); 
+        @media (min-width: 768px){
+            &.section-overlay-gradient-flat{
+                background: linear-gradient(180deg, rgba(0,0,0,0.208) 35%, rgba(0,0,0,0.001) 35%);
+            }
+            
+            &.section-overlay-gradient-angle{
+                background: linear-gradient(176deg, rgba(0,0,0,0.208) 40%, rgba(0,0,0,0.001) 40%);
+            }
+            
+            &.section-overlay-gradient-smooth{
+                background: linear-gradient(176deg, rgba(0,0,0,0.8071603641456583) 0%, rgba(0,0,0,0.020045518207282953) 45%);
+            }
+
+            // Brand gradient
+            &.section-overlay-brand-gradient-flat{
+                background: linear-gradient(180deg, rgba($brand,0.408) 35%, rgba(0,0,0,0.001) 35%);
+            }
+            
+            &.section-overlay-brand-gradient-angle{
+                background: linear-gradient(176deg, rgba($brand,0.408) 40%, rgba(0,0,0,0.001) 40%);
+            }
+            
+            &.section-overlay-brand-gradient-smooth{
+                background: linear-gradient(176deg, rgba($brand,0.9071603641456583) 0%, rgba(0,0,0,0.020045518207282953) 45%);
+            }
+        }
+        
+    }
+    
+}
+
+
+
 .section-default{
     
 }
@@ -651,10 +694,13 @@ section{
 }
 
 @include section-diffuse(primary,$brand-primary);
-
-.section-primary .section-overlay{
-    background-color:rgba($brand-primary,0.2); 
-}
+@include section-overlay(primary,$brand-primary);
+// .section-primary .section-overlay{
+//     background-color:rgba($brand-primary,0.2); 
+   
+  
+    
+// }
 
 
 
@@ -674,10 +720,10 @@ section{
 }
 
 @include section-diffuse(info,$brand-info);
-
-.section-info .section-overlay{
-    background-color:rgba($brand-info,0.2); 
-}
+@include section-overlay(info,$brand-info);
+// .section-info .section-overlay{
+//     background-color:rgba($brand-info,0.2); 
+// }
 
 
 
@@ -694,10 +740,10 @@ section{
 }
 
 @include section-diffuse(success,$brand-success);
-
-.section-success .section-overlay{
-    background-color:rgba($brand-success,0.2); 
-}
+@include section-overlay(success,$brand-success);
+// .section-success .section-overlay{
+//     background-color:rgba($brand-success,0.2); 
+// }
 
 
 
@@ -711,10 +757,10 @@ section{
     background-color:lighten($brand-warning,20%);
 }
 @include section-diffuse(warning,$brand-warning);
-
-.section-warning .section-overlay{
-    background-color:rgba($brand-warning,0.2); 
-}
+@include section-overlay(warning,$brand-warning);
+// .section-warning .section-overlay{
+//     background-color:rgba($brand-warning,0.2); 
+// }
 
 
 
@@ -729,9 +775,10 @@ section{
     background-color:lighten($brand-danger,20%);
 }
 @include section-diffuse(danger,$brand-danger);
-.section-danger .section-overlay{
-    background-color:rgba($brand-danger,0.2); 
-}
+@include section-overlay(danger,$brand-danger);
+// .section-danger .section-overlay{
+//     background-color:rgba($brand-danger,0.2); 
+// }
 
 
 
@@ -1007,6 +1054,8 @@ section{
         margin-top:-80px;
         margin-top: calc(-80px + -45px);//The extra negative margin top helps to keep the hero image on the site roof even when the main menu split in two line. It should even be higher if the menu can split in 3 lines
         padding-top:80px;
+
+        
         
     }
 

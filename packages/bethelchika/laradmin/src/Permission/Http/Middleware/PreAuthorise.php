@@ -5,6 +5,7 @@ namespace BethelChika\Laradmin\Permission\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\Source;
+use BethelChika\Laradmin\User;
 
 class PreAuthorise
 {
@@ -37,9 +38,10 @@ class PreAuthorise
     {
        $this->perm=app('laradmin')->permission;
         $this->user=$request->user();
+        
        //return $this->perm->can($user,'table:users','read',$userToView);
        //$perm->can();
-       if($this->user and $this->authoriseUrl($request) and $this->authoriseRoute()){
+       if( $this->authoriseUrl($request) and $this->authoriseRoute()){
             return $next($request);
        }else{
            //return redirect()->route('user-profile')->with('warning','Access denied');
@@ -84,14 +86,23 @@ class PreAuthorise
 
         //Now perform test
         foreach($source_items as $source_item){
-            $source_type=Source::getTypeKey($source_item);
-            $source=$source_type.':'.$source_item->id;
-            if($this->perm->isDisallowed($this->user,$source,'read')){
+            //$source_type=Source::getTypeKey($source_item);
+            //$source=$source_type.':'.$source_item->id;
+             // Check if a user must login first
+            $user=$this->user;
+            if(!$user){
+                if($this->perm->hasEntry(Source::class,$source_item->id,'read')){
+                    abort(403,'You must login to access the request.');
+                }
+                $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
+            }
+
+            if($this->perm->isDisallowed($user,Source::class,$source_item->id,'read')){
                 return false;
             }
-            return true;
+            
         }
-        
+        return true;
     }
 
     /**
@@ -103,24 +114,53 @@ class PreAuthorise
         $route=app('router')->current();
         
         //Check route
-        $source_type=Source::getRouteTypeKey($route);
-        $source=$source_type.':'.$route->uri();
-        
-        if($this->perm->isDisallowed($this->user,$source,'read')){
+        $source_id=Source::getRouteSourceId($route);
+        $source_type='route';
+
+         // Check if a user must login first
+         $user=$this->user;
+         if(!$user){
+             if($this->perm->hasEntry($source_type,$source_id,'read')){
+                 abort(403,'You must login to access the request.');
+             }
+             $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
+         }
+
+         // Now do permission
+        if($this->perm->isDisallowed($user,$source_type,$source_id,'read')){
             return false;
         }
 
-        
 
-        //CHeck prefix
-        $source_type=Source::getRoutePrefixTypeKey($route);
-        $source=$source_type.':'.$route->getPrefix();
-        
-        if($this->perm->isDisallowed($this->user,$source,'read')){
+
+
+        //
+        //******************************************************************
+        //CHeck prefix****************************************************
+        $prefix=$route->getPrefix();
+        if(!$prefix){
+            return true;
+        }
+        $source_type='route_prefix';//Source::getRoutePrefixTypeKey();
+        $source_id=$prefix;
+
+        // Check if a user must login first
+        $user=$this->user;
+        if(!$user){
+            if($this->perm->hasEntry($source_type,$source_id,'read')){
+                abort(403,'You must login to access the request.');
+            }
+            $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
+        }
+
+        //Now check permission
+        if($this->perm->isDisallowed($user,$source_type,$source_id,'read')){
             return false;
         }
 
         return true;
 
     }
+
+  
 }
