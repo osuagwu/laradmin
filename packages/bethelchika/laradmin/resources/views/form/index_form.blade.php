@@ -58,7 +58,7 @@
             
         @endforeach
 
-        @if($form->getEditLink())<div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs" href="{{$form->getEditLink()}}" title="Edit"> <i class="fas fa-edit"></i> {{__('Edit')}}</a></div>@endif
+        @if($form->getEditLink())<div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs" href="{{$form->getEditLink()}}" title="Edit"> <i class="fas fa-pen"></i> {{__('Edit')}}</a></div>@endif
 
         @if($form->indexBottomMessage)<p class=" fainted-08"><small>{{$form->indexBottomMessage}}</small></p>@endif
         @includeIf($form->getEditBottom())

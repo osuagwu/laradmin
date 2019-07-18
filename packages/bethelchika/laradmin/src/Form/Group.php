@@ -8,18 +8,18 @@ class Group extends FormItem
 
 
 
-    /**
- * 
- *
- * @var string
- */
-    public $indexDescription = null;
-    /**
- * 
- *
- * @var string
- */
-    public $editDescription = null;
+//     /**
+//  * 
+//  *
+//  * @var string
+//  */
+//     public $indexDescription = null;
+//     /**
+//  * 
+//  *
+//  * @var string
+//  */
+//     public $editDescription = null;
 
     /**
  * 

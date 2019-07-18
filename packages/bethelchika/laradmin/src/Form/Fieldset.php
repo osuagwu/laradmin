@@ -19,6 +19,22 @@ class Fieldset extends FormItem
  * @var string
  */
     public $legend = null;
+
+    /**
+     * Read only items are only displayed for viewing.
+     *
+     * @var boolean
+     */
+    public $isReadOnly=false;
+
+     /**
+     * Read only items are only displayed for editing page.
+     *
+     * @var boolean
+     */
+    public $isWriteOnly=false;
+    
+    
     /**
      * Construct a new fieldset
      *

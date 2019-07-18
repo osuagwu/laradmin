@@ -30,6 +30,11 @@
                             <td>
                                 <a href="{{route('cp-source-show-route_prefix',['name'=>$prefix])}}"> 
                                     {{$prefix}}
+                                    @if($laradmin->permission->hasEntry('route_prefix',$prefix))
+                                        <span class="label label-warning" title="Has permission">
+                                            <i class="fas fa-lock" > </i> 
+                                        </span>
+                                    @endif 
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                 </a>
                             </td>

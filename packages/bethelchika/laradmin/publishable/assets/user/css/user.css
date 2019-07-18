@@ -6,6 +6,11 @@
 3: $gray-dark // Must be based on $brand-primary
 */
 
+/* This stands for 'use border radius' set it to 0 to remove border radius 
+*  that are not 50%, and 1 to allowe them.
+*  Values: {0,1}
+*/
+
 /*!
  * Bootstrap v3.4.0 (https://getbootstrap.com/)
  * Copyright 2011-2018 Twitter, Inc.
@@ -10327,7 +10332,7 @@ body.navbar-primary .main-nav.navbar-default .navbar-nav > li,
 body.navbar-primary .main-nav.navbar-default .navbar-nav > li > a,
 .minor-nav-primary.navbar-default .navbar-nav > li > a {
   color: #ecf0f1;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 body.navbar-primary .main-nav.navbar-default .navbar-nav > li > a.call-to-action,
@@ -10762,7 +10767,7 @@ ul {
   padding: 0 5px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .nav .custom-dropdown-toggle {
     border: 1px solid;
     padding: 1px 7px;
@@ -10793,6 +10798,16 @@ ul {
 
 .minor-nav .nav .custom-dropdown-toggle {
   top: 10px;
+}
+
+@media (max-width: 768px) {
+  .nav-tabs.nav .custom-dropdown-toggle,
+  .nav-pills.nav .custom-dropdown-toggle {
+    border: 0px solid;
+    padding-left: 4px;
+    padding-right: 4px;
+    right: 0px;
+  }
 }
 
 .main-nav .navbar-header .sidebar-control {
@@ -11153,25 +11168,25 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 @media (min-width: 768px) {
   .section-primary .section-overlay.section-overlay-gradient-flat {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(0, 0, 0, 0.208)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-primary .section-overlay.section-overlay-gradient-angle {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-primary .section-overlay.section-overlay-gradient-smooth {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 47%);
   }
 
-  .section-primary .section-overlay.section-overlay-brand-gradient {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(74, 74, 127, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(74, 74, 127, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  .section-primary .section-overlay.section-overlay-brand-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(74, 74, 127, 0.408)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(74, 74, 127, 0.408) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-primary .section-overlay.section-overlay-brand-gradient-angle {
-    background: linear-gradient(176deg, rgba(74, 74, 127, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(74, 74, 127, 0.408) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-primary .section-overlay.section-overlay-brand-gradient-smooth {
@@ -11219,25 +11234,25 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 @media (min-width: 768px) {
   .section-info .section-overlay.section-overlay-gradient-flat {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(0, 0, 0, 0.208)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-info .section-overlay.section-overlay-gradient-angle {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-info .section-overlay.section-overlay-gradient-smooth {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 47%);
   }
 
-  .section-info .section-overlay.section-overlay-brand-gradient {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(126, 163, 204, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(126, 163, 204, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  .section-info .section-overlay.section-overlay-brand-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(126, 163, 204, 0.408)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(126, 163, 204, 0.408) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-info .section-overlay.section-overlay-brand-gradient-angle {
-    background: linear-gradient(176deg, rgba(126, 163, 204, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(126, 163, 204, 0.408) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-info .section-overlay.section-overlay-brand-gradient-smooth {
@@ -11285,25 +11300,25 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 @media (min-width: 768px) {
   .section-success .section-overlay.section-overlay-gradient-flat {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(0, 0, 0, 0.208)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-success .section-overlay.section-overlay-gradient-angle {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-success .section-overlay.section-overlay-gradient-smooth {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 47%);
   }
 
-  .section-success .section-overlay.section-overlay-brand-gradient {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 204, 102, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(0, 204, 102, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  .section-success .section-overlay.section-overlay-brand-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(0, 204, 102, 0.408)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 204, 102, 0.408) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-success .section-overlay.section-overlay-brand-gradient-angle {
-    background: linear-gradient(176deg, rgba(0, 204, 102, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(0, 204, 102, 0.408) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-success .section-overlay.section-overlay-brand-gradient-smooth {
@@ -11351,25 +11366,25 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 @media (min-width: 768px) {
   .section-warning .section-overlay.section-overlay-gradient-flat {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(0, 0, 0, 0.208)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-warning .section-overlay.section-overlay-gradient-angle {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-warning .section-overlay.section-overlay-gradient-smooth {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 47%);
   }
 
-  .section-warning .section-overlay.section-overlay-brand-gradient {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(244, 162, 97, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(244, 162, 97, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  .section-warning .section-overlay.section-overlay-brand-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(244, 162, 97, 0.408)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(244, 162, 97, 0.408) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-warning .section-overlay.section-overlay-brand-gradient-angle {
-    background: linear-gradient(176deg, rgba(244, 162, 97, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(244, 162, 97, 0.408) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-warning .section-overlay.section-overlay-brand-gradient-smooth {
@@ -11417,25 +11432,25 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 @media (min-width: 768px) {
   .section-danger .section-overlay.section-overlay-gradient-flat {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(0, 0, 0, 0.208)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 35%, rgba(0, 0, 0, 0.001) 35%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(0, 0, 0, 0.208)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.208) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-danger .section-overlay.section-overlay-gradient-angle {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.208) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-danger .section-overlay.section-overlay-gradient-smooth {
-    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 45%);
+    background: linear-gradient(176deg, rgba(0, 0, 0, 0.80716) 0%, rgba(0, 0, 0, 0.0200455) 47%);
   }
 
-  .section-danger .section-overlay.section-overlay-brand-gradient {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(35%, rgba(237, 106, 90, 0.408)), color-stop(35%, rgba(0, 0, 0, 0.001)));
-    background: linear-gradient(180deg, rgba(237, 106, 90, 0.408) 35%, rgba(0, 0, 0, 0.001) 35%);
+  .section-danger .section-overlay.section-overlay-brand-gradient-flat {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(38%, rgba(237, 106, 90, 0.408)), color-stop(38%, rgba(0, 0, 0, 0.001)));
+    background: linear-gradient(180deg, rgba(237, 106, 90, 0.408) 38%, rgba(0, 0, 0, 0.001) 38%);
   }
 
   .section-danger .section-overlay.section-overlay-brand-gradient-angle {
-    background: linear-gradient(176deg, rgba(237, 106, 90, 0.408) 40%, rgba(0, 0, 0, 0.001) 40%);
+    background: linear-gradient(176deg, rgba(237, 106, 90, 0.408) 42%, rgba(0, 0, 0, 0.001) 42%);
   }
 
   .section-danger .section-overlay.section-overlay-brand-gradient-smooth {
@@ -11643,9 +11658,9 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 @media (min-width: 768px) {
   .section.hero.hero-super,
   .section.hero.hero-super .section-overlay {
-    margin-top: -80px;
-    margin-top: calc(-80px + -45px);
-    padding-top: 80px;
+    margin-top: -210px;
+    margin-top: calc(-80px + -130px);
+    padding-top: 200px;
   }
 
   .section.hero.hero-super .section-overlay.no-offset {
@@ -11658,7 +11673,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   body.hero.hero-super .logo-hero-super {
     display: none;
   }
@@ -11736,6 +11751,12 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   margin-top: 120px;
 }
 
+@media (min-width: 768px) {
+  .section.hero.hero-super .hero-headline {
+    margin-top: 80px;
+  }
+}
+
 .section.hero .hero-headline-text {
   line-height: 1.1;
   font-weight: 100;
@@ -11763,7 +11784,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   font-size: 15px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .section.hero .hero-headline {
     width: 100%;
     max-width: 100%;
@@ -11913,6 +11934,10 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   margin-top: 10px;
   font-weight: 400;
   line-height: 1.28;
+}
+
+.mainbar .nav li.active > a {
+  font-weight: bold;
 }
 
 .sidebar {
@@ -13171,6 +13196,15 @@ body.has-sidebar .breadcrumb {
 }
 
 /**
+* Limits image responsive max and min width
+*/
+
+.image-responsive-limits {
+  max-width: 100%;
+  min-width: 100%;
+}
+
+/**
 * Section extra bottom padding
 */
 
@@ -14214,7 +14248,8 @@ article.page .featured-image-box .featured-image {
 
 .blog-posts.blog-posts-h0 .blog-post {
   width: 25%;
-  height: 300px;
+  height: auto;
+  max-height: 320px;
   overflow-y: hidden;
   margin-left: 15px;
   margin-bottom: 15px;
@@ -14240,6 +14275,8 @@ article.page .featured-image-box .featured-image {
   margin: 3px 0 2px 0;
   font-weight: 700;
   line-height: 1.25rem;
+  max-height: 100px;
+  min-height: 100px;
 }
 
 .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .caption .title a {
@@ -14251,10 +14288,14 @@ article.page .featured-image-box .featured-image {
   color: #757575;
   line-height: 1.125rem;
   font-size: 0.875rem;
+  max-height: 30px;
+  min-height: 30px;
+  overflow: hidden;
+  margin-top: -16px;
 }
 
 .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .caption .date {
-  color: #F4A261;
+  color: #757575;
   font-size: 75%;
 }
 
@@ -14290,14 +14331,77 @@ article.page .featured-image-box .featured-image {
 
   .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .caption .title {
     margin-top: 0px;
+    max-height: none;
+    min-height: auto;
+  }
+
+  .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .caption .date {
+    display: none;
+  }
+
+  .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .caption .summary {
+    display: block;
+    max-height: none;
+    min-height: auto;
+    margin-top: auto;
   }
 
   .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .blog-post-inner-item {
     margin-left: 15px;
   }
+}
 
-  .blog-posts.blog-posts-h0 .blog-post .blog-post-inner .caption .summary {
-    display: block;
+.section-primary .blog-posts.blog-posts-h0 .blog-post-inner,
+.section-danger .blog-posts.blog-posts-h0 .blog-post-inner,
+.section-info .blog-posts.blog-posts-h0 .blog-post-inner,
+.section-warning .blog-posts.blog-posts-h0 .blog-post-inner,
+.section-success .blog-posts.blog-posts-h0 .blog-post-inner {
+  background-color: #fff;
+}
+
+.section-primary .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+.section-danger .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+.section-info .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+.section-warning .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+.section-success .blog-posts.blog-posts-h0 .blog-post-inner .caption .title {
+  padding: 16px 16px 16px 16px;
+}
+
+@media (max-width: 768px) {
+  .section-primary .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+  .section-danger .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+  .section-info .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+  .section-warning .blog-posts.blog-posts-h0 .blog-post-inner .caption .title,
+  .section-success .blog-posts.blog-posts-h0 .blog-post-inner .caption .title {
+    padding: 8px;
+  }
+}
+
+.section-primary .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+.section-primary .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+.section-danger .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+.section-danger .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+.section-info .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+.section-info .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+.section-warning .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+.section-warning .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+.section-success .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+.section-success .blog-posts.blog-posts-h0 .blog-post-inner .caption .date {
+  padding: 0px 16px 16px 16px;
+}
+
+@media (max-width: 768px) {
+  .section-primary .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+  .section-primary .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+  .section-danger .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+  .section-danger .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+  .section-info .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+  .section-info .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+  .section-warning .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+  .section-warning .blog-posts.blog-posts-h0 .blog-post-inner .caption .date,
+  .section-success .blog-posts.blog-posts-h0 .blog-post-inner .caption .summary,
+  .section-success .blog-posts.blog-posts-h0 .blog-post-inner .caption .date {
+    display: none;
   }
 }
 
@@ -14401,6 +14505,10 @@ article.page .featured-image-box .featured-image {
   height: 100px;
 }
 
+.form-page.index .group .row.row-c {
+  padding-top: 0px;
+}
+
 .form-page .header .formbar {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -14469,6 +14577,11 @@ article.page .featured-image-box .featured-image {
 
 .form-page .value:hover {
   opacity: 1;
+}
+
+.form-page .description {
+  font-size: 90%;
+  color: #757575;
 }
 
 .form-page fieldset {

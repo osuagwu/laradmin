@@ -20,7 +20,7 @@
     @stack('meta')
     
     <title>
-        @isset($pageTitle) {{ config('app.name', 'Laradmin').' | '.$pageTitle }} 
+        @isset($pageTitle) {{$pageTitle.' - '.  config('app.name', 'Laradmin')}} 
         @else {{config('app.name', 'Laradmin')}} 
         @endisset
     </title>

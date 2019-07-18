@@ -98,17 +98,19 @@ class ComicpicServiceProvider extends ServiceProvider
         // Views
         $this->loadViewsFrom($path.'/resources/views', 'comicpic');
         
-        $this->publishes([
-            $path.'/resources/views' => resource_path('views/vendor/comicpic'),
-        ],'laradmin_view'); 
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                $path.'/resources/views' => resource_path('views/vendor/comicpic'),
+            ],'laradmin_view'); 
 
-        // Assets
-        $this->publishes([
-            $path.'/publishable' => public_path('vendor/comicpic'),
-        ], 'laradmin_asset');
+            // Assets
+            $this->publishes([
+                $path.'/publishable' => public_path('vendor/comicpic'),
+            ], 'laradmin_asset');
 
-        // Load migrations
-        $this->loadMigrationsFrom($path.'/database/migrations');
+            // Load migrations
+            $this->loadMigrationsFrom($path.'/database/migrations');
+        }
 
 
 

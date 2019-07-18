@@ -71,6 +71,13 @@ class MenuItem extends NavigationItem
     public $iconImage;
 
     /**
+     * Item is activated if the current url starts with the link of the item
+     *
+     * @var boolean
+     */
+    public $activateStartWith=false;
+
+    /**
      * Specifies a dummy item
      *
      * @var boolean
@@ -208,7 +215,7 @@ class MenuItem extends NavigationItem
     public function getLink()
     {
         if ($this->url) {
-            if(strpos($this->url,'http://')!==0 and strpos($this->url,'https://')!==0 and strpos($this->url,'ftp://')!==0 and strpos($this->url,'#')!==0)  {// Note that if the protocol is a protocols other tha http, https or ftp then this will currupt the link
+            if(strpos($this->url,'http://')!==0 and strpos($this->url,'https://')!==0 and strpos($this->url,'ftp://')!==0 and strpos($this->url,'#')!==0)  {// Note that if the protocol is  other tha http, https or ftp then this will currupt the link
                 return rtrim(url(''),'/').'/'.ltrim($this->url,'/');
             }else{
                 return $this->url;
@@ -216,7 +223,7 @@ class MenuItem extends NavigationItem
             }
         }
         elseif ($this->namedRoute) {
-            return route($this->namedRoute,$this->namedRouteParams);// TODO: the route function depends on laravel, needs to remove the namedRoute if we want to work independent of laravel
+            return route($this->namedRoute,$this->namedRouteParams);//
         } else return null;
     }
 
@@ -327,13 +334,15 @@ class MenuItem extends NavigationItem
     {
         $isactive = false;
 
+        $current_url=rtrim(request()->url(),'/');
+
         if ($url) {
             $isactive = !strcmp($item->getLink(), $url);//TODO: untested
         } else {
             if($item->hasLink()){
                 //if($item->url){
                     
-                    $isactive=!strcmp(rtrim(request()->url(),'/'),rtrim($item->getLink(),'/'));
+                    $isactive=!strcmp($current_url,rtrim($item->getLink(),'/'));
                 //}else{
                 //    $isactive = !strcmp(request()->url(),route($item->namedRoute));//TODO:://note working
                 //}
@@ -341,10 +350,35 @@ class MenuItem extends NavigationItem
             
         }
 
+
+
+        // Do we need to activate if the current url starts with the link of this 
+        // item. This is a trick to activate parents
+        if(!$isactive){
+            if($item->activateStartWith){
+                if ($url) {
+                    $isactive = starts_with($url,str_finish($item->getLink(),'/'));//TODO: untested
+                } else {
+                    if($item->hasLink()){                       
+                        $isactive=starts_with($current_url,str_finish($item->getLink(),'/'));
+                        //
+                        //  if($isactive){
+                        // //     if(str_contains($item->getLink(),'plug')){dd($item->getLink());}
+                        //      print_r('<div>'.$item->getTag().'</div><b>'.$item->getLink().'</b>');
+                        //      dd($item);
+                        //  }
+                    }
+                    
+                }
+            }
+        }
+
+
+
         ///////////////////////////////////////////////////////////////////
         //////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////
-        //check if any od the dummy route matches the current route
+        //check if any of the dummy route matches the current route
         if(!$isactive){
             foreach($item->dummyNamedRoutes as $d_route){
                 if(!strcmp($d_route,Route::currentRouteName())){

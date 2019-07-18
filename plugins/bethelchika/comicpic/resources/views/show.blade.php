@@ -63,7 +63,7 @@
                 <div class="col-md-4">
                     <div class="text-right">
                         <p>   
-                            <a href="{{route('comicpic.me')}}" class="btn btn-primary btn-xs">My Comicpic</a>
+                            <a href="{{route('comicpic.me')}}" class="btn btn-primary btn-xs">My {{$appname}}</a>
                             <a href="{{route('comicpic.create')}}" class="btn btn-primary btn-xs">Upload</a>
                         </p>
                         {{--  <hr style="margin:0;" />  --}}

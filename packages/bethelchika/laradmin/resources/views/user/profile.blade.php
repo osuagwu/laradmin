@@ -1,5 +1,5 @@
 @extends('laradmin::user.layouts.app')
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 
 @if($show_profile_card)

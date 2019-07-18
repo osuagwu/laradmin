@@ -9,7 +9,7 @@
    $with_icon=true [Boolean optional] When false, Icons are not printed.
 --}} 
 
-  <li role="{{$item->ariaRole}}" class="vertical-menu-item level-{{$level}} {{$item->cssClass }} {{$class ?? ''}}
+  <li role="{{$item->ariaRole}}" class="vertical-menu-item-tag-{{$item->getTag()}} vertical-menu-item level-{{$level}} {{$item->cssClass }} {{$class ?? ''}}
     @if($item->active and $activate) active @endif 
     @if($item->hasChildren()) has-children
       @if($level>0) dropdown-submenu @endif {{--SXXCTHC: dropdown-submenu class allows for multi-level menu that bootstrap 3 does not provide. --}}

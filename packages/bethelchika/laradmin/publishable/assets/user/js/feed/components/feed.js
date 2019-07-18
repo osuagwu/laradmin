@@ -286,8 +286,8 @@ Vue.component('laradmin-feeds', {
           <span v-else class="dynamic-feed-identifier">Dynamic feed</span>\
         </div>\
       </div>\
-      <h4 class="title"><a :href="feed.url"> {{feed.title}} </a></h4>\
       <div class="before-html" v-if="feed.beforeHtml" v-html="feed.beforeHtml"></div>\
+      <h4 class="title"><a :href="feed.url"> {{feed.title}} </a></h4>\
       <div class="summary" v-if="feed.summary">{{feed.summary}}</div>\
       <div class="content" v-else>{{feed.content}}</div>\
       <div class="image" v-if="feed.image"> <a :href="feed.url"> <img :alt="feed.title" :src="feed.image" /> </a>  </div>\

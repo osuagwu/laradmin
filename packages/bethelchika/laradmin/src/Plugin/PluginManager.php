@@ -121,6 +121,9 @@ class PluginManager{
         $d['psr4']=null;
         $d['installed']=null;
         $d['updating']=null;
+        $d['img_url']=null;
+        $d['thumbnail_url']=null;
+        
 
         
         $pluginpath=$this->getPluginPath($tag);
@@ -128,6 +131,12 @@ class PluginManager{
             $d['error_count']=1;
             $d['error_msgs'][]='Missing plugin folder';
             return $d;
+        }
+
+         //Get the image
+         if(file_exists($pluginpath.'/img.jpg')){
+            $d['img_url']=route('cp-plugin',['tag'=>$tag,'show_img'=>'1']);
+            $d['thumbnail_url']=route('cp-plugin',['tag'=>$tag,'show_img'=>1,'thumbnail'=>1]);
         }
 
 
@@ -206,6 +215,10 @@ class PluginManager{
         $plugin=
         $d['installed']= $this->isInstalled($d['tag']);
         $d['updating']=$this->isUpdating($d['tag']);  
+
+
+       
+
         return $d;
     }
 
@@ -258,7 +271,7 @@ class PluginManager{
             $plug=new $d['plugable'];
             $re=$plug->install($this,$tag);
             if(!$re){
-                return 0;//Something went wront with installation
+                return 0;//Something went wrong with installation
             }
        }catch(\Exception $e){           
            Log::error('Error installing plugin:(tag='.$tag.'):> '.$e->getMessage());
@@ -269,7 +282,7 @@ class PluginManager{
 
         $c=new \stdClass();
         $c->tag=$tag;//Plugin unique identifier
-        $c->enabled=1;//When true pluging is enabled
+        $c->enabled=1;//When true, pluging is enabled
         $c->plugable=$d['plugable'];//plugable fully qualified classname
         $c->psr4=$d['psr4'];//prs4 definitions
         $c->updating=0;// When true update is in progress

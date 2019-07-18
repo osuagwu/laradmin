@@ -2,16 +2,12 @@
 
 namespace  BethelChika\Laradmin\Http\Controllers\CP;
 
-use Lang;
-use BethelChika\Laradmin\User;
-use BethelChika\Laradmin\UserGroup;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use BethelChika\Laradmin\Notifications\Notice;
-use BethelChika\Laradmin\Traits\EmailConfirmationEmail;
 use BethelChika\Laradmin\Laradmin;
 use BethelChika\Laradmin\Http\Controllers\CP\Controller; //NOTE: This is explicitly imported to avoid wrong use of a controller if this file is coppied elsewhere
+use Intervention\Image\ImageManager;
+
 class PluginAdminController extends Controller
 {
     /*
@@ -59,8 +55,29 @@ class PluginAdminController extends Controller
     {//dd($this->laradmin);
         $this->cpAuthorize();
         $tag=urldecode($request->tag);
+
         
         $plugin=$this->laradmin->pluginManager->getDetails($tag);
+        if($request->has('show_img') ){
+            if(intval($request->input('show_img'))){
+                $img=$this->laradmin->pluginManager->getPluginPath($tag).'/img.jpg';
+                if(file_exists($img)){
+                    
+                    //$image->make($img)->response();
+                    $manager = new ImageManager();
+                    if($request->input('thumbnail')){
+                        return $image = $manager->make($img)->crop(150,150)->response();
+                    }else{
+                        return $image = $manager->make($img)->response();
+                    }
+                    
+                }else{
+                    return abort(404);
+                }
+            }
+        }
+        
+        
         $pageTitle=$plugin['title'];
         //dd($tag);
         return view('laradmin::cp.plugin.show',compact('pageTitle','plugin'));

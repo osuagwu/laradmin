@@ -29,9 +29,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/u/register', $LCR.'User\RegisterController@register');
     
 
-    /**
-    * Laradmin routes
-    **/
+   
     // Userprofile routes
     $LCR=class_exists($LCR_EXT.'User\UserProfileController')?$LCR_EXT:$LCR_LOCAL;
     Route::get('/u/index', $LCR.'User\UserProfileController@index')->name('user-home');
@@ -74,23 +72,23 @@ Route::group(['middleware' => ['web']], function () {
 
     //User Message
     $LCR=class_exists($LCR_EXT.'User\UserMessageController')?$LCR_EXT:$LCR_LOCAL;
-    Route::delete('/user-message/' ,$LCR.'User\UserMessageController@destroys')->name('user-message-deletes');
+    Route::delete('/u/user-message/' ,$LCR.'User\UserMessageController@destroys')->name('user-message-deletes');
     //Resource-------------------------------
-    Route::post ('/user-message',$LCR.'User\UserMessageController@store')->name('user-message-store');
-    Route::get('/user-message' ,$LCR.'User\UserMessageController@index')->name('user-message-index');
-    Route::get('/user-message/create' ,$LCR.'User\UserMessageController@create')->name('user-message-create');
-    Route::delete('/user-message/{message}' ,$LCR.'User\UserMessageController@destroy')->name('user-message-delete');
-    Route::get('/user-message/{message}',$LCR.'User\UserMessageController@show')->name('user-message-show');
-    Route::put('/user-message/{message}' ,$LCR.'User\UserMessageController@update')->name('user-message-update');
-    Route::get('/user-message/{message}/edit ',$LCR.'User\UserMessageController@edit')->name('user-message-edit');
+    Route::post ('/u/user-message',$LCR.'User\UserMessageController@store')->name('user-message-store');
+    Route::get('/u/user-message' ,$LCR.'User\UserMessageController@index')->name('user-message-index');
+    Route::get('/u/user-message/create' ,$LCR.'User\UserMessageController@create')->name('user-message-create');
+    Route::delete('/u/user-message/{message}' ,$LCR.'User\UserMessageController@destroy')->name('user-message-delete');
+    Route::get('/u/user-message/{message}',$LCR.'User\UserMessageController@show')->name('user-message-show');
+    Route::put('/u/user-message/{message}' ,$LCR.'User\UserMessageController@update')->name('user-message-update');
+    Route::get('/u/user-message/{message}/edit ',$LCR.'User\UserMessageController@edit')->name('user-message-edit');
     //-----------------------------------------------
     //Route::resource('/cp/message',$LCR.'CP\UserMessageController');
-    Route::put('/user-message/mark-as/ajax' ,$LCR.'User\UserMessageController@markAsAjax')->name('user-message-mark-ajax');
-    Route::post('/user-message/reply',$LCR.'User\UserMessageController@reply')->name('user-message-reply');
+    Route::put('/u/user-message/mark-as/ajax' ,$LCR.'User\UserMessageController@markAsAjax')->name('user-message-mark-ajax');
+    Route::post('/u/user-message/reply',$LCR.'User\UserMessageController@reply')->name('user-message-reply');
 
     //Contact us
-    Route::get('/contact-us/create' ,$LCR.'User\ContactUsUserMessageController@create')->name('contact-us-create');
-    Route::post ('/contact-us',$LCR.'User\ContactUsUserMessageController@store')->name('contact-us-store');
+    Route::get('/u/contact-us/create' ,$LCR.'User\ContactUsUserMessageController@create')->name('contact-us-create');
+    Route::post ('/u/contact-us',$LCR.'User\ContactUsUserMessageController@store')->name('contact-us-store');
 
 
     //SocialUser
@@ -128,19 +126,28 @@ Route::group(['middleware' => ['web']], function () {
 
 
     // WP (Wordpress)
-    Route::prefix(config('laradmin.page_url_prefix'))->group(function () use( $LCR_EXT,$LCR_LOCAL){
-        $LCR=class_exists($LCR_EXT.'User\WPController')?$LCR_EXT:$LCR_LOCAL;
-        Route::get('{slug}', $LCR.'User\WPController@page')->name('page');
-    });
+    if(config('laradmin.wp_enable')){
 
-    Route::prefix('post')->group(function () use( $LCR_EXT,$LCR_LOCAL){
-        $LCR=class_exists($LCR_EXT.'User\WPController')?$LCR_EXT:$LCR_LOCAL;
-        Route::get('{slug}', $LCR.'User\WPController@post')->name('post');
-    });
-    Route::get(config('laradmin.wp_rpath').'/{slug}',function(){
-        //This should never execute as it is installed in config('laradmin.wp_rpath'), Wordpress should already grab the request right?
-        return 'Problem with WordPress';
-    })->name('wp');
+        Route::prefix(config('laradmin.page_url_prefix'))->group(function () use( $LCR_EXT,$LCR_LOCAL){
+            $LCR=class_exists($LCR_EXT.'User\WPController')?$LCR_EXT:$LCR_LOCAL;
+            Route::get('home', $LCR.'User\WPController@homePage')->name('laradmin-homepage');
+            Route::get('{slug}', $LCR.'User\WPController@page')->name('page');
+        });
+
+        Route::get('/_page-wp-to-laradmin/{slug}',function($slug){//NOTE: REF:PAGE-ROUTE-URL-PRE-WP-PLUG-1 If you make changes to this route url, you should also update laradmin wp plugin.
+            //For a page redirected from Wordpress by the laradmin plugin, Wordpress custom links etc.
+            return redirect()->route('page',$slug);
+        });
+
+        Route::prefix('post')->group(function () use( $LCR_EXT,$LCR_LOCAL){
+            $LCR=class_exists($LCR_EXT.'User\WPController')?$LCR_EXT:$LCR_LOCAL;
+            Route::get('{slug}', $LCR.'User\WPController@post')->name('post');
+        });
+        Route::get(config('laradmin.wp_rpath').'/{slug}',function(){
+            //This should never execute as it is installed in config('laradmin.wp_rpath'), Wordpress should already grab the request right?
+            return 'Problem with WordPress';
+        })->name('wp');
+    }
     
 
 
@@ -191,25 +198,30 @@ Route::group(['middleware' => ['web']], function () {
 
         // Sources
         $LCR=class_exists($LCR_EXT.'CP\SourceController')?$LCR_EXT:$LCR_LOCAL;
-        Route::get('/source/create',$LCR.'CP\SourceController@create')->name('cp-source-create');
+        Route::get('/source/types/create',$LCR.'CP\SourceController@create')->name('cp-source-create');
         Route::post('/source/create',$LCR.'CP\SourceController@store');
         //Route::get('/sources/',$LCR.'CP\SourceController@index')->name('cp-sources');
         ////Types of sources
-        Route::get('/source/types',$LCR.'CP\SourceController@types')->name('cp-source-types');
+        Route::get('/source/types/',$LCR.'CP\SourceController@types')->name('cp-source-types');
+        
         Route::get('/source/types/table',$LCR.'CP\SourceController@tables')->name('cp-source-type-table');
+        Route::get('/source/types/table/show/{name}',$LCR.'CP\SourceController@showTable')->name('cp-source-show-table');
+        
         Route::get('/source/types/route',$LCR.'CP\SourceController@routes')->name('cp-source-type-route');
+        Route::get('/source/types/route/show',$LCR.'CP\SourceController@showRoute')->name('cp-source-show-route');
+        
         Route::get('/source/types/route_prefix',$LCR.'CP\SourceController@routePrefixes')->name('cp-source-type-route_prefix');
+        Route::get('/source/types/route_prefix/show',$LCR.'CP\SourceController@showRoutePrefix')->name('cp-source-show-route_prefix');
+
         Route::get('/source/types/page',$LCR.'CP\SourceController@pages')->name('cp-source-type-page');
+        Route::get('/source/types/page/show/{id}',$LCR.'CP\SourceController@showPage')->name('cp-source-show-page');
+
         Route::get('/source/types/{type}',$LCR.'CP\SourceController@type')->name('cp-source-type');//For any source type without its own specific route definition
-        ////individual source
-        Route::get('/source/show/table/{name}',$LCR.'CP\SourceController@showTable')->name('cp-source-show-table');
-        Route::get('/source/show/route/',$LCR.'CP\SourceController@showRoute')->name('cp-source-show-route');
-        Route::get('/source/show/route_prefix/',$LCR.'CP\SourceController@showRoutePrefix')->name('cp-source-show-route_prefix');
-        Route::get('/source/show/page/{id}',$LCR.'CP\SourceController@showPage')->name('cp-source-show-page');
-        Route::get('/source/show/{id}',$LCR.'CP\SourceController@show')->name('cp-source-show');
+        Route::get('/source/types/{type}/show/{id}',$LCR.'CP\SourceController@show')->name('cp-source-show');
+        
         // updating source
-        Route::get('/source/edit/{source}',$LCR.'CP\SourceController@edit')->name('cp-source-edit');
-        Route::put('/source/edit/{source}',$LCR.'CP\SourceController@update');
+        Route::get('/source/types/{type}/edit/{source}',$LCR.'CP\SourceController@edit')->name('cp-source-edit');
+        Route::put('/source/types/{type}/edit/{source}',$LCR.'CP\SourceController@update');
         //Delete source
         Route::delete('/source/edit/{source}',$LCR.'CP\SourceController@destroy');
         
@@ -242,25 +254,35 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/notification/mark-as-ajax',$LCR.'CP\NotificationController@markAsAjax')->name('cp-notification-mark-ajax');
         Route::delete('/notification/{notification}',$LCR.'CP\NotificationController@destroy')->name('cp-notification-delete');
 
-        // General seetings
+        // Settings
         $LCR=class_exists($LCR_EXT.'CP\SettingsController')?$LCR_EXT:$LCR_LOCAL;
-        Route::get('/settings/edit',$LCR.'CP\SettingsController@edit')->name('cp-settings-edit');
-        Route::get('/settings/edit/storage-link',$LCR.'CP\SettingsController@storageLink')->name('cp-settings-storage-link');
+        Route::get('/settings/{form_pack?}/{form_tag?}',$LCR.'CP\SettingsController@index')->name('cp-settings');
 
+        //Route::get('/settings_edit',$LCR.'CP\SettingsController@edit')->name('cp-settings-edit');
+        
+        
+        // Post Installation setings
+        Route::get('/post_install',$LCR.'CP\SettingsController@postInstall')->name('cp-post-install');
+        Route::put('/post_install/wpitems',$LCR.'CP\SettingsController@wpInstallItems')->name('cp-post-install-wpitems');
+        Route::get('/post_install/storage-link',$LCR.'CP\SettingsController@storageLink')->name('cp-post-install-storage-link');
 
         // Plugins
         $LCR=class_exists($LCR_EXT.'CP\PluginAdminController')?$LCR_EXT:$LCR_LOCAL;
-        Route::get('/plugins/index',$LCR.'CP\PluginAdminController@index')->name('cp-plugins');
-        Route::get('/plugin',$LCR.'CP\PluginAdminController@show')->name('cp-plugin');
-        Route::post('/plugin',$LCR.'CP\PluginAdminController@install');
-        Route::put('/plugin/enable',$LCR.'CP\PluginAdminController@enable')->name('cp-plugin-enable');
-        Route::put('/plugin/disable',$LCR.'CP\PluginAdminController@disable')->name('cp-plugin-disable');
-        Route::get('/plugin/publish',$LCR.'CP\PluginAdminController@publishing')->name('cp-plugin-publish');
-        Route::put('/plugin/publish',$LCR.'CP\PluginAdminController@publish');//->name('cp-plugin-publish');
-        Route::delete('/plugin',$LCR.'CP\PluginAdminController@uninstall');
-        Route::get('/plugin/update',$LCR.'CP\PluginAdminController@updating')->name('cp-plugin-update');
-        Route::put('/plugin/update',$LCR.'CP\PluginAdminController@update');
-        Route::delete('/plugin/update',$LCR.'CP\PluginAdminController@updateCancel');
+        Route::get('/plugins',$LCR.'CP\PluginAdminController@index')->name('cp-plugins');
+        Route::get('/plugins/show',$LCR.'CP\PluginAdminController@show')->name('cp-plugin');
+        Route::post('/plugins/install',$LCR.'CP\PluginAdminController@install');
+        Route::put('/plugins/enable',$LCR.'CP\PluginAdminController@enable')->name('cp-plugin-enable');
+        Route::put('/plugins/disable',$LCR.'CP\PluginAdminController@disable')->name('cp-plugin-disable');
+        Route::get('/plugins/publish',$LCR.'CP\PluginAdminController@publishing')->name('cp-plugin-publish');
+        Route::put('/plugins/publish',$LCR.'CP\PluginAdminController@publish');//->name('cp-plugin-publish');
+        Route::delete('/plugins',$LCR.'CP\PluginAdminController@uninstall');
+        Route::get('/plugins/update',$LCR.'CP\PluginAdminController@updating')->name('cp-plugin-update');
+        Route::put('/plugins/update',$LCR.'CP\PluginAdminController@update');
+        Route::delete('/plugins/update',$LCR.'CP\PluginAdminController@updateCancel');
+
+
+        
+        
     });
 
      

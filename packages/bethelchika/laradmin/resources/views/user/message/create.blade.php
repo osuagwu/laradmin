@@ -1,11 +1,12 @@
 @extends('laradmin::user.layouts.app')
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content-top')
 
 
 @endsection
 
 @section('content')
-<section class="section section-subtle section-first section-full-page section-last">
+<section class="section section-subtle  section-full-page ">
     <div class="container-fluid" >
         <div class="sidebar-mainbar">
                 

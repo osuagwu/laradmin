@@ -5,41 +5,43 @@
 
 @section('content')                  
 <div class="cp-plugin-show">
-    <div class="icon-box">
-        <span class="fas fa-plug fainted-09"> </span>
-    </div>
-        
-      
-    <div class="notice">
-        @if($plugin['installed'])
-        
-            @if($plugin['installed']==1)
-                <span class="label label-success"><i class="fas fa-check"></i> Intalled</span>
-            @elseif($plugin['installed']==-1)
-                <span class="label label-default"><i class="fas fa-ban"></i> Disabled</span>
-            @endif
-            @if($plugin['updating']==1)
-                <span class="label label-warning"><i class="fas fa-info"></i> Updating</span>
-            @endif
-
-        @elseif($plugin['installed']==0)
-            {{---Do nothin--}}
-        @endif
-        
-        @if($plugin['error_count'])
-        <span class="label label-danger"><i class="fas fa-exlamation-triangle"></i> {{$plugin['error_count']}} error(s)</span>
-        <div class="error-msg">
-            
-            <ul class="alert alert-danger list-unstyled">@foreach($plugin['error_msgs'] as $error_msg)<li>{{$error_msg}}</li> @endforeach</ul>
-        </div>
-        @endif
-    </div>
-    
-    <p class="description">{{$plugin['description']}}</p>
-        
-    
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-md-6">
+            <div class="icon-box">
+                <img alt="{{$plugin['title']}}" src="{{$plugin['img_url']??'https://via.placeholder.com/450x250?text='.urlencode($plugin['title'])}}" >
+            </div>
+                
+            
+            <div class="notice">
+                @if($plugin['installed'])
+                
+                    @if($plugin['installed']==1)
+                        <span class="label label-success"><i class="fas fa-check"></i> Intalled</span>
+                    @elseif($plugin['installed']==-1)
+                        <span class="label label-default"><i class="fas fa-ban"></i> Disabled</span>
+                    @endif
+                    @if($plugin['updating']==1)
+                        <span class="label label-warning"><i class="fas fa-info"></i> Updating</span>
+                    @endif
+
+                @elseif($plugin['installed']==0)
+                    {{---Do nothin--}}
+                @endif
+                
+                @if($plugin['error_count'])
+                <span class="label label-danger"><i class="fas fa-exlamation-triangle"></i> {{$plugin['error_count']}} error(s)</span>
+                <div class="error-msg">
+                    
+                    <ul class="alert alert-danger list-unstyled">@foreach($plugin['error_msgs'] as $error_msg)<li>{{$error_msg}}</li> @endforeach</ul>
+                </div>
+                @endif
+            </div>
+    
+        </div>
+        <div class="col-md-6 review-controls">
+            
+    
+    
 
             @if($plugin['installed'])
                 
@@ -77,12 +79,16 @@
                 </form> 
             @endif
             <a href="{{route('cp-plugin-update',['tag'=>$plugin['tag']])}}"  class="btn btn-{{$plugin['updating']?'warning':'primary'}} btn-small" >{{$plugin['updating']? 'Continue update':'Update'}}</a>
-            <a href="{{route('cp-plugins')}}" >Back to all plugins</a>
+            <p>
+                <br>
+                <a href="{{route('cp-plugins')}}" >Back to all plugins</a>
+            </p>
         </div>
         {{-- <div class="col-sm-2 text-right">
                 
         </div> --}}
     </div>
+    <p class="description">{{$plugin['description']}}</p>
 </div>    
         
         

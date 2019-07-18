@@ -23,21 +23,17 @@ class ContentManager
      * @var array
      */
     private static $stacks = [
-        'side-bar-top',//TODO:
-        'side-center',//TODO:
-        'side-bottom',//TODO:
+        'sidebar-top',
+        'sidebar-bottom',
+        'rightbar-top',
+        'rightbar-bottom',
+        'mainbar-top',
+        'mainbar-bottom',
         'footer-left',//TODO:
         'footer-right',//TODO:
         'footer-center',//TODO:
         'footer-top',//TODO:
         'footer-bottom',//TODO:
-        'content-top',//TODO:
-        'content-bottom',//TODO:
-        'content-right',//TODO:
-        'content-left',//TODO:
-        'page-top',//TODO:
-        'page-left',//TODO:
-        'page-right',//TODO:
         'meta',
     ];
 
@@ -221,17 +217,19 @@ class ContentManager
         $navigation=app('laradmin')->navigation;
         
         $navigation->create('Settings','settings','admin.general',[
-            'namedRoute'=>'cp-settings-edit',
+            'namedRoute'=>'cp-settings',
+            'namedRouteParams'=>['cp_settings','general'],
             'iconClass'=>'fas fa-cog',
             ]);
-        $navigation->create('Backup','ackup','admin.general',[
-            'namedRoute'=>'cp-settings-edit',
-            'iconClass'=>'far fa-hdd',
-            ]);
+        // $navigation->create('Backup','backup','admin.general',[
+        //     'namedRoute'=>'cp-settings',
+        //     'iconClass'=>'far fa-hdd',
+        //     ]);
 
         // Source types
         $navigation->create('Types','types','admin.sources',[
             'namedRoute'=>'cp-source-types',
+            'iconClass'=>'fas fa-hdd',
             ]);
         
         foreach(Source::$DEFAULT_TYPES as $type=>$label){
@@ -244,8 +242,15 @@ class ContentManager
             }
             $navigation->create($label,$type,'admin.sources.types',[
                 'namedRoute'=>$route,'namedRouteParams'=>$route_params,
+                'activateStartWith'=>true,
                 ]);
         }
+
+        //Post install
+        $navigation->create('Post installation','post_installation','admin.general',[
+            'namedRoute'=>'cp-post-install',
+            'iconClass'=>'fas fa-file-export',
+            ]);
     }
 
     /**

@@ -140,6 +140,22 @@ abstract class FormItem
      */
     public $editLink='';
 
+    /**
+     * Description text for the index page.
+     *
+     * @var string
+     */
+    public $indexDescription='';
+
+    /**
+     * Description text for the edit page.
+     *
+     * @var string
+     */
+    public $editDescription='';
+
+
+
 
     /**
      * Construct a new item from array; the item returned can be a field or fieldset or group based on the type array index

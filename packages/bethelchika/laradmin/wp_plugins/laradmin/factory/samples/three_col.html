@@ -1,0 +1,17 @@
+The <strong>Three columns</strong> template has both the right and the main sidebar on the left. It give impression of a
+page with lots of information, ideal for displaying lots of side information. See documentation for template custom
+fields to modify the display of this template.
+
+<div>
+    [push]
+    <h2 class="heading-2">Templates</h2>
+    <div>[menu tag=primary.{{TEMPLATES_SUBMENU_ID}}]</div>
+    <!-- Note: A div will prevent wp processing from wrapping this with a p tag-->
+    [/push]
+</div>
+<div>
+    [push bar=sidebar-top]
+    <h4>From '3 columns'</h4>
+    I can push my own stuff into my sidebar. <i>Its nice when you cannot be bordered with custom fields.</i>
+    [/push]
+</div>

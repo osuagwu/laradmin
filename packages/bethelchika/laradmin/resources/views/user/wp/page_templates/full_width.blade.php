@@ -1,6 +1,6 @@
 @extends('laradmin::user.layouts.app')
 @include('laradmin::user.partials.social.metas', ['metas'=>$metas])
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 {{-- <section class="section section-primary section-light-bg section-title section-first padding-top-x10 padding-bottom-x10">
     <div class="section-overlay">
@@ -11,7 +11,7 @@
     </div>
 </section> --}}
 
-<section role="main" class="section section-default  padding-bottom-x8">
+<section role="main" class="section section-{{$page->meta->scheme??'default'}}   padding-bottom-x8 @include('laradmin::user.wp.inc.section_gradient',['page'=>$page])">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <article class="page" role="presentation">
             <header>
@@ -27,7 +27,7 @@
                 @include ('laradmin::inc.msg_board')
                 @if($page->image)
                 <div class="featured-image-box">
-                    <img class="featured-image" src="{{$page->image}}" alt="{{$page->title}}">
+                    @include('laradmin::user.wp.partials.img_srcset',['srcset'=>$page->getFeaturedThumbSrcset(),'alt'=>$page->title, 'class'=>'featured-image','sizes'=>['(max-width: 767px) calc(100vw - 30px)','80vw']])
                 </div>
                 @endif
 
@@ -51,13 +51,15 @@
                         <h3 class="heading-4 text-gray-light">Share</h3>
                         @include('laradmin::user.partials.social.share',['share'=>$metas])
                         @endif
+                        @can('update',$page)
                         <div class="text-gray-light">
                             <small>Date created: <time datetime="{{$page->created_at}}">{{$page->created_at->format('l jS \\of F Y h:i:s A')}}</time></small>; 
                             <small>Last updated: {{$page->updated_at}}</small>
-                            @can('update',$page)
+                            
                                 <small class="fainted-09"><a class="edit-link" href="{{config('laradmin.wp_rpath')}}/wp-admin/post.php?post={{$page->ID}}&action=edit">Edit</a></small>
-                            @endcan
+                            
                         </div>
+                        @endcan
                     </div>
                 </div>
                 

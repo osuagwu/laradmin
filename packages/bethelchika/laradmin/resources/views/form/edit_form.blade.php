@@ -42,7 +42,7 @@
 
 
 
-        <form class="form-horizontal" role="form" method="@if(str_is(strtolower($form->method),'get')){{'GET'}}@else{{'POST'}}@endif" action="{{$form->getEditLink()}}"
+        <form class="form-horizontal" role="form" method="@if(str_is(strtolower($form->method),'get')){{'GET'}}@else{{'POST'}}@endif" action="{{$form->action??$form->getEditLink()}}"
                 @if($form->hasImageField($form->getFields())) enctype="multipart/form-data" @endif
             >
             @if(!in_array(strtolower($form->method),['get','post']))

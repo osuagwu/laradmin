@@ -1,8 +1,8 @@
 
 @extends('laradmin::user.layouts.app')
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
-<section role="main" class="section section-full-page section-subtle section-light-bg section-diffuse section-last">
+<section role="main" class="section section-subtle section-full-page  section-light-bg section-diffuse section-diffuse-no-shadow section-last">
     <div class="container">
         
         <div class="row">

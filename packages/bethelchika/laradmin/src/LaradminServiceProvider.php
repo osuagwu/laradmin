@@ -59,7 +59,7 @@ class LaradminServiceProvider extends ServiceProvider
         // Register service providers from other packages 
         $this->app->register(ImageServiceProvider::class); //TODO: this can also be simply be put in the laravel's main config/app instead expecially if the main app is going to use this package already
 
-        // Register wordpress bridge which will pages menus etc
+        // Register wordpress bridge which will used for pages menus etc
         $this->app->register(WPServiceProvider::class);
 
         // Register form service provider
@@ -88,13 +88,16 @@ class LaradminServiceProvider extends ServiceProvider
             }
         }
 
-        // Register fieldables
+        // Register CP fieldables
+        $laradmin->formManager->registerFieldable('cp_settings','general',\BethelChika\Laradmin\Tools\Forms\CPSettingsFieldable::class);
+
+        // Register User Fieldables
         $laradmin->formManager->registerFieldable('user_settings','personal',\BethelChika\Laradmin\Tools\Forms\ProfileFieldable::class);
-        $laradmin->formManager->registerFieldable('user_settings','contacts',\BethelChika\Laradmin\Tools\Forms\ProfileContactsFieldable::class);
+        $laradmin->formManager->registerFieldable('user_settings','address',\BethelChika\Laradmin\Tools\Forms\ProfileContactsFieldable::class);
         
         
 
-
+        
         //Share a view of list of plugins
         //$this->sharePluginsList($laradmin,$view);
 
@@ -116,7 +119,7 @@ class LaradminServiceProvider extends ServiceProvider
 
         
 
-
+        
         // Publish things & loading__________________________________________________
         
         $laradminPath=dirname(__DIR__);
@@ -132,39 +135,48 @@ class LaradminServiceProvider extends ServiceProvider
         //$kernel->pushMiddleware('BethelChika\Laradmin\Http\Middleware\Route');
 
 
-        // Publish confi
-        $this->publishes(
-            [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')], 'laradmin_config'
-        );
-
+        
+        
         // Load route
         $this->loadRoutesFrom($laradminPath.'/routes/web.php');
 
-
-        // Load migrations
-        $this->loadMigrationsFrom($laradminPath.'/database/migrations');
+       
 
 
         // Translations
         $this->loadTranslationsFrom($laradminPath.'/resources/lang', 'laradmin');
         
-        $this->publishes([
-            $laradminPath.'/resources/lang' => resource_path('lang/vendor/laradmin'),
-        ],'laradmin_lang');
 
+       
 
         // Views
         $this->loadViewsFrom($laradminPath.'/resources/views', 'laradmin');
         
-        $this->publishes([
-            $laradminPath.'/resources/views' => resource_path('views/vendor/laradmin'),
-        ], 'laradmin_view');
-        
 
-        // Assets
-        $this->publishes([
-            $laradminPath.'/publishable/assets' => public_path('vendor/laradmin'),
-        ], 'laradmin_asset');
+        if ($this->app->runningInConsole()) {
+            // Publish confi
+            $this->publishes(
+                [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')], 'laradmin_config'
+            );
+            
+            // Load migrations
+            $this->loadMigrationsFrom($laradminPath.'/database/migrations');
+
+            $this->publishes([
+                $laradminPath.'/resources/lang' => resource_path('lang/vendor/laradmin'),
+            ],'laradmin_lang');
+
+
+            $this->publishes([
+                $laradminPath.'/resources/views' => resource_path('views/vendor/laradmin'),
+            ], 'laradmin_view');
+            
+
+            // Assets
+            $this->publishes([
+                $laradminPath.'/publishable/assets' => public_path('vendor/laradmin'),
+            ], 'laradmin_asset');
+        }
 
 
         

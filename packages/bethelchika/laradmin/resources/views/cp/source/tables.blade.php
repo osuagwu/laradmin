@@ -27,7 +27,19 @@
                     <tbody>
                         @foreach($tables as $table)
                         <tr title="{{$table->connection_info['prefix']}}">
-                            <td><a  href="{{route('cp-source-show-table',[$table->name,'connection'=>$table->connection,'prefix'=>$table->connection_info['prefix'],'database'=>$table->connection_info['database']])}}"><span class="glyphicon glyphicon-th"></span> {{$table->label}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td>
+                                <a  href="{{route('cp-source-show-table',[$table->name,'connection'=>$table->connection,'prefix'=>$table->connection_info['prefix'],'database'=>$table->connection_info['database']])}}">
+                                    <span class="glyphicon glyphicon-th"></span> {{$table->label}} 
+                                    
+                                    @if($laradmin->permission->hasEntry('route',BethelChika\Laradmin\Source::getTableSourceId($table->connection,$table->connection_info['database'],$table->connection_info['prefix'],$table->name)))
+                                        <span class="label label-warning" title="Has permission">
+                                            <i class="fas fa-lock" > </i> 
+                                        </span>
+                                    @endif 
+
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            </td>
                             <td>{{$table->connection}}</td>
                             <td>{{$table->connection_info['database']}}</td>
                             

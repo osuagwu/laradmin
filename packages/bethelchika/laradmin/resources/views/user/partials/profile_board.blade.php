@@ -13,7 +13,7 @@ $laradmin Laradmin
                         @push('head-styles')
                         <style >
                             .my-dash-card .first-col div.user-icon.user-icon-default{
-                                background-color:{{$laradmin->assetManager->colorLuminance($laradmin->assetManager->getbrands()['primary'],-0.25)}};
+                                background-color:{{\BethelChika\Laradmin\Tools\Color::colorLuminance($laradmin->assetManager->getbrands()['primary'],-0.25)}};
                                 border:none;
                             }
                         </style>

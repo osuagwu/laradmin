@@ -1,0 +1,43 @@
+<h1>This is the hero title
+    <small class="text-white">Small bit of the title which could serve as a tag line</small></h1>
+
+[hero_route name=user-profile text="User profile"]
+
+<h4 style="text-align: left;">The hero template</h4>
+<strong>This hero template allows you to create a beautiful and simple page which has a hero
+    image.</strong> 
+
+The these are the parts of a hero page:
+<ul>
+    <li>The hero image is a featured image of the corresponding page in WP</li>
+    <li>The first H1 on the page is assumed to be the title of the hero. A tagline for the title can be created my add a
+        small element tag in the H1 tag. Thus:
+        <pre><code>&lt;h1&gt;This is the hero title
+    &lt;small class="text-white"&gt;Small bit of the title which could serve as a tag line&lt;/small&gt;&lt;/h1&gt;</code></pre>
+    </li>
+    <li>Any of the following can be used to create buttons inside the hero image:
+        <ul class="list-unstyled">
+            <li>
+                <pre><code>hero_url url="http://www.itv.com" text="See the ITV" </code></pre>
+            </li>
+            <li>
+                <pre><code>hero_route name=user-profile text="User profile" </code></pre>
+            </li>
+            <li>
+                <pre><code> hero_url url="http://www.bbc.co.uk" text="See the BBC" </code></pre>
+            </li>
+        </ul>
+    </li>
+    <li>Any other content on the page will be placed right after the hero image.</li>
+</ul>
+
+
+
+[embed caption="Nice info on this"]http://www.youtube.com/watch?v=a8U8wnzlBPM[/embed]
+
+The Youtube video above was inserted using using the embed shortcode which includes a caption="Nice info on this"
+parameter.
+
+
+<h2 class="heading-2">Templates</h2>
+<div>[menu tag=primary.{{TEMPLATES_SUBMENU_ID}} box_class=list-group class=list-group-item]</div><!-- Note: A div will prevent wp processing from wrapping this with a p tag-->

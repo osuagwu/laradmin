@@ -3,7 +3,8 @@ namespace BethelChika\Laradmin\WP\Traits;
 trait Formatting{
     public function getContentFilteredAttribute()
     {
-        return $this->theContent($this->content);
+        $content_=$this->theContent($this->post_content);//NOTE: This needs to be done first b4 the short code else <p> and <br> will be added to mess up the outputs of shortcodes
+        return $this->stripShortcodes($content_);
     }
 
     public function getExcerptFilteredAttribute(){
@@ -12,9 +13,9 @@ trait Formatting{
         }
         else {
             # code...
-            $c= $this->theContent($this->content);
+            $c= $this->theContent($this->post_content);
             if(strlen($c)>240)
-                $c=substr($this->content,0,240).' ...';
+                $c=substr($this->post_content,0,240).' ...';
             return $c;
         }
     }
@@ -28,7 +29,7 @@ trait Formatting{
     private function theContent($content){
         $formatting_file=public_path().config('laradmin.wp_rpath').'/wp-includes/formatting.php';//NOTE: were assuming that the includes path for wordpress is not chnaged
        
-        if (file_exists($formatting_file)){
+        if (file_exists($formatting_file) and !function_exists('wptexturize')){
 
            include dirname(__DIR__).'/wp_helpers.php';
 

@@ -46,7 +46,7 @@
                         <div class="cp-object" >
                             
                             <h3><a href="{{route('cp-source-types')}}" style="text-decoration:none;">
-                                    <span class="	glyphicon glyphicon-save"> </span>
+                                    <i class="fas fa-hdd"> </i>
                                     <br>
                                     Sorces 
                                     <br>
@@ -65,12 +65,12 @@
                          
                         <div class="cp-object" >
                         
-                            <h3><a href="{{route('cp-settings-edit')}}" style="text-decoration:none;">
+                            <h3><a href="{{route('cp-settings')}}" style="text-decoration:none;">
                                     <span class="	glyphicon glyphicon-ok"> </span>
                                     <br>
                                     Settings 
                                     <br>
-                                    <span class="small">Site settings</span>
+                                    <span class="small">Settings</span>
                                 </a>
                             </h3>   
                         

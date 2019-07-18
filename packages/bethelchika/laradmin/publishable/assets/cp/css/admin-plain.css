@@ -86,16 +86,19 @@ th .checkbox-inline input[type="checkbox"] {
 .cp-plugins-view{
 
 }
+.cp-plugins-view-item{
+    margin-bottom:60px;
+}
 .cp-plugins-view .icon-box {
-    height: 90px;
+    height: 150px;
     width: 150px;
-    border:1px solid #ddd;
-    padding-bottom:8px;
+   
+    
     text-align: center;
     display: inline-block;
     background-color: #fbfbfb;
     border-radius: 3px;
-    font-size: 450%;
+    
 }
 .cp-plugins-view .notice{
 }
@@ -109,22 +112,28 @@ th .checkbox-inline input[type="checkbox"] {
 /* Plugin show***************************************/
 .cp-plugin-show{
     
+}
+.cp-plugin-show .icon-box {
+    overflow: hidden;
+    
+}
+.cp-plugin-show .icon-box img{
+    height: auto;
+    width: auto;
+}
+.cp-plugin-show .notice{
+}
+.cp-plugin-show .error-msg{
+    margin: 5px 0 5px 0;
+}
+.cp-plugin-show .description{
+    padding: 15px 0 20px 0;;
+}
+.cp-plugin-show .review-controls{
+    margin-top:100px;
+}
+@media(max-width:768px){
+    .cp-plugin-show .review-controls{
+        margin-top:15px;
     }
-    .cp-plugin-show .icon-box {
-        height: 90px;
-        width: 150px;
-        border:1px solid #ddd;
-        padding-bottom:15px;
-        text-align: center;
-        display: inline-block;
-        background-color: #fbfbfb;
-        font-size: 450%;
-    }
-    .cp-plugin-show .notice{
-    }
-    .cp-plugin-show .error-msg{
-        margin: 5px 0 5px 0;
-    }
-    .cp-plugin-show .description{
-        padding: 15px 0 20px 0;;
-    }
+}

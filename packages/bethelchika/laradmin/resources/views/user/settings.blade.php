@@ -1,5 +1,5 @@
 @extends('laradmin::user.layouts.app')
-@inject('laradmin','laradmin')
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 {{--
 <section class="section section-primary section-light-bg section-first section-title">

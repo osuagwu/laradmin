@@ -1,0 +1,111 @@
+<div class="table-responsive">
+
+    <h2 class="heading-2">Templates</h2>
+    <div>[menu tag=primary.{{TEMPLATES_SUBMENU_ID}} box_class=list-group class=list-group-item]</div><!-- Note: A div will prevent wp processing from wrapping this with a p tag-->
+
+    <h2 class="heading-2">Template custom fields</h2>
+    Use these fields to modify how the templates are displayed.
+    <table class="table table-striped" style="height: 1183px;" summary="Custom fields for modifying templates"
+        width="579">
+        <tbody>
+            <tr>
+                <th style="text-align: left;">Fileds</th>
+                <th style="text-align: left;">Value(s)</th>
+                <th style="text-align: left;">Description</th>
+            </tr>
+            <tr>
+                <td>minor_nav</td>
+                <td>on|off</td>
+                <td>Turns minor nav ON and OFF</td>
+            </tr>
+            <tr>
+                <td>minor_nav_scheme</td>
+                <td>subtle|primary</td>
+                <td>Determines the class of minor nav</td>
+            </tr>
+            <tr>
+                <td>blog_listing</td>
+                <td>off|left|right|bottom</td>
+                <td>If not 'off' determines which part of the page shows blog listing. Setting this to 'right' turns ON
+                    the rightbar.</td>
+            </tr>
+            <tr>
+                <td>blog_listing_count</td>
+                <td>[Integer]</td>
+                <td>The maximum number of blog posts to display</td>
+            </tr>
+            <tr>
+                <td>main_nav_scheme</td>
+                <td>subtle|primary</td>
+                <td>Sets the scheme of the main nav</td>
+            </tr>
+            <tr>
+                <td>hero_height</td>
+                <td>dynamic|full|[Integer]</td>
+                <td>Determine if the height of the hero should be made to fill the page height or be dynamic relative to
+                    content. If integer it will be interpreted as css vh unit.</td>
+            </tr>
+            <tr>
+                <td>hero_headline_justify</td>
+                <td>left|center|right|</td>
+                <td>Horizontal position of the content of a hero</td>
+            </tr>
+
+            <tr>
+                <td>hero_shade</td>
+                <td>default(default)|angle|smooth|flat</td>
+                <td>The shade the help things on the hero like the menu to be seen especially when the hero is not very
+                    dark.</td>
+            </tr>
+
+            <tr>
+                <td>hero_headline_shade</td>
+                <td>on|off</td>
+                <td>When 'on' adds extra shade behind hero content to make it easier to see. Note this is different from
+                    section overlay; The default section overlay might already make it easy to see the content.</td>
+            </tr>
+            <tr>
+                <td>rightbar</td>
+                <td>on|off</td>
+                <td>Enable or disable the right bar</td>
+            </tr>
+            <tr>
+                <td>wide_screen</td>
+                <td>| on|off(default)</td>
+                <td>When 'on' bootstraps 'container' is replaced with 'container-fluid'</td>
+            </tr>
+            <tr>
+                <td>hero_fullscreen</td>
+                <td>on|off(default)</td>
+                <td>Makes the hero image full screen</td>
+            </tr>
+            <tr>
+                <td>hero_headline_align</td>
+                <td>left|center|right</td>
+                <td>
+                    <div>
+                        <div>Used to verticaly position the headline inside the hero NOTE: you may need to use
+                            <strong><em>hero_height</em></strong> to create the enough vertical height for this setting
+                            to have effect</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>hero_type</td>
+                <td>super|hero(default)</td>
+                <td>Determines the type of hero. Super hero extends to the top nav</td>
+            </tr>
+            <tr>
+                <td>social_share_top</td>
+                <td>| on|off</td>
+                <td>Turn of or off social share at page top</td>
+            </tr>
+            <tr>
+                <td>social_share_bottom</td>
+                <td>on|off</td>
+                <td>Turn of or off social share at page bottom</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="well well-sm">Keys: ?...? =&gt; Not Implemented.</div>
+</div>

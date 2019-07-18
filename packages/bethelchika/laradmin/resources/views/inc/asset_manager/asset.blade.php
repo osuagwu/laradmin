@@ -1,5 +1,5 @@
-@foreach(app('laradmin')->assetManager->getStacks() as $stack)
+@foreach($laradmin->assetManager->getStacks() as $stack)
     @push($stack)
-        {!!app('laradmin')->assetManager->getAssetsString($stack)!!}
+        {!!$laradmin->assetManager->getAssetsString($stack)!!}
     @endpush
 @endforeach

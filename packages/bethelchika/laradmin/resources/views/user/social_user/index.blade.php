@@ -1,7 +1,7 @@
 
 
 @extends('laradmin::user.layouts.app')
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content') 
 <section class="section section-primary section-first section-title " style="">
     <div class="container-fluid"> 
@@ -108,7 +108,7 @@
                         </div>
                         
                         <br />
-                        <p class=""><a href="{{route('social-user-external')}}" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-chevron-left"></span> Back to settings </a></p>
+                        <p class=""><a href="{{route('social-user-external')}}" class="btn btn-subtle btn-sm"> <span class="glyphicon glyphicon-chevron-left"></span> Back to settings </a></p>
                         
                     </div>
             

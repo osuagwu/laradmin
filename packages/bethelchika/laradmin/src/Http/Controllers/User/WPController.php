@@ -7,9 +7,12 @@ use BethelChika\Laradmin\WP\Models\Post;
 use BethelChika\Laradmin\Http\Controllers\Controller;
 use BethelChika\Laradmin\Laradmin;
 use Illuminate\Support\Facades\Auth;
+use BethelChika\Laradmin\Http\Controllers\User\Traits\WPHomepage;
 
 class WPController extends Controller
 {
+    use WPHomepage;
+
     private $laradmin;
     /**
      * Create a new controller instance.
@@ -24,6 +27,7 @@ class WPController extends Controller
         
     } 
 
+    
     /**
      * Show page.
      * Instruction:TODO:move instruction to doc
@@ -31,6 +35,7 @@ class WPController extends Controller
      * 
      * Fields                   | Value(s)                         | Description
      * ---------------------------------------------------------------------------------
+     * scheme                   | subtle|primary|success|info|...  | The scheme for the page, primarily currently used to style the main section. Any of the brands is valid. the default in most pages is 'default' while it is 'primary' in hero pages
      * minor_nav                | on|off                           | Turns minor nav ON and OFF
      * minor_nav_scheme         | subtle|primary                   | Determines the class of minor nav
      * blog_listing             | off|left|right|bottom            | If not 'off' determines which part of the page shows blog listing. Setting this to 'right' turns ON the rightbar.
@@ -47,6 +52,12 @@ class WPController extends Controller
      * hero_type                | super|hero(default)              | Determines the type of hero. Super hero extends to the top nav
      * social_share_top         | on|off                           | Turn on or off social share at page top
      * social_share_bottom      | on|off                           | Turn on or off social share at page bottom
+     * rightbars                | [String]                         | Comma separated list of page_part slugs whose content should be included in the rightbar. When defined the default rightbar must be included in the list for it to be displayed.
+     * sidebars                 | [String]                         | Comma separated list of page_part slugs whose content should be included in the sidebar.
+     * footers                  | [String]                         | Comma separated list of page_part slugs whose content should be included in the footer.
+     * linear_gradient_brand2   | primary|success|info|...         | A brand name to use to make gradient with the current scheme
+     * linear_gradient_direction| [top,left top, left, ...]        | Any of the CSS linear gradient function direction i.e linear-gradient(to left top,), So e.g {left top, top, right bottom, ...}.
+     * linear_gradient_fainted  | [Integer] {1,2,3 ...100}         | The faint level of the colors used for gradient. Higher value equals more opaque=>less faint.
      * 
      * Keys: ? => not implemented
      * 
@@ -57,7 +68,7 @@ class WPController extends Controller
         
         
 
-       
+        
 
         
 
@@ -65,7 +76,7 @@ class WPController extends Controller
         $page = Page::published()->where('post_name', $slug)->first();
 
         // First check if page needs authentication/authorisation
-        if($page->needsAuth()){
+        if(config('laradmin.wp_page_auth') and $page->needsAuth()){
             if(Auth::guest()){
                 $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
                 return view('laradmin::user.wp.needs_auth');
@@ -132,11 +143,10 @@ class WPController extends Controller
         if(starts_with($tpl_filename,'hero_') or str_is($tpl_filename,'hero')) // we assume  hero if the template starts with 'hero_' or the name is 'hero'     
         {
            $metas['hero']=$this->content2Hero($page);
-           $this->laradmin->assetManager->registerHero($page->image,$page->meta->hero_type);
+           $this->laradmin->assetManager->registerHero($page->getHeroImages(),$page->meta->hero_type);
         }
         
         //Get blog posts
-        $page->meta->blog_listing_count=4;//TODO:delete
         $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($page->meta->blog_listing_count??4)->get();
 
         //$is_bs_container_fluid = $this->laradmin->assetManager->isContainerFluid();

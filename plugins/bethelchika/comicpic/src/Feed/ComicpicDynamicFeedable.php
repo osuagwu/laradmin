@@ -39,8 +39,8 @@ private function make($limit){
         $feed->sourceUrl='/comicpic/index';
         $feed->url=('/comicpic/show/'.$comicpic->id);
         $feed->image=Storage::disk('public')->url($comicpic->medias[0]->getFullName());
-        $feed->afterHtml='<i class="label label-info">Dynamic feed</i>';
-        $feed->beforeHtml='<strong class="label label-warning">Comicpic</strong>Dynamic feed" ';
+        $feed->afterHtml='<a class="text-muted" href="'. $feed->sourceUrl.'">see more <i class="fas fa-angle-right"></i></a>';
+        $feed->beforeHtml='<a class="text-muted" href="'. $feed->sourceUrl.'">see more <i class="fas fa-angle-right"></i></a>';
         $feeds->push($feed);
     }
     return $feeds->all();

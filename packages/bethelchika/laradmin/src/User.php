@@ -71,13 +71,22 @@ class User extends \App\User
      * @return void
      */
     public function socialUsers(){
-        return $this->hasMany('BethelChika\Laradmin\Social\Models\socialUser');
+        return $this->hasMany('BethelChika\Laradmin\Social\Models\SocialUser');
+    }
+    
+
+    /**
+     * Relationshipt to linked meta
+     *
+     * @return void
+     */
+    public function metas(){
+        return $this->hasMany('BethelChika\Laradmin\Meta');
     }
     
 
     /**
      * Hard deletes a user. Hard delete is stronger that soft delete but does not actually wipe the user off completely
-     * @param void
      * @return boolean
      */
     function hardDelete(){
@@ -102,7 +111,6 @@ class User extends \App\User
       /**
      * Initiate self deletion of user account
      *
-    * @param  void
     * @return mixed \Carbon\Carbon or false 
     */
     function initiateSelfDelete(){
@@ -119,7 +127,6 @@ class User extends \App\User
     /**
      * Cancel self deletion of user account
      *
-    * @param  void
     * @return boolean 
     */
     function cancelSelfDelete(){
@@ -134,7 +141,6 @@ class User extends \App\User
     /**
      * Self deactivate account
      *
-    * @param  void
     * @return boolean
     */
     function selfDeactivate(){
@@ -220,7 +226,6 @@ class User extends \App\User
 
     /**
      * Returns the unread messages of a user
-     * @param void
      * @return int
      */
     function unReadUserMessages(){
@@ -229,17 +234,25 @@ class User extends \App\User
     }
 
     /**
-     * Destroy notifications by this user
-     * @param void
+     * Destroy notifications for this user
      * @return boolean
      */
     public function destroyNotifications(){
         $this->notifications()->delete();
         return true;
     }
+
+    /**
+     * Destroy metas for this user
+     * @return boolean
+     */
+    public function destroyMetas(){
+        $this->metas()->delete();
+        return true;
+    }
+
     /**
      * Limits the number of notifications by deleteing the oldest notifications by this user
-     * @param void
      * @return boolean
      */
     public function limitNotifications(){

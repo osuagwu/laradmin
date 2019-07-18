@@ -4,7 +4,7 @@
 <section class="section section-danger   section-title  ">
     <div class="container">
         <ol class="breadcrumb bg-transparent">
-            <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">Comicpic</a></li>
+            <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">{{$appname}}</a></li>
             <li class="breadcrumb-item active">me</li>
         </ol>
 
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <h1 class="heading-big content-title text-right  fainted-07  "> My Comic Pics <small class="text-white"> - your very own creation!</small></h1>
+                <h1 class="heading-big content-title text-right  fainted-07  "> My {{$appname}} <small class="text-white"> - your very own creation!</small></h1>
             </div>
         </div>
         <!---------------------------------------------------->

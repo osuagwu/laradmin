@@ -1,5 +1,5 @@
 @extends('laradmin::user.layouts.app')
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 <section class="section section-primary section-first">
     <div class="container-fluid">
@@ -7,7 +7,7 @@
     </div>
 </section>
 
-<section class="section section-subtle section-full-page">
+<section class="section section-subtle section-light-bg section-diffuse section-diffuse-no-shadow">
     <div class="container-fluid">
         <div class="sidebar-mainbar">
             {{-- sidebar control --}}

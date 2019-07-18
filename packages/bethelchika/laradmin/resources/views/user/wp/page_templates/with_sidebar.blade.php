@@ -1,12 +1,13 @@
 @extends('laradmin::user.layouts.app')
 @include('laradmin::user.partials.social.metas', ['metas'=>$metas])
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 @if(!str_is(strtolower($page->meta->minor_nav),'off'))
 <section class="section section-subtle">
     @include('laradmin::user.partials.minor_nav',['scheme'=>$page->meta->minor_nav_scheme,'with_icon'=>false])    
 </section>
 @endif
-<section class="section section-default  section-last  ">
+<section class="section section-{{$page->meta->scheme??'default'}}   section-last  @include('laradmin::user.wp.inc.section_gradient',['page'=>$page])">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="sidebar-mainbar">
             {{-- sidebar control --}}
@@ -19,16 +20,21 @@
                         <span class="iconify" data-icon="zmdi:close" data-inline="false"></span>
                     </div>
                     
+                    {{--  Start top stack  --}}
+                    <div class="inner-content padding-top-x3">
+                        @stack('sidebar-top')
+                    </div>
+                    {{--  end top stack  --}}
                     
 
-                    <h4 class="heading-4">In this section</h4>
+                    {{--  <h4 class="heading-4">In this section</h4>
                     <div class="scroll-y-lg no-scroll-x mCustomScrollbar" data-mcs-theme="minimal-dark" >
                         <div class="inner-content">
                             <ul class="nav ">                            
                                 @include('laradmin::menu', ['tag' => 'primary','layout'=>'vertical'])
                             </ul>
                         </div>
-                    </div>
+                    </div>  --}}
 
                     {{--  Stuff from WP  --}}
                     <div class="inner-content padding-top-x3">
@@ -53,6 +59,12 @@
                         </div>
                         @endif
                     @endif
+
+                    {{--  Start bottom stack  --}}
+                    <div class="inner-content padding-top-x3">
+                        @stack('sidebar-bottom')
+                    </div>
+                    {{--  end bottom stack  --}}
                 </div>
             </aside>
     
@@ -77,11 +89,14 @@
                                    
                                 </header>
                                 
+                                @stack('mainbar-top')
+                                
+                                
                                 <div class="article-body">
                                     @include ('laradmin::inc.msg_board')
                                     @if($page->image)
                                     <div class="featured-image-box">
-                                        <img class="featured-image" src="{{$page->image}}" alt="{{$page->title}}">
+                                        @include('laradmin::user.wp.partials.img_srcset',['srcset'=>$page->getFeaturedThumbSrcset(),'alt'=>$page->title, 'class'=>'featured-image','sizes'=>['(max-width: 767px) calc(100vw - 30px)','33.333vw']])
                                     </div>
                                     @endif
 
@@ -102,19 +117,22 @@
                                             <h4 class=" heading-4 text-gray-light strong">Share</h4>
                                             @include('laradmin::user.partials.social.share',['share'=>$metas])
                                             
+                                            @can('update',$page)
                                             <div class="text-gray-light">
                                                 <small>Date created: <time datetime="{{$page->created_at}}">{{$page->created_at->format('l jS \\of F Y h:i:s A')}}</time></small>; 
                                                 <br>
                                                 <small>Last updated: {{$page->updated_at}}.</small>
                                                 
-                                                @can('update',$page)
+                                                
                                                     <small class="fainted-09"><a class="edit-link" href="{{config('laradmin.wp_rpath')}}/wp-admin/post.php?post={{$page->ID}}&action=edit">Edit</a></small>
-                                                @endcan
+                                                
                                             </div>
+                                            @endcan
                                         </div>
                                     </div>
                                     
                                 </div>
+                                @stack('mainbar-bottom')
                             </article>
                         </div>
                     </div>
@@ -122,6 +140,11 @@
                     @if(str_contains(strtolower($page->meta->rightbar),'on') or str_contains(strtolower($page->meta->blog_listing),'right'))
                     <aside class="col-md-3">
                         <div class="right">
+                            {{--  Start top stack  --}}
+                            @stack('rightbar-top')
+                            {{--  end top stack  --}}
+
+
                              {{--<h3 class="heading-3">In this section</h3> 
                             <div class="">
                                 
@@ -142,6 +165,10 @@
                                 @endif
                             </div>
                             @endif
+
+                            {{--  Start bottom stack  --}}
+                            @stack('rightbar-bottom')
+                            {{--  end bottom stack  --}}
                             
                         </div>
                     </aside>

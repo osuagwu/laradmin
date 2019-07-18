@@ -5,13 +5,13 @@
             @php 
                 $unreadMessagesCount=Auth::user()->getSystemUser()->unReadUserMessages()->count();
             @endphp
-            <span class="label label-danger bubble unseen-count" >
+            
             @if($unreadMessagesCount)
-                
+                <span class="label label-danger bubble unseen-count" >
                     {{$unreadMessagesCount}}
-                
+                </span> 
             @endif
-            </span> 
+            
         </span>    
            
     

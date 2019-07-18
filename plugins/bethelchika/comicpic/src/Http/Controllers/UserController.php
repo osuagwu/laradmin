@@ -45,16 +45,17 @@ class UserController extends Controller
         $user=Auth::user();
 
         $this->authorize('view',$user);
-        
-        $pageTitle='Settings';
-        return $this->laradmin->pluginManager->userView('comicpic::settings',compact('pageTitle'));
+        $appname=$this->appName;
+        $pageTitle='Settings - '.$this->appName;
+        return $this->laradmin->pluginManager->userView('comicpic::settings',compact('pageTitle','appname'));
     }
     public function create(){
         $user=Auth::user();
         
         $this->authorize('update',$user);
-        $pageTitle='Upload';
-        return view('comicpic::create_edit',compact('pageTitle'));
+        $pageTitle='Upload - '.$this->appName;
+        $appname=$this->appName;
+        return view('comicpic::create_edit',compact('pageTitle','appname'));
 
     }
         
@@ -98,9 +99,9 @@ class UserController extends Controller
         if(!$media or !($media->user_id==$user->id)){
             return redirect()->route('comicpic.create')->with('danger','There was error with the upload. Please try again');
         }
-
-        $pageTitle='Upload details';
-        return view('comicpic::create_edit',compact('pageTitle','comicpic','media'));
+        $appname=$this->appName;
+        $pageTitle='Upload details - '. $this->appName;
+        return view('comicpic::create_edit',compact('pageTitle','comicpic','media','appname'));
     }
 
     public function update(FileDetails $request){
@@ -213,9 +214,10 @@ class UserController extends Controller
         //dd(\Illuminate\Support\Facades\DB::getQueryLog());
         
         //dd($comicpics);
-        $pageTitle='My Comicpic';
+        $appname=$this->appName;
+        $pageTitle='My '.$this->appName;
     
-        return view('comicpic::me',compact('pageTitle','comicpics'));
+        return view('comicpic::me',compact('pageTitle','comicpics','appname'));
     }
     
    

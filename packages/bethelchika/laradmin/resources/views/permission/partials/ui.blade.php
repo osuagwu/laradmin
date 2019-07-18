@@ -7,7 +7,7 @@
     --}}
 
 
-<h2>Permissions <a href="{{route('cp-help')}}#permission"><i class="far fa-question-circle"></i></a></h2> 
+<h2>Permissions <a target="_blank" href="{{route('cp-help')}}#permission"><i class="far fa-question-circle"></i></a></h2> 
 <form id="permission-form" onsubmit="updatePermissionString()" class="form-horizontal bg-info"  role="form" method="post" action="{{route('cp-source-permission-update')}}">
     {{ method_field('PUT') }}
     {{ csrf_field() }}

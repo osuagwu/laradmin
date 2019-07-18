@@ -136,17 +136,32 @@ class Permission
 
 
     /**
-     * Checks if there is at least one entry for a given resource and action
+     * Checks if there is at least one entry for a given resource
+     *
+     * @param string $source_type
+     * @param string $source_id
+     * @param string $action(CURRENTLY UNUSED) Example Any of 'create','read', 'update' and 'delete' //TODO: Note that the $action here is actually not that important, but it could become required in the future
+     * @return boolean
+     */
+    public function hasEntry($source_type,$source_id,$action=null){
+        return !!PermissionModel::where('source_type',$source_type)
+        ->where('source_id',$source_id)->first();
+        //->select($action)->first();
+    }
+
+      /**
+     * Checks if there is at least one entry denied against any user/group for a given resource and action
      *
      * @param string $source_type
      * @param string $source_id
      * @param string $action Example Any of 'create','read', 'update' and 'delete'
      * @return boolean
      */
-    public function hasEntry($source_type,$source_id,$action){
+    public function hasDenyEntry($source_type,$source_id,$action){
         return !!PermissionModel::where('source_type',$source_type)
         ->where('source_id',$source_id)
-        ->select($action)->first();
+        ->where($action,0)
+        ->select($action)->count();
     }
 
      /**
@@ -303,7 +318,8 @@ class Permission
        // ____________________________________________________________
 
         // Is the user disabled. A disabbled user might be forced to logout,
-        // in which case we will not get here
+        // in which case we will not get here, but we still make sure that
+        // we stop him.
         if($this->isDisabled($user)){
             return false;
         }

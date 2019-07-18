@@ -66,10 +66,28 @@ return [
     'wp_rpath'=>env('LARADMIN_WP_RPATH','/wp'),
 
     /**
+     * Array of menu names/tags that should be imported from WP.
+     */
+    'wp_menus'=>env('LARADMIN_WP_MENUS',['primary']),
+
+    /**
+    * The wordpress theme name.
+    */
+    'wp_theme'=>env('LARADMIN_WP_THEME','twentyseventeen'),
+
+
+    /**
     * The Url path prefix for pages. e.g a page is assessed through: http://localhost/{{page_url_prefix}}/page-slug
      */
     'page_url_prefix'=>env('LARADMIN_PAGE_URL_PREFIX','page'),
 
+
+    /**
+     * Enable authorisation of wordpress pages. It is not very often that  authorisation 
+     * of public pages is required. So if not required, disable this functionality to 
+     * reduced the number of database queries performed to carry out authorisation
+     */
+    'wp_page_auth'=>env('LARADMIN_WP_PAGE_AUTH',false),
     
     
     // /**

@@ -164,13 +164,13 @@ Trait Autoform{
     * @param string $tag
     * @return string The menu tag that can be used to display the menu
     */
-    public static function autoformPackToMenu($pack,$tag=null){
+    public static function autoformPackToMenu($pack,$tag=null,$mode='index'){
         
         $autoforms=new Collection;
         if($tag){
-            $autoforms=collect(self::getAutoform($pack,$tag));
+            $autoforms=collect(self::getAutoform($pack,$tag,$mode));
         }else{
-            $autoforms=self::getAutoforms($pack);
+            $autoforms=self::getAutoforms($pack,$mode);
         }
        
 

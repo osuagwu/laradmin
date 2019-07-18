@@ -16,35 +16,33 @@ $class string The css class
 
                 <div class="blog-post-inner">
                     <div class="img-box blog-post-inner-item">
-                        <a href="{{route('post',$post->post_name)}}" ><img src="{{$post->image?$post->getFeaturedThumb():'https://via.placeholder.com/728x400.png?text='.urlencode('Read More')}}" alt="{{$post->title}}"></a>
+                        <a href="{{route('post',$post->post_name)}}" ><img src="{{$post->getFeaturedThumb('laradmin-thumb',false)??'https://via.placeholder.com/270x150.png?text='.urlencode('Read More')}}" alt="{{$post->title}}"></a>
                     </div>
                     <div class="caption blog-post-inner-item">
                         
                         <h4 class="title"><a href="{{route('post',$post->post_name)}}" >
-                                @if(strlen($post->title)>50)
-                                    {{substr($post->title,0,47)}}...
-                                @else
-                                    {{$post->title}}
-                                @endif
+                            {{str_limit($post->title,47,'...')}}
                             </a>
                         </h4>
+                        
+                        @if(isset($summary) and $summary)
+                            <p class="summary">
+                                {{str_limit($post->post_excerpt,77,'...')}}
+                                {{--THIS IS SAME AS THE ONE LINE ABOVE  
+                                @if(strlen($post->post_excerpt)>80)
+                                    {{substr($post->post_excerpt,0,77)}}...
+                                @else
+                                    {{$post->post_excerpt}}
+                                @endif  --}}
+
+                            </p>
+                        
+                        @endif
                         <div class="date">
                             <small>
                                 <i class="fas fa-clock"></i> {{$post->created_at->diffForHumans()}}
                             </small>
                         </div>
-                        @if(isset($summary) and $summary)
-                            <p class="summary">
-                                @if(strlen($post->post_excerpt)>80)
-                                    {{substr($post->post_excerpt,0,77)}}...
-                                @else
-                                    {{$post->post_excerpt}}
-                                @endif
-
-                            </p>
-                        
-                        @endif
-                        
                     </div>
                 </div>
         

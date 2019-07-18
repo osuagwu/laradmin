@@ -5,6 +5,7 @@ $fileds Collection of fields object
     --}}
 
 @foreach($fields as $field)
+    @continue($field->isReadOnly)
     @switch($field->type)
         @case($field::FIELDSET)
             <fieldset>
@@ -13,25 +14,25 @@ $fileds Collection of fields object
             </fieldset>
             @break
         @case($field::TEXT)
-            @include('laradmin::form.components.input_text',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.input_text',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break
         @case($field::PASSWORD)
-            @include('laradmin::form.components.input_password',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.input_password',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break      
         @case($field::SELECT)
-            @include('laradmin::form.components.input_select',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'unit'=>$field->unit,'options'=>$field->options,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.input_select',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'unit'=>$field->unit,'options'=>$field->options,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break  
         @case($field::RADIO)  
-            @include('laradmin::form.components.input_radio',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'unit'=>$field->unit,'options'=>$field->options,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.input_radio',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'unit'=>$field->unit,'options'=>$field->options,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break  
         @case($field::CHECKBOX)  
-            @include('laradmin::form.components.input_checkbox',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'unit'=>$field->unit,'options'=>$field->options,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.input_checkbox',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'unit'=>$field->unit,'options'=>$field->options,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break
         @case($field::TEXTAREA)
-            @include('laradmin::form.components.textarea',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.textarea',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break
         @case($field::IMAGE)
-            @include('laradmin::form.components.input_file',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style])
+            @include('laradmin::form.components.input_file',['name'=>$field->name,'label'=>$field->label,'value'=>$field->value,'help'=>$field->help,'placeholder'=>$field->placeholder,'unit'=>$field->unit,'class'=>$field->class,'style'=>$field->style,'description'=>$field->editDescription])
             @break
         @case($field::HTML)
             {{--Do not display HTML type in edit mode for now--}} 

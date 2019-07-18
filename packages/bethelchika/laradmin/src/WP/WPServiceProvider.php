@@ -54,14 +54,51 @@ class WPServiceProvider extends ServiceProvider
             return ShortCodes::heroUrl($shortcode);
         });
 
+        //Short code for push
+        Post::addShortcode('push', function ($shortcode) {
+            return ShortCodes::push($shortcode);
+        });
+
+        //Short code for menu
+        Post::addShortcode('menu', function ($shortcode) {
+            return ShortCodes::menu($shortcode);
+        });
+
+        //Short code for feeds
+        Post::addShortcode('feeds', function ($shortcode) {
+            return ShortCodes::feeds($shortcode);
+        });
+
+
+         //Short code for contact form
+         Post::addShortcode('contact_form', function ($shortcode) {
+            return ShortCodes::contactForm($shortcode);
+        });
+
+        //Short code for posts
+        Post::addShortcode('posts', function ($shortcode) {
+            return ShortCodes::posts($shortcode);
+        });
+        
+
         //Short code for embed
         Post::addShortcode('embed', function ($shortcode) {
             return ShortCodes::embed($shortcode);
         });
+
+
+        //Short code for image_responsive
+        Post::addShortcode('image_responsive', function ($shortcode) {
+            return ShortCodes::imageResponsive($shortcode);
+        });
+
+
+        
         
 
 
-        $menu_names =['primary'];//TODO: create a this in config with a list of menu names/tag 
+        // Import menus
+        $menu_names =config('laradmin.wp_menus',[]); 
         foreach($menu_names as $mn){
             WP::exportNavigation($mn);
         }

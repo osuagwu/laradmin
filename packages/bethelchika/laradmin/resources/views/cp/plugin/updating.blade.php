@@ -6,7 +6,7 @@
 @section('content')                  
 <div class="cp-plugin-show">
     <div class="icon-box">
-        <span class="fas fa-plug fainted-09"> </span>
+        <img alt="{{$plugin['title']}}" src="{{$plugin['img_url']??'https://via.placeholder.com/450x250?text='.urlencode($plugin['title'])}}" >
     </div>
     
     <p class="description">{{$plugin['description']}}</p>

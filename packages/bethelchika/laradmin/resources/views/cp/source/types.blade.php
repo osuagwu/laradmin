@@ -13,8 +13,8 @@
 </div>
     <br><br>
     <ul class="list-group">
-        @foreach ($source_types as $source_type)
-            <li class="list-group-item"><a href="{{route('cp-source-type',[strtolower($source_type)])}}">{{$source_type}} </a></li>
+        @foreach ($source_types as $source_key=>$source_type)
+            <li class="list-group-item"><a href="{{route('cp-source-type',[$source_key])}}">{{$source_type}} </a></li>
         @endforeach
     </ul>
             

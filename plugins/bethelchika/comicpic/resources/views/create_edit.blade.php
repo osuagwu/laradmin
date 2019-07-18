@@ -4,10 +4,10 @@
 <section class="section section-primary   section-title section-diffuse section-light-bg">
     <div class="container">
         <ol class="breadcrumb bg-transparent">
-            <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">Comicpic</a></li>
+            <li class="breadcrumb-item"><a href="{{route('comicpic.index')}}">{{$appname}}</a></li>
             <li class="breadcrumb-item active">Create/edit</li>
         </ol>
-        <h1 class="heading-1 content-title   "> My Comic Pics <small class="text-white"> - your very own creation!</small></h1>
+        <h1 class="heading-1 content-title   "> Create {{$appname}} <small class="text-white"> - your very own creation!</small></h1>
         {{-- <nav><!--THIS IS NOT DISPLAYED B/C OF JUST TESTING S DIFFERENT LOOK-->
             <ul class="nav nav-tabs nav-justified nav-flat">
                 @include('laradmin::menu',['tag'=>'primary.comicpic'])
@@ -19,14 +19,14 @@
     <div class="container">
         {{--  <div class="text-right">
             <p>
-                <a href="{{route('comicpic.me')}}" class="btn btn-primary btn-xs">My Comicpic</a>
+                <a href="{{route('comicpic.me')}}" class="btn btn-primary btn-xs">My {{$appname}}</a>
                 <a href="{{route('comicpic.create')}}" class="btn btn-primary btn-xs">Upload</a>
                 <br /><br />
             </p>
         </div>  --}}
         {{-- <div class="sidebar-mainbar"> --}}
             {{-- <aside class="sidebar">
-                <a href="{{route('comicpic.me')}}" class="btn btn-info">My Comicpic</a>
+                <a href="{{route('comicpic.me')}}" class="btn btn-info">My {{$appname}}</a>
                 <a href="{{route('comicpic.create')}}" class="btn btn-primary">Upload</a>
             </aside> --}}
     

@@ -119,8 +119,8 @@
             <!-- Sidebar -->
             <aside role="presentation">
                 <div id="sidebar-wrapper" >
-                    <nav class="nav">
-                        <ul class="sidebar-nav">
+                    <nav >
+                        <ul class="nav sidebar-nav">
                             <li class="sidebar-brand">
                                 <br>
                             </li>
@@ -241,6 +241,8 @@
     <script src="{{asset('vendor/laradmin/cp/js/structure-plain.js')}}"></script>
     <script src="{{asset('vendor/laradmin/cp/js/admin-plain.js')}}"></script>
     
+    {{--iconify.design--}}
+    <script src="https://code.iconify.design/1/1.0.0-rc7/iconify.min.js"></script>
 
 
     @stack('footer-scripts')

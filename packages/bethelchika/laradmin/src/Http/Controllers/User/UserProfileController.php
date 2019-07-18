@@ -86,7 +86,8 @@ class UserProfileController extends Controller
 
     /**
       * Show the profile info.
-      *
+      * @param string $form_pack A form pack which actually should always be 'user_settings'.
+      * @param string $form_tag A tag of a form in the 'user_settings' pack
       * @return \Illuminate\Http\Response
       */
     public function profile($form_pack = null, $form_tag = null)
@@ -120,7 +121,7 @@ class UserProfileController extends Controller
 
         $show_profile_card = false; //When true similar profile card shown in the dashboard will be shown in the profile page too
 
-        return view('laradmin::user.profile', ['pageTitle' => $pageTitle, 'show_profile_card' => $show_profile_card, 'laradmin' => $this->laradmin, 'form' => $form, 'forms_nav_tag' => $forms_nav_tag]);
+        return view('laradmin::user.profile', ['pageTitle' => $pageTitle, 'show_profile_card' => $show_profile_card, 'form' => $form, 'forms_nav_tag' => $forms_nav_tag]);
     }
 
 

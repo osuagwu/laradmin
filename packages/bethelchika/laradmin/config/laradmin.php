@@ -13,10 +13,10 @@ return [
  
     /*
     |--------------------------------------------------------------------------
-    | AuthManagement 
+    | Auth Management 
     |--------------------------------------------------------------------------
     |
-    | COntrols if a restricted user should be forced to log out
+    | Controls if a restricted user should be forced to log out
     |
     */
     'log_out_restricted_user' => env('LARADMIN_LOG_OUT_RESTRICTED_USER', true),
@@ -56,9 +56,9 @@ return [
      ],
     
     /**
-     * Use to enable or disable Wordpress
+     * Used to enable or disable Wordpress. Only enable this after installing Wordpress
     */
-    'wp_enable'=>env('LARADMIN_WP_ENABLE',true),
+    'wp_enable'=>env('LARADMIN_WP_ENABLE',false),
      
     /**
     * The path to wordpress relative to the public path
@@ -66,10 +66,33 @@ return [
     'wp_rpath'=>env('LARADMIN_WP_RPATH','/wp'),
 
     /**
+     * Array of menu names/tags that should be imported from WP.
+     */
+    'wp_menus'=>env('LARADMIN_WP_MENUS',['primary']),
+
+
+
+    /**
     * The Url path prefix for pages. e.g a page is assessed through: http://localhost/{{page_url_prefix}}/page-slug
      */
     'page_url_prefix'=>env('LARADMIN_PAGE_URL_PREFIX','page'),
 
+
+    /**
+     * Enable authorisation of wordpress pages. It is not very often that  authorisation 
+     * of public pages is required. So if not required, disable this functionality to 
+     * reduced the number of database queries performed to carry out authorisation
+     */
+    'wp_page_auth'=>env('LARADMIN_WP_PAGE_AUTH',false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Section Gradient
+    |--------------------------------------------------------------------------
+     * The regular gradient will flow from color A to B only once. If this config is false
+     * , then the gradient flow from the color A to the other color B may repeat itself.
+     */
+    'regular_section_gradient'=>env('LARADMIN_REGULAR_SECTION_GRADIENT',false),
     
     
     // /**

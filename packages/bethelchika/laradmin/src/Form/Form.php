@@ -64,7 +64,7 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
      public $title='';
 
      /**
-      * The url to the form
+      * The url to the form index page
       *
       * @var string
       */
@@ -78,6 +78,12 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
      public $editLink=null;
 
 
+    /**
+      * The form action url
+      *
+      * @var string
+      */
+      public $action=null;
 
      /**
       * For description of index page

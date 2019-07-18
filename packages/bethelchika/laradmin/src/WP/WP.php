@@ -33,7 +33,13 @@ class WP{
      */
     public static function exportNavigation($name='primary'){
         $menu = Menu::slug($name)->first();
+        if(!$menu){
+            return;
+        }
         $items=$menu->items;
+        if(!count($items)){
+            return;
+        }
         $tag=$name;
        
         //Group by $items[$i]->meta->_menu_item_menu_item_parent

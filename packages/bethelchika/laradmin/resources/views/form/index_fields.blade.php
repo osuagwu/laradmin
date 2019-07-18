@@ -5,10 +5,12 @@ $fields Collection of fields object
     --}}
 
 @foreach($fields as $field)
+    @continue($field->isWriteOnly)
     @switch($field->type)
         @case($field::FIELDSET)
             <fieldset>
                 @if($field->legend)<legend>{{$field->legend}}</legend>@endif
+                @if($field->indexDescription)<div class="description">{{$field->indexDescription}}</div>@endif
                 @include('laradmin::form.index_fields',['fields'=>$field->getFields()])
             </fieldset>
             @break
@@ -22,6 +24,7 @@ $fields Collection of fields object
             <div class="row {{$field->class}}">
                 <div class="col-xs-6 col-md-3 "><div class="field">{{$field->label}} @if($field->unit) <em>{{$field->unit}}</em> @endif </div></div>
                 <div class="col-xs-6 col-md-9 ">
+                    @if($field->indexDescription)<div class="description">{{$field->indexDescription}}</div>@endif
                     <div class="value">
                     @if(str_is($field::PASSWORD,$field->type))
                         ********** 
@@ -42,7 +45,7 @@ $fields Collection of fields object
                         {{$field->value}}
                     @endif
                     @if($field->editLink) 
-                        <a class="fainted-08 btn btn-primary btn-xs" href="{{$field->editLink}}" title="Edit {{$field->label}}"> <i class="fas fa-pen"></i></a>
+                        <a class="fainted-04 " href="{{$field->editLink}}" title="Edit {{$field->label}}"> <i class="fas fa-edit"></i></a>
                     @else 
                         @if(isset($form) and $form->getEditLink()) <a class="fainted-04" href="{{$form->getEditLink()}}" title="Edit"> <i class="fas fa-pen"></i></a> @endif
                     @endif
@@ -54,7 +57,8 @@ $fields Collection of fields object
             <div class="row {{$field->class}}">
                 <div class="col-xs-6 col-md-3 "><span class="">{{$field->label}} @if($field->unit) <em>{{$field->unit}}</em> @endif </span></div>
                 <div class="col-xs-6 col-md-9 ">
-                    <img class="img-sm" src="{{$field->value}}" alt="{{$field->label}}"> 
+                    <img class="img-sm" src="{{$field->value}}" alt="{{$field->label}}">
+                    @if($field->indexDescription)<div class="description">{{$field->indexDescription}}</div>@endif 
                     @if($field->editLink) 
                         <a class="fainted-04 btn btn-primary btn-xs" href="{{$field->editLink}}" title="Edit {{$field->label}}"> <i class="fas fa-pen"></i></a>
                     @else 

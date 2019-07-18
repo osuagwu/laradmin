@@ -2,6 +2,7 @@
 
 namespace BethelChika\Laradmin\Plugin;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 class PluginServiceProvider extends ServiceProvider
 {
@@ -59,13 +60,16 @@ class PluginServiceProvider extends ServiceProvider
      * 
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
          //Create admin menu
-         $this->app->make('laradmin')->navigation->create('Plugins','plugins','admin.general',[
-            'namedRoute'=>'cp-plugins',
-            'iconClass'=>'fas fa-plug',
+         //if(!strcmp($router->current()->getPrefix(),'cp')){//TODO:It will be nice to chck here if we are on cp b4 creating the admin menuitem; but it seems like the current route is always null here
+            $this->app->make('laradmin')->navigation->create('Plugins','plugins','admin.general',[
+                'namedRoute'=>'cp-plugins',
+                'iconClass'=>'fas fa-plug',
+                'activateStartWith'=>true,
             ]);
+        //}
     
     }
 

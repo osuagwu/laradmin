@@ -29,13 +29,25 @@
                     <tbody>
                         @foreach($sources as $source)
                         <tr>
-                            <td><a href="{{route('cp-source-show',[$source->id])}}"> {{$source->name}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td>
+                                <a href="{{route('cp-source-show',[$source->type,$source->id])}}"> 
+                                    {{$source->name}} 
+
+                                    @if($laradmin->permission->hasEntry(get_class($source),$source->id))
+                                        <span class="label label-warning" title="Has permission">
+                                            <i class="fas fa-lock" > </i> 
+                                        </span>
+                                    @endif 
+
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            </td>
                             <td>{{$source->type}}</td>
                             <td>{{$source->description}}</td>
                             <td>
-                                <a href="{{route('cp-source-edit',$source->id)}}"><i class="fas fa-edit"></i></a>
+                                <a href="{{route('cp-source-edit',[$source->type,$source->id])}}"><i class="fas fa-edit"></i></a>
                                 
-                                @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-source-edit',$source->id)])
+                                @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-source-edit',[$source->type,$source->id])])
                                 @endcomponent
                             </td>
                         </tr>

@@ -76,7 +76,16 @@ $btn-border-radius-base:         0px !default;
 $btn-border-radius-large:        $border-radius-large !default;
 $btn-border-radius-small:        0px !default;
 
-//Bethel
-$ubr:0;//{0,1}This stands for 'use border radius' set it to 0 to remove border radius that are not 50%, and 1 to allowe them.
+
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// Laradmin
+
+
+/* This stands for 'use border radius' set it to 0 to remove border radius 
+*  that are not 50%, and 1 to allowe them.
+*  Values: {0,1}
+*/
+$ubr:0;
 
 $border-radius-round:50%;

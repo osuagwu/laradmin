@@ -1,6 +1,7 @@
 <div class="form-group {{$errors->has($name)? 'has-error':''}} {{$class??''}}">
     <label for="{{$name}}" class="col-md-4 control-label">{{$label??ucfirst(str_replace('_',' ',$name))}}</label>
     <div class="col-md-6">
+         @if(isset($description) and $description)<div class="description">{{$description}}</div>@endif
         <select class="form-control" id="{{$id??$name}}" name="{{$name}}"  
         style="{{$style??''}}">
             <option value="" {{!strcmp(old($name,$value),'')? 'selected':''}}>Please select</option>

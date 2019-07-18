@@ -8,8 +8,10 @@
     <div class="row">
         @foreach($plugins as $plugin)
         <div class="col-md-6 text-center">
-            <div >
-                <div class="icon-box "><i class="fas fa-plug fainted-07"></i> </div>
+            <div class="cp-plugins-view-item">
+                <div class="icon-box ">
+                    <img alt="{{$plugin['title']}}" src="{{$plugin['thumbnail_url']??'https://via.placeholder.com/150x150?text='.urlencode($plugin['title'])}}" > 
+                </div>
                 <h3><a href="{{route('cp-plugin',['tag'=>urlencode($plugin['tag'])])}}" style="text-decoration:none;">
                         
                         

@@ -1,5 +1,5 @@
 @extends('laradmin::user.layouts.app')
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 <section role="main" class="section section-subtle section-first section-full-page" >
     <div class="container">

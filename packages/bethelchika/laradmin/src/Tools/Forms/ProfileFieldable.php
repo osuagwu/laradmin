@@ -54,6 +54,7 @@ class ProfileFieldable implements Fieldable{
                         'group' => 'names',
                         'order' => 0,
                         'rules' => 'required:min:2',
+                        'editDescription'=>'Choose your screen name. Be sure to make it nice and  and also very shiny.'
                     ])
                 );
                 if(str_is($mode,'index')){

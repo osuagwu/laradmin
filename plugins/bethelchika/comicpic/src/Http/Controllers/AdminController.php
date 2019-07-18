@@ -14,8 +14,8 @@ use BethelChika\Comicpic\Http\Controllers\Traits\Helper;
 class AdminController extends Controller
 {
     use Helper;
-    private $laradmin;
-    private $appname;
+    
+    
 
     /**
      * Create a new controller instance.
@@ -27,7 +27,7 @@ class AdminController extends Controller
         $this->middleware(['auth','pre-authorise']);
         
         $this->laradmin = $laradmin;
-        $this->appname = Cache::get('comicpic.appname', 'Comicpic');
+        $this->appName = Cache::get('comicpic.appname', 'Comicpic');
     }
 
     /**
@@ -38,7 +38,7 @@ class AdminController extends Controller
     public function index()
     {
         $pageTitle = 'Data view';
-        $appname = $this->appname;
+        $appname = $this->appName;
 
 
 
@@ -118,7 +118,7 @@ class AdminController extends Controller
     public function editSettings(Laradmin $laradmin)
     {
         $pageTitle = 'Comicpic settings';
-        $appname = $this->appname;
+        $appname = $this->appName;
         return $this->laradmin->pluginManager->adminView('comicpic::admin.edit_settings', compact('pageTitle', 'appname'));
     }
 

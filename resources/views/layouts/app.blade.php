@@ -17,7 +17,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Webferendum').' | ' }}{{$pageTitle ?? ' '}}</title>
+    <title> @if(isset($pageTitle)) {{ $pageTitle.' -'}}@endif {{config('app.name', 'Webferendum') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -53,12 +53,12 @@
                             <!-- Branding Image -->
                             <a class=" navbar-brand " href="{{ url('/') }}">
                                 @if(str_contains($laradmin->assetManager->getHeroType(),'super'))  {{--print the special logo for hero --}}
-                                <div class="logo-hero-super visible-md visible-lg">{{-- The visibility class here is not required as this has already been done in the css file--}}
+                                <div class="logo-hero-super ">{{-- The visibility class here is not required as this has already been done in the css file--}}
                                     <img class="logo " src="/img/logo-hero-super.svg" alt="{{ config('app.name', 'Laradmin')}}" />
                                 </div>
                                 @endif
                                 
-                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) visible-sm visible-xs @endif">{{--if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file--}}
+                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) {{''}} @endif">{{--if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file--}}
                                     <img class="logo " src="/img/logo{{$laradmin->assetManager->getLogoType('-')}}.svg" alt="{{ config('app.name', 'Laradmin')}}" />
                                 </div>
                             </a>

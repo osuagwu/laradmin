@@ -49,8 +49,9 @@ class HomeController extends Controller
         //dd(\Illuminate\Support\Facades\DB::getQueryLog());
         
         //dd($comicpics);
-        $pageTitle='Comicpic';
-        return view('comicpic::index',compact('pageTitle','comicpics'));
+        $appname=$this->appName;
+        $pageTitle=$this->appName;
+        return view('comicpic::index',compact('pageTitle','comicpics','appname'));
     }
     /**
      * Show a given model.
@@ -68,10 +69,10 @@ class HomeController extends Controller
         ->whereNotNull('published_at')->inRandomOrder()->limit(8)->get(); //TODO: Here we use inRanomOder but what we really need is to search an feach related results to the one beign shown
         
         //$laradmin->assetManager->setContainerType('fluid',true);
-
+        $appname=$this->appName;
         $pageTitle=$comicpic->title;
         $has_small_height=$comicpic->medias[0]->getHeight()<200?true:false;
-        return view('comicpic::show',compact('pageTitle','has_small_height','comicpic','comicpics'));
+        return view('comicpic::show',compact('pageTitle','has_small_height','comicpic','comicpics','appname'));
     }
     
  

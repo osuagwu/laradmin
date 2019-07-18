@@ -39,7 +39,7 @@ public function register(Application,$tag)....
 ```
 The register method of the  
 
-## Composer.json
+### Composer.json
 All plugins must have a 'composer.json' file in the root folder of the plugin. The name entry on the composer.json is used as the plugin folder relative the plugins folder. The composer.json should contain psr-4 entries for all classes that plugin is installing. The file must also have extras entry that includes the 'plugable' with value equal to the fully qualified class of the plugin plogable the implements the plugable interface.
 
 Here is an example json file:
@@ -80,7 +80,7 @@ Add menu items for you plugin admin to the menu. The create corresponding routes
 return $pluginmanager->adminView(....) ;
 ```
 
-## User settings page
+### User settings page
 In addition to creating admin pages for a plugin, you can create also a user settings page.The following are required to create a user settinsg page:
 - create a menu item with parent tag of 'user_settings', e.g in the boot method of your service provider. see menu documentation for how to create a menu. TODO: Note that because the rest of the menu items are loaded later, your menu will be first on the list; This should be fixed in the future.
 - Add a corresponding Laravel route to the menu.
@@ -96,3 +96,5 @@ A few things to note: When the plugin has php error, the whole page will break b
 - 'section-offset-mainbar-sides' : to offset the left and right margins
 There are offcourse not neccessary.
 
+### Plugin image
+You can specify an image for your plugin. The best size should be at least 150x150 pixels. You should keep the file size small. The file should be saved as img.jpg in your plugin root directory.

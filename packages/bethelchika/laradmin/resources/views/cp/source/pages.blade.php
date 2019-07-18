@@ -29,7 +29,17 @@
                         @foreach($pages as $page)
                         <tr>
                             <td>{{$page->ID}}</td>
-                            <td ><a title="{{$page->title}}" href="{{route('cp-source-show-page',[$page->ID])}}"> {{str_limit($page->title,30)}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td >
+                                <a title="{{$page->title}}" href="{{route('cp-source-show-page',[$page->ID])}}"> 
+                                    {{str_limit($page->title,30)}} 
+                                    @if($laradmin->permission->hasEntry(get_class($page),$page->getKey()))
+                                        <span class="label label-warning" title="Has permission">
+                                            <i class="fas fa-lock" > </i> 
+                                        </span>
+                                    @endif 
+                                     <span class="glyphicon glyphicon-eye-open"> </span>
+                                </a>
+                            </td>
                             <td><a role="button" aria-label="Edit {{$page->title}}" title="Edit" href="{{$page->getEditLink()}}"><i class="fas fa-edit"></i></a></td>
                         </tr>
                         

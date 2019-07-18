@@ -1,5 +1,5 @@
 @extends('laradmin::user.layouts.app')
-
+@include('laradmin::user.partials.content_manager.stacks')
 @section('content')
 <section role="banner" class="section section-primary  padding-top-x7 padding-bottom-x7" style="border-top: 1px solid #fffdfd38;">
     <div class="container">

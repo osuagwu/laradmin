@@ -115,7 +115,7 @@ class SourceController extends Controller
      * @param string $id
      * @return \Illuminate\Http\Response
      */
-     public function show($id)
+     public function show($type,$id)
      {
         $this->cpAuthorize();
         $source=Source::find($id);
@@ -412,7 +412,7 @@ class SourceController extends Controller
      * @param  Source $source
      * @return \Illuminate\Http\Response
      */
-    public function edit(Source $source)
+    public function edit($type,Source $source)
     {
         $this->cpAuthorize();
         $source_types=Source::$UNGUARDED_DEFAULT_TYPES;
@@ -426,7 +426,7 @@ class SourceController extends Controller
     * @param  Source $source
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Source $source)
+    public function update(Request $request,$type,Source $source)
     {
         $this->cpAuthorize();
         $source->name=$request->input('name');
@@ -442,7 +442,7 @@ class SourceController extends Controller
         }
 
         if($source->save()){
-            return redirect()->route('cp-source-show',$source->id)->with('success','Done!');
+            return redirect()->route('cp-source-show',[$source->type,$source->id])->with('success','Done!');
         }else{
             return back()->withInput($request->all())->with('danger','Error with saving item');
         }

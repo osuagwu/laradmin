@@ -36,12 +36,24 @@ class PreAuthorise
      */
     public function handle($request, Closure $next)
     {
+
+        // First is this a WP page and if so are we allowed to authorise it?
+        $prefix=app('router')->current()->getPrefix();
+        $page_prefix='/'.trim(config('laradmin.page_url_prefix'),'/') ;
+        if( !config('laradmin.wp_page_auth') and !strcmp($prefix,$page_prefix)){
+             return $next($request);
+        }
+        
+
+        // Begin Authorisation 
+
        $this->perm=app('laradmin')->permission;
         $this->user=$request->user();
         
        //return $this->perm->can($user,'table:users','read',$userToView);
        //$perm->can();
-       if( $this->authoriseUrl($request) and $this->authoriseRoute()){
+
+       if($this->authoriseUrl($request) and $this->authoriseRoute()){
             return $next($request);
        }else{
            //return redirect()->route('user-profile')->with('warning','Access denied');
@@ -91,7 +103,7 @@ class PreAuthorise
              // Check if a user must login first
             $user=$this->user;
             if(!$user){
-                if($this->perm->hasEntry(Source::class,$source_item->id,'read')){
+                if($this->perm->hasDenyEntry(Source::class,$source_item->id,'read')){
                     abort(403,'You must login to access the request.');
                 }
                 $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
@@ -120,7 +132,7 @@ class PreAuthorise
          // Check if a user must login first
          $user=$this->user;
          if(!$user){
-             if($this->perm->hasEntry($source_type,$source_id,'read')){
+             if($this->perm->hasDenyEntry($source_type,$source_id,'read')){
                  abort(403,'You must login to access the request.');
              }
              $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
@@ -147,7 +159,7 @@ class PreAuthorise
         // Check if a user must login first
         $user=$this->user;
         if(!$user){
-            if($this->perm->hasEntry($source_type,$source_id,'read')){
+            if($this->perm->hasDenyEntry($source_type,$source_id,'read')){
                 abort(403,'You must login to access the request.');
             }
             $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?

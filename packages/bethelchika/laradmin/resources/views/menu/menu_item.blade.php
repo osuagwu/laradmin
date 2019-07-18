@@ -9,7 +9,7 @@
    $with_icon=true [Boolean optional] When false, Icons are not printed.
 --}} 
 
-  <li role="{{$item->ariaRole}}" class="menu-item level-{{$level}} {{$item->cssClass }} {{$class ?? ''}}{{--TODO: Add role ARIA since this is now a pops menu on mouse over. But I dont know which role to give it. You might also need to let ARIA know when the popup is open and when it is closed??--}}
+  <li role="{{$item->ariaRole}}" class="menu-item-tag-{{$item->getTag()}} menu-item level-{{$level}} {{$item->cssClass }} {{$class ?? ''}}{{--TODO: Add role ARIA since this is now a pops menu on mouse over. But I dont know which role to give it. You might also need to let ARIA know when the popup is open and when it is closed??--}}
     @if($item->active and $activate) active @endif 
     @if($item->hasChildren()) 
        dropdown has-children

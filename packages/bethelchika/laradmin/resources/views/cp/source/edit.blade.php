@@ -23,7 +23,7 @@
 
 
 
-                <form class="form-horizontal" role="form" method="POST" action="{{route('cp-source-edit',$source->id)}}">
+                <form class="form-horizontal" role="form" method="POST" action="{{route('cp-source-edit',[$source->type,$source->id])}}">
                    
                     {{ csrf_field() }}
                     @method('put')

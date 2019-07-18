@@ -141,3 +141,5 @@ $admin_nav->addDummyNamedRoutes([
         'comicpic.admin-create']);
 ```
 The argument is the named routes which can be an array or comma separated list.
+
+If your menu item links builds on each other, then their is a simpler way to activate parent menu item without getting dirty with dummies. You can do this by setting the activateStartWith menu item property to true. For example say the parent menu link is 'http://webferendum.com/posts' and the children links follow 'http://webferendum.com/posts/{posts_slug}'. There can be potentially hundreds of children here and you would not want to add them to as children to the parent. By the activateStartWith propert of th eparent to true, the parent will be active for all the various posts independent of the post's slug, because the post's url starts with http://webferendum.com/posts. 

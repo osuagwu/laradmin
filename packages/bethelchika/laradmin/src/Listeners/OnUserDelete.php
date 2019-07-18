@@ -32,5 +32,8 @@ class OnUserDelete
 
         //destroy all notifications
         $event->user->destroyNotifications();
+
+        //destroy all metas
+        $event->user->destroyMetas();
     }
 }

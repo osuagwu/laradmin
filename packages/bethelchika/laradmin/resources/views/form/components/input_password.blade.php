@@ -12,6 +12,7 @@
     $style string (optional) Inline style for the input element
     $placeholder string (optional) The input placeholder
     $unit string The unit of the field (e.g $,£,cm, etc).
+    $description string Text to give more description to the input
     --}}
 
 {{--  <div class="form-group {{$errors->has($name)? 'has-error':''}} {{$class??''}}" >
@@ -29,6 +30,7 @@
     <div class="form-group {{$errors->has($name)? 'has-error':''}}  {{$class??''}}" >
             <label for="{{$id??$name}}" class="col-md-4 control-label">{{$label??ucfirst(str_replace('_',' ',$name))}} @if(isset($unit) and $unit) <em>{{$unit}}</em> @endif</label>
             <div class="col-md-6">
+                @if(isset($description) and $description)<div class="description">{{$description}}</div>@endif
                 <input id="{{$id??$name}}" type="password" class="form-control" name="{{$name}}" value="{{old($name,$value)}}"   {{ $required??''}} autofocus="" placeholder="{{$placeholder??'...'}}"  
                  style="{{$style??''}}">
                 @if ($errors->has($name) or isset($help)) 

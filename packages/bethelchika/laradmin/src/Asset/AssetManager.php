@@ -234,34 +234,7 @@ class AssetManager
     }
 
 
-    /**
-     * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.7
-     * Source: https://gist.github.com/stephenharris/5532899
-     * @param str $hex Colour as hexadecimal (with or without hash);
-     * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
-     * @return str Lightened/Darkend colour as hexadecimal (with hash);
-     */
-    public static function colorLuminance($hex, $percent)
-    {
 
-        // validate hex string
-
-        $hex = preg_replace('/[^0-9a-f]/i', '', $hex);
-        $new_hex = '#';
-
-        if (strlen($hex) < 6) {
-            $hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
-        }
-
-        // convert to decimal and change luminosity
-        for ($i = 0; $i < 3; $i++) {
-            $dec = hexdec(substr($hex, $i * 2, 2));
-            $dec = min(max(0, $dec + $dec * $percent), 255);
-            $new_hex .= str_pad(dechex($dec), 2, 0, STR_PAD_LEFT);
-        }
-
-        return $new_hex;
-    }
 
     /**
      * Returns the brands colors
@@ -352,11 +325,11 @@ class AssetManager
     /**
       * Setup hero page
       *
-      * @param string $img_url
+      * @param array $img_urls Array of image urls indexed with 'sm' and 'lg' to specify the images screen sizes 
       * @param string $type The hero type {see self::$heroType for example values}
       * @return void
       */
-    public static function registerHero($img_url = null, $type = null)
+    public static function registerHero($img_urls = null, $type = null)
     {
         if (!$type) {
             $type = 'hero';
@@ -373,11 +346,28 @@ class AssetManager
         }
 
 
-        if ($img_url) {
-            $css = '<style type="text/css">.section.hero{
-                    background-image: url(' . $img_url . ');
-                }  
+        // Now do the image styles
+        // Wrap images in ono-overlapping media  queries to avoid multiple downloads. See https://timkadlec.com/2012/04/media-query-asset-downloading-results/
+        if (count($img_urls)) {
+            $css = '
+            <style type="text/css">
+                @media all and (min-width: 768px){
+                    .section.hero{
+                        background-image: url(' . $img_urls['lg'] . ');
+                    }
+                }';
+            if(isset($img_urls['sm']) and $img_urls['sm']){ 
+                $css.='
+                    @media all and (max-width: 767px){
+                        .section.hero{
+                            background-image: url(' . $img_urls['sm'] . ');
+                        }
+                    }
                 </style>';
+            }else{
+                $css.='</style>';
+            }
+            
             self::registerAsset('head-styles', 'hero_image', $css);
         }
     }
@@ -392,14 +382,14 @@ class AssetManager
         return self::$heroType;
     }
 
-    /**
+     /**
      * Check if page is defined as having a super hero
      *
      * @param mixed $ontrue Variable to return on true
      * @param mixed $onfalse Variable to return on false
      * @return boolean|$ontrue|$onfalse
      */
-    public static function isSuperHero($ontrue = null, $onfalse = null)
+    public static function isHeroSuper($ontrue = null, $onfalse = null)
     {
 
         $q = str_contains(self::$heroType, 'super');
@@ -410,5 +400,16 @@ class AssetManager
             return $onfalse;
         }
         return $q;
+    }
+
+    /**
+     * Here for when isHeroSuper(...) is mistyped. TODO: Delete this method after removing those using it
+     *
+     * @see self::isHeroSuper()
+     */
+    public static function isSuperHero($ontrue = null, $onfalse = null)
+    {
+
+        return self::isHeroSuper($ontrue,$onfalse);
     }
 }

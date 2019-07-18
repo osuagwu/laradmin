@@ -29,7 +29,19 @@
                         <tr>
                             <td>{{implode('|',$route->methods())}}</td>
                             <td>{{$route->getPrefix()}}</td>
-                            <td title="{{$route->uri()}}"><a href="{{route('cp-source-show-route',['name'=>$route->getName(),'methods'=>implode('|',$route->methods()),'prefix'=>$route->getPrefix(),'uri'=>$route->uri(),'action'=>$route->getActionName()])}}"> {{str_limit($route->uri(),35)}} <span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td title="{{$route->uri()}}">
+                                <a href="{{route('cp-source-show-route',['name'=>$route->getName(),'methods'=>implode('|',$route->methods()),'prefix'=>$route->getPrefix(),'uri'=>$route->uri(),'action'=>$route->getActionName()])}}"> 
+                                    {{str_limit($route->uri(),35)}} 
+
+                                @if($laradmin->permission->hasEntry('route',BethelChika\Laradmin\Source::getRouteSourceId($route)))
+                                    <span class="label label-warning" title="Has permission">
+                                        <i class="fas fa-lock" > </i> 
+                                    </span>
+                                @endif 
+
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            </td>
                             <td title="{{$route->getActionName()}}">{{str_limit($route->getActionName(),20)}}</td>
                         </tr>
                         

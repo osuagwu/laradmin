@@ -1,4 +1,5 @@
 # Form
+The Laradmin form is designed with plugins and external packages in mind. They allow a module to create a form where fields on the form can come from other modules, like core, plugins and packages. So the form is not designed to simplify form process exactly but to create a collaborative form. If your intention is not to create a collaborative form that other people can contribute to, you can still use form if you want to take advantage of some of its features; e.g if you cannot be bordered to write the HTML of the form yourself including displaying of errors.
 ## Creating custom form 
 Create form simply thus:
 ```php
@@ -64,7 +65,6 @@ To label a group of fields, you must add a Group to the form and set a none empt
         'label'=>'Choice',
         'order'=>5,
         'help'=>'Help text',
-        'placeholder'=>'Enter author name',
         'class'=>'',
         'unit'=>'',
         'value'=>'b',
@@ -80,12 +80,27 @@ To label a group of fields, you must add a Group to the form and set a none empt
         'group'=>'comicpic_author',
         'order'=>5,
         'help'=>'Help text',
-        'placeholder'=>'Enter author name',
         'class'=>'',
         'unit'=>'',
         'value'=>['a','d'],
         'options'=>['a'=>'A','b'=>'B','c'=>'C','d'=>'D'],
         'rules' => 'required',
+
+        ]);
+```
+        Note that for checkbox 'options' property, you should always use key=>value pairs even for only one checkbox item e.g: 
+```php
+         $test3=Field::make([   'type'=>Field::CHECKBOX,
+        'name'=>'terms_conditions',
+        'label'=>'Accept terms and conditions?',
+        'group'=>'comicpic_author',
+        'order'=>5,
+        'help'=>'You are required accept the terms and conditions before proceeding. Make sure you read the terms and conditions',
+        'editDescription'=>'Required',
+        'value'=>[''],
+        'options'=>['yes'=>'yes'],//Note that the label will not be printed since their is only one item here
+        'rules' => 'required',
+        'isWriteOnly'=>true,//Field should be display when viewing form 
 
         ]);
 
@@ -95,20 +110,13 @@ To label a group of fields, you must add a Group to the form and set a none empt
         'label'=>'Check',
         'group'=>'comicpic_author',
         'order'=>5,
-        'help'=>'Help text',
-        'placeholder'=>'Enter author name',
-        'class'=>'',
-        'unit'=>'',
-        'value'=>['a','d'],
-        'options'=>['a'=>'A','b'=>'B','c'=>'C','d'=>'D'],
-        'rules' => 'required',
-
         ]);
         $fieldset->legend='Test fieldset';
 
         // Lets add fields to the fieldset
         $fieldset->addField($test1);
         $fieldset->addField($test2);
+        $fieldset->addField($test3);
 
         //Example of Group
         $group=Group::make(['name'=>'comicpic_author2','label'=>'Test group','order'=>-3.1]);
@@ -145,9 +153,11 @@ An example in a controller:
 
         // Process any field that is not from fieldable, e.g added with $form->addField() or rendered directly to the form. For example say a 'name' field was added, then we can process thus.
         $rules = ['name' => 'required|string|max:255',];
-        $this->validate($request, $rules);
+        $this->validate($request, $rules); // 
         $user = User::find(Auth::user()->id);
         $user->name = $request->name;
+
+        //Note that we can alternatively add the above field back into the form so that we can validate it together with those from fieldables as below.
 
         // Now process extrinsic fields, i.e from fieldables
         $form->getValidator($request->all())->validate();
@@ -159,7 +169,7 @@ An example in a controller:
 ```
 
 ## User profile forms
-The user profile page automates the display and editing of fieldables registered to the 'user_settings' pack. You can easily create a new form in this pack by adding Fieldable/s to it with a unique tag. if the tag already exists then the Fieldable/s will be added to the existing form instead. The defined tags include 'personal' and 'contacts'=>should be changes to 'addresses'.
+The user profile page automates the display and editing of fieldables registered to the 'user_settings' pack. You can easily create a new form in this pack by adding Fieldable/s to it with a unique tag. if the tag already exists then the Fieldable/s will be added to the existing form instead. The defined tags include 'personal' and 'address'.
 
 ## Rendering form
 ### Form

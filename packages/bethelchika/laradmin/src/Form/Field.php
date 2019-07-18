@@ -5,7 +5,7 @@ class Field extends FormItem
 {
     //TODO: Perhaps add a $js property like in menuitem| ALSO ADD $id property for html id parameter of th einput
     /**
-     * Hel message
+     * Help message
      *
      * @var string
      */
@@ -69,6 +69,19 @@ class Field extends FormItem
      */
     public $messages = [];
 
+    /**
+     * Read only items are only displayed for viewing.
+     *
+     * @var boolean
+     */
+    public $isReadOnly=false;
+
+      /**
+     * Read only items are only displayed for editing page.
+     *
+     * @var boolean
+     */
+    public $isWriteOnly=false;
 
     /**
      * Construct a new field
