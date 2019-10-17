@@ -150,7 +150,7 @@ class LaradminServiceProvider extends ServiceProvider
         //dd($_SERVER);
         // Detect when we are in admin and load the cp routes
         // NOTE: If this gives problem just merge the cp_wep.php into web.php or just load cp_web.php all the time
-        if(strpos($_SERVER['REQUEST_URI'],'/cp/')===0 or $this->app->runningInConsole()){// NOTE: this prohibits the use of 'domain/cp' i.e with the trailing slash '/'
+        if($this->app->runningInConsole() or strpos($_SERVER['REQUEST_URI'],'/cp/')===0 ){// NOTE: this prohibits the use of 'domain/cp' i.e with the trailing slash '/'
             $this->loadRoutesFrom($laradminPath.'/routes/cp_web.php');
         }
         

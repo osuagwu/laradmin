@@ -1,9 +1,0 @@
-# You can use this file to specify the current update of each database
-# Format:
-# Each line should be a {database name}_{YYYMMDD}
-# GeoLite2-City_20190813
-# Lines starting with '#' are comments
-#
-# Database source: https://dev.maxmind.com/geoip/geoip2/geolite2/
-#
-GeoLite2-City_20190813

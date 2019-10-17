@@ -195,9 +195,9 @@ class Tools
     }
 
     
-    $ip_database_path=self::basePath().'/database/geoip2';
+    //$ip_database_path=//self::basePath().'/database/geoip2';
     
-    $city_database=$ip_database_path.'/GeoLite2-City.mmdb';
+    $city_database=base_path().'/'.ltrim(config('laradmin.geoip.db_city_filename','\\/'));//$ip_database_path.'/GeoLite2-City.mmdb';
     //$country_database=$ip_database_path.'/GeoLite2-Country.mmdb';
 
     // This creates the Reader object, which should be reused across
@@ -257,6 +257,6 @@ class Tools
         }
         return $tzs;
     }
-
+ 
     
 }

@@ -105,10 +105,10 @@ return [
      ],
 
      /**
-      * Theme. This theme is intended to be used for public pages excluding the user settings.
-      * The user settings and the admin pages are not affected by this theme.
+      * Theme. This theme is intended to be used for public pages (wp pages) but not the user 
+      * settings. The user settings and the admin pages are not affected by this theme.
       */
-      'theme'=>env('LARADMIN_THEME','default'),
+      //'theme'=>env('LARADMIN_THEME','default'),
 
     /**
      * Used to enable or disable Wordpress. Only enable this after installing Wordpress
@@ -225,6 +225,17 @@ return [
     // 'route_prefix_source_id'=>function(\Illuminate\Routing\Route $route){
     //     return $route->getPrefix();// Note that changing this key will make already applied permission inaccessible, which makes it seem like the previous permissions do not exist
     //  },
+
+     /*
+    |--------------------------------------------------------------------------
+    | GEO IP
+    | 
+    |--------------------------------------------------------------------------
+    */
+
+    'geoip'=>[
+        'db_city_filename'=>'/geoip2/GeoLite2-City',//The City filename of the geo location ip db relative to laravel root. 
+    ],
 
 
     /*

@@ -226,6 +226,17 @@ return [
     //     return $route->getPrefix();// Note that changing this key will make already applied permission inaccessible, which makes it seem like the previous permissions do not exist
     //  },
 
+     /*
+    |--------------------------------------------------------------------------
+    | GEO IP
+    | 
+    |--------------------------------------------------------------------------
+    */
+
+    'geoip'=>[
+        'db_city_filename'=>'/geoip2/GeoLite2-City.mmdb',//The City filename of the geo location ip db relative to laravel root. 
+    ],
+
 
     /*
     |--------------------------------------------------------------------------

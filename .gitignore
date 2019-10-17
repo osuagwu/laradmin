@@ -16,4 +16,6 @@ yarn-error.log
 /public/vendor
 npm-debug.log
 
+/geoip2/*
+
 plugins/bethelchika/comicpic/img.jpg
