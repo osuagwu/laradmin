@@ -14,14 +14,28 @@
 @php
 
 
-//// Remove border-bottom on major navs
-$laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom') ;
-$laradmin->assetManager->registerBodyClass('has-minor-nav') ;
+
 // set default root tag
 if(!isset($root_tag)){
     $root_tag=$laradmin->navigation->getMinorNavTag();//
 }
 
+//Do not display menu is empty
+$is_empty=$laradmin->navigation->isEmptyTags($root_tag);
+if(!$is_empty and isset($left_menu_tag)){
+    $is_empty=$laradmin->navigation->isEmptyTags($left_menu_tag);
+}
+if(!$is_empty and isset($right_menu_tag)){
+    $is_empty=$laradmin->navigation->isEmptyTags($right_menu_tag);
+}
+if(!$is_empty){
+    return;
+}
+            
+
+//// Remove border-bottom on major navs
+$laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom') ;
+$laradmin->assetManager->registerBodyClass('has-minor-nav') ;
 @endphp
 <nav id="site-top-minor-nav" class="navbar navbar-default minor-nav @if(isset($scheme) and $scheme) minor-nav-{{$scheme}} @else minor-nav-subtle @endif {{$class??''}}">
     <div class="@if(!isset($with_container) or $with_container)  {{$laradmin->assetManager->isContainerFluid('container-fluid','container')}} @endif">
@@ -44,8 +58,6 @@ if(!isset($root_tag)){
                     <small> {{$title}}</small>
                 </a>
             @endif
-            
-            
             
             
             

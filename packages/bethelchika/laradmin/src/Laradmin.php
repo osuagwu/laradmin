@@ -9,7 +9,7 @@ use BethelChika\Laradmin\Asset\AssetManager;
 use BethelChika\Laradmin\Content\ContentManager;
 //use BethelChika\Laradmin\Menu\Navigation;
 use BethelChika\Laradmin\Permission\Permission;
-
+use BethelChika\Laradmin\Theme\Contracts\Theme;
 class Laradmin
 {
     public $pluginManager;
@@ -20,18 +20,23 @@ class Laradmin
     public $contentManager;
     public $permission;
 
+    public $theme;
+
     public function __construct(
         MediaManager $mediaManager,
         FeedManager $feedManager,
         AssetManager $assetManager,
         ContentManager $contentManager,
-        Permission $permission
+        Permission $permission,
+        Theme $theme
     ) {
         $this->mediaManager = $mediaManager;
         $this->feedManager = $feedManager;
         $this->assetManager = $assetManager;
         $this->contentManager=$contentManager;
         $this->permission=$permission;
+
+        $this->theme=$theme;
 
 
     }

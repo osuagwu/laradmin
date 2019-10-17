@@ -127,7 +127,7 @@ Navigation::create('somename','sometag','primary.feeds',['namedRoute'=>'feeds.sh
 ```
 Note the the namedRouteParams property has to be provided if the route needs parameter but the values can be any thing here since only the route name is relevant here.
 
-A more efficient way to add dummy like behaviour with creating new items is to add dummy route names to to an item uisng addDummyNamedRoutes method:
+A more efficient way to add dummy-like behaviour with creating new items is to add dummy route names to an item uisng addDummyNamedRoutes method:
 
 ```php
 $admin_nav=$laradmin->navigation->create('Comicpic','comicpic','admin.apps',[
@@ -142,4 +142,5 @@ $admin_nav->addDummyNamedRoutes([
 ```
 The argument is the named routes which can be an array or comma separated list.
 
-If your menu item links builds on each other, then their is a simpler way to activate parent menu item without getting dirty with dummies. You can do this by setting the activateStartWith menu item property to true. For example say the parent menu link is 'http://webferendum.com/posts' and the children links follow 'http://webferendum.com/posts/{posts_slug}'. There can be potentially hundreds of children here and you would not want to add them to as children to the parent. By the activateStartWith propert of th eparent to true, the parent will be active for all the various posts independent of the post's slug, because the post's url starts with http://webferendum.com/posts. 
+### activateStartWith
+If your menu item links builds on each other, then their is a simpler way to activate parent menu item without getting dirty with dummies. You can do this by setting the activateStartWith menu item property to true. For example say the parent menu link is 'http://webferendum.com/posts' and the children links follow 'http://webferendum.com/posts/{posts_slug}'. There can be potentially hundreds of children here and you would not want to add them as children to the parent. By using the activateStartWith property of the parent to true, the parent will be active for all the various posts independent of the post's slug, because the post's url starts with http://webferendum.com/posts. 

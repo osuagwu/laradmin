@@ -2,20 +2,23 @@
 namespace BethelChika\Laradmin\Traits;
 
 use Carbon\Carbon;
+use Jenssegers\Agent\Agent;
 use BethelChika\Laradmin\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use BethelChika\Laradmin\Tools\Tools;
+use BethelChika\Laradmin\LoginAttempt;
 use Illuminate\Support\Facades\Session;
-use BethelChika\Laradmin\Social\SocialUserManager;
 use BethelChika\Laradmin\Social\Models\SocialUser;
-
+use BethelChika\Laradmin\Social\SocialUserManager;
 
 
 trait AuthManagement
 {
     /**
-     * COntrols if a restricted user should be forced to log out. This serves as a default value incase it is not provided in settings
-     * 
+     * Controls if a restricted user should be forced to log out. This serves as a default value incase it is not provided in settings
+     *
      * @var boolean
      */
     private $LOG_OUT_RESTRICTED_USER=true;
@@ -33,7 +36,51 @@ trait AuthManagement
         }
     }
 
-  
+   /**
+     * Logs a registered user attempt
+     *
+     * @return LoginAttempt
+     */
+    public function logRegistered(){
+        return LoginAttempt::extractAndLogRegisteredAttempt($this,new Agent(),request()->ip());
+    }
+
+
+    /**
+     * Logs a successful login
+     *
+     * @return LoginAttempt
+     */
+    public function logSuccessfulLogin(){
+        return LoginAttempt::extractAndLogAttempt($this,true,new Agent(),request()->ip());
+    }
+
+
+  /**
+   * Logs an unsuccessful login
+   *
+   * @param User $user
+   * @param array $credentials The credential  user tried to login with. Array has indexes 'email' and 'password'
+   * @return LoginAttempt
+   */
+    public static function logFailedLogin(User $user=null,$credentials=null){
+        
+        if(!$user){
+            $user=User::getGuestUser();   
+        }
+        return LoginAttempt::extractAndLogAttempt($user,false,new Agent(),request()->ip(),$credentials);
+    }
+
+
+    /**
+     * Checks if extra factor authentication is enabled
+     *
+     * @return boolean
+     */
+    public function hasXfactor(){
+        return !!$this->xfactor;
+    }
+
 
     /**
     * Restrict authentication by forcing a user to log out (depends on settings) if the user is logged in.
@@ -87,7 +134,7 @@ trait AuthManagement
     *
     * @param  int $minutes
     * @return boolean False if reauthentication is needed and true otherwise
-    
+
     static function lastAuthTimeIsLess($minutes){
         $lastTime=Session::get('last_re_auth_at');
         return $lastTime->addMinutes($minutes)<Carbon::now();
@@ -102,7 +149,7 @@ trait AuthManagement
     function loginAt(){
 
         if(Auth::viaRemember()) return; //do not update if user loggend in via 'remember-me'
-        
+
         $this->last_login_at=$this->current_login_at;
         $this->current_login_at=Carbon::now();
         //$this->last_confirm_auth_at=Carbon::now();
@@ -128,16 +175,16 @@ trait AuthManagement
     /**
      * Return the intended url before reauth was required
      *
-     * @return string 
+     * @return string
      */
     public function getReAuthUrlIntended(){
         return Session::get('re_auth_url_intended','');
-    
+
     }
 
     /**
      * Set the intended url before reauth was required. Clears previous value if called with no parameter or empty value.
-     * 
+     *
      * @param string $url The url the user intended to go to before she was required to reauth
      * @return void
      */
@@ -147,7 +194,7 @@ trait AuthManagement
         }else{
             Session::forget('re_auth_url_intended');
         }
-    
+
     }
     /**
      * Reauthenticate user with users password only
@@ -181,7 +228,7 @@ trait AuthManagement
     }
 
      /**
-     * Re-authentication by comparing two social users. 
+     * Re-authentication by comparing two social users.
      *
      * @param SocialUser $authSocialUser The user used to loging
      * @param SocialUser $freshSocialUser Fresh from provider
@@ -192,7 +239,7 @@ trait AuthManagement
     }
 
     /**
-     * Check if the given social user matches any social user account of the spcifies user. 
+     * Check if the given social user matches any social user account of the spcified user.
      *
      * @param mixed $socialUser. Raw(e.g user object of Sociallite)  or instance of SocialUser
      * @param string $provider The name of the social provider
@@ -206,7 +253,7 @@ trait AuthManagement
         return false;
     }
 
-    
+
 
     /**
      * Increment the number of attempts to reauth by the specified amount
@@ -215,7 +262,7 @@ trait AuthManagement
      * @return void
      */
     public function logReAuthAttempt($incrementBy=null){
-        
+
         if(!$incrementBy){
             $incrementBy=1;
         }
@@ -228,7 +275,7 @@ trait AuthManagement
             Session::put('re_auth_attemp_count',$incrementBy);
         }
     }
-    
+
     /**
      * Gets the number of reauth attempts
      *
@@ -302,5 +349,5 @@ trait AuthManagement
         Session::forget('re_auth_at');
         Session::forget('re_auth_on');
     }
-    
+
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use BethelChika\Laradmin\Content\ContentManager;
 use BethelChika\Laradmin\WP\Models\Post;
 use Corcel\Model\Attachment;
+use BethelChika\Laradmin\Tools\Tools;
 
 class Shortcodes{
 
@@ -90,6 +91,29 @@ class Shortcodes{
         
         return '<a class="btn-hero" href="'.$href.'">'.$text.'</a>';
     }
+
+    /**
+     * Interpretes shortcode for page_part. This shortcode is used to include 
+     * Page parts custom post type in any part of a page. Try not to create a loop by 
+     * including a page part into itself. 
+     * 
+     * Instruction: parameters include:
+     * 'name': string a comma separated list of page parts to include.
+     *  e.g: [page_part name=widgets]
+     */
+    public static function pagePart($shortcode){
+        $params=$shortcode->getParameters();
+        if(isset($params['name'])){
+            $page_parts=$params['name'];
+        }
+            
+        else{
+            return '';
+        }
+        
+        return Post::getPageParts(explode(',',$page_parts));
+    }
+    
 
 /**
      * Interpretes shortcode for push. The push shortcode should be used 
@@ -214,10 +238,62 @@ class Shortcodes{
         }
         $box_class=$params['box_class']??'flat-design';
         
-        $v=view('laradmin::user.partials.feed.feeds',['allow_fetch_on_scroll'=>$allow_fetch_on_scroll, 'box_class'=>$box_class]);
+        $v=view('laradmin::partials.feed.feeds',['allow_fetch_on_scroll'=>$allow_fetch_on_scroll, 'box_class'=>$box_class]);
         return $v->render();
     }
 
+    /**
+ * Interpretes the shortcode for social_feeds
+ * 
+ * Instruction: parameters includes
+ * title [optional]: string A title for the feeds.
+ * box_class [optional]: string Arbitrary Css class for the feeds box.
+ * limit [optional] int The max number of feeds to print
+ * @param \Thunder\Shortcode\Shortcode\ShortcodeInterface $shortcode
+ * @return string
+ */
+public static function socialFeeds($shortcode){
+    $climit=config('laradmin.social_feeds.limit');
+    if(!$climit){
+        return '';
+    }
+    $params=$shortcode->getParameters();
+    $title=$params['title']??'';
+    $limit=$params['limit']??$climit;
+    $box_class=$params['box_class']??'';
+    
+    // TODO: Check first that the current theme does not have this view before trying to load it from default.
+    $v=view(app('laradmin')->theme->defaultFrom().'social.feed.feeds',['limit'=>$limit,'title'=>$title, 'box_class'=>$box_class]);
+    return $v->render();
+}
+
+/**
+ * Interpretes the shortcode for facebook_page
+ * 
+ * Instruction: parameters includes
+ * url [optional]: string the url of the page. Default to the config('services.facebook.page_url')
+ * page_name [optional]: string A title for the page default to site name
+ * box_class [optional]: string Arbitrary Css class for the contaning box.
+ * @param \Thunder\Shortcode\Shortcode\ShortcodeInterface $shortcode
+ * @return string
+ */
+public static function facebookPage($shortcode){
+    
+    $params=$shortcode->getParameters();
+    $url=$params['url']??config('services.facebook.page_url');
+    if(!$url){
+        return '';
+    }
+
+    $page_name=$params['page_name']??config('app.name');
+    $box_class=$params['box_class']??'';
+    
+    $v=view(app('laradmin')->theme->defaultFrom().'social.inc.facebook_page',['url'=>$url,'page_name'=>$page_name, 'box_class'=>$box_class]);
+    return $v->render();
+}
+
+
+   
 
     /**
  * Interpretes the shortcode for contact_form
@@ -271,7 +347,7 @@ public static function posts($shortcode){
     $layout=$params['layout']??'vertical';
 
     $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($count)->get();
-    $v=view('laradmin::user.wp.partials.blog_posts',['posts'=>$posts,
+    $v=view(app('laradmin')->theme->defaultFrom().'wp.partials.blog_posts',['posts'=>$posts,
                                                         'summary'=>$summary,
                                                         'class'=>$class,
                                                         'box_class'=>$box_class,
@@ -355,7 +431,7 @@ public static function imageResponsive($shortcode){
         
     $srcset=Post::getImageSrcset($attachment);
 
-    return (view('laradmin::user.wp.partials.img_srcset',['srcset'=>$srcset,'sizes'=>$sizes,'attrs'=>$attrs])->render());
+    return (view(app('laradmin')->theme->defaultFrom().'wp.partials.img_srcset',['srcset'=>$srcset,'sizes'=>$sizes,'attrs'=>$attrs])->render());
     
     
 
@@ -372,6 +448,7 @@ public static function imageResponsive($shortcode){
      */
     public static function embed($shortcode){
         $provider='';
+        
         $params=$shortcode->getParameters();
         
         $src='';
@@ -404,7 +481,7 @@ public static function imageResponsive($shortcode){
         if(starts_with($src,['https://youtu','https://www.youtu','http://youtu','http://www.youtu'])){
             $provider='youtube';
             $src='http://www.youtube.com/oembed?url='.urlencode($src);
-            $resp=json_decode(self::url_get_content($src));
+            $resp=json_decode(Tools::urlGetContent($src));
             
         }
 
@@ -429,20 +506,20 @@ public static function imageResponsive($shortcode){
                 </div>';
     }
 
-    /**
-     * Fetch content of a URL
-     *
-     * @param string $URL The URL to fetch
-     * @return string
-     */
-    private static function url_get_content($URL){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $URL);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
-  }
+//     /**
+//      * Fetch content of a URL
+//      *
+//      * @param string $URL The URL to fetch
+//      * @return string
+//      */
+//     private static function url_get_content($URL){
+//         $ch = curl_init();
+//         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//         curl_setopt($ch, CURLOPT_URL, $URL);
+//         $data = curl_exec($ch);
+//         curl_close($ch);
+//         return $data;
+//   }
   
   
     

@@ -3,15 +3,18 @@
 namespace BethelChika\Laradmin;
 
 use Carbon\Carbon;
-use BethelChika\Laradmin\UserMessage;
 use Illuminate\Support\Facades\Hash;
+use BethelChika\Laradmin\Tools\Tools;
+use BethelChika\Laradmin\UserMessage;
+use Illuminate\Auth\Events\Registered;
 use BethelChika\Laradmin\Events\UserHardDelete;
-use BethelChika\Laradmin\Traits\UserManagement;
 use BethelChika\Laradmin\Traits\AuthManagement;
+use BethelChika\Laradmin\Traits\UserManagement;
 
 
 class User extends \App\User
 {
+    
     use UserManagement, AuthManagement;
 
     /**
@@ -51,6 +54,19 @@ class User extends \App\User
     }
 
 
+    function loginAttempts(){
+        return $this->hasMany('BethelChika\Laradmin\LoginAttempt');
+    }
+
+
+    function securityAnswers(){
+        return $this->hasMany('BethelChika\Laradmin\SecurityAnswer');
+    }
+
+    function authVerification(){
+        return $this->hasOne('BethelChika\Laradmin\AuthVerification\Models\AuthVerification');
+    }
+
      /**
     * Relationship to UserMessage
     */
@@ -84,6 +100,18 @@ class User extends \App\User
         return $this->hasMany('BethelChika\Laradmin\Meta');
     }
     
+    /**
+     * Saves the user object as registration.
+     *
+     * @return boolean
+     */
+    public function saveAsRegistration(){
+        $re=$this->save();
+        if($re){
+            event(new Registered($this));
+        }
+        return $re;
+    }
 
     /**
      * Hard deletes a user. Hard delete is stronger that soft delete but does not actually wipe the user off completely
@@ -279,7 +307,17 @@ class User extends \App\User
         }        
         return true;
     }
-    
+
+    /**
+     * Get Local
+     *
+     * @param string $link The avatar link
+     * @return string|null
+     */
+    public function getLocal(){
+        return $this->local;
+   }
+
     /**
      * Set avatar for the user using specified link
      *
@@ -311,5 +349,50 @@ class User extends \App\User
         }
 
         return $alerts;
+    }
+
+    /**
+     * Get all emails that are confirmed for the user
+     *
+     * @return array[] Array of array. The inner array has indexes id, email and masked_email. The email with id of 0=>primary email. None zero ids refers to the id of the corresponding socialUser 
+     */
+    public function getConfirmedEmails(){
+        $emails=[];
+        if($this->isEmailConfirmed()){
+            $emails[]=['id'=>0,
+                        'email'=>$this->email,
+                        'masked_email'=>Tools::maskEmail($this->email),
+                    ];
+        }
+        $social_users=$this->socialUsers;
+        if($social_users){
+            foreach($social_users as $social_user){
+                if($social_user->isEmailConfirmed()){
+                    $emails[]=['id'=>$social_user->id,
+                                'email'=>$social_user->getEmail(),
+                                'masked_email'=>Tools::maskEmail($social_user->getEmail()),
+                            ]; 
+                }
+            }
+        }
+        
+        return $emails;
+    }
+
+    /**
+     * Get an email by associated id.
+     * 
+     * @param int $id If id is 0, the the primary email is returned. Else the email for social user with $id is returned
+     * 
+     * @return array @see $this->getConfirmedEmails()
+     */
+    public function getConfirmedEmailById($id=0){
+        $emails=$this->getConfirmedEmails();
+        foreach($this->getConfirmedEmails() as $email){
+            if($email['id']==$id){
+                return $email;
+            }
+        }
+        return [];
     }
 }

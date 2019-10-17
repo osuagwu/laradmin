@@ -11,12 +11,15 @@ use Illuminate\Support\Facades\Hash;
 use BethelChika\Laradmin\Http\Controllers\Controller;
 use BethelChika\Laradmin\Notifications\Notice;
 use BethelChika\Laradmin\Traits\EmailConfirmationEmail;
-use BethelChika\Laradmin\Traits\ReAuthController;
+use BethelChika\Laradmin\Http\Controllers\User\Traits\ReAuthController;
 use BethelChika\Laradmin\Laradmin;
 use BethelChika\Laradmin\WP\Models\Post;
 use BethelChika\Laradmin\Form\Form;
 use BethelChika\Laradmin\Form\Field;
 use BethelChika\Laradmin\Form\Group;
+use BethelChika\Laradmin\WP\Models\Page;
+use BethelChika\Laradmin\SecurityQuestion;
+use Illuminate\Support\Facades\Validator;
 
 class UserProfileController extends Controller
 {
@@ -31,9 +34,10 @@ class UserProfileController extends Controller
     public function __construct(Laradmin $laradmin)
     {
         parent::__construct();
-        $this->middleware('auth', ['except' => ['emailConfirmation']]);
+        $this->middleware('auth', ['except' => ['emailConfirmation','privacy']]);
+        
         $this->middleware('re-auth:10')->only(['edit']);
-        $this->middleware('re-auth:1')->only(['editPassword', 'updatePassword', 'initiateSelfDelete', 'selfDeactivate']); //Set a much more strict rerauth params for changing password.
+        $this->middleware('re-auth:5')->only(['editPassword' ,'updatePassword','securityQuestionsUpdate','securityQuestionsEdit', 'initiateSelfDelete', 'selfDeactivate']); //Set a much more strict rerauth params for changing password.
 
         $this->laradmin = $laradmin;
         // Load menu items for user settings
@@ -57,7 +61,10 @@ class UserProfileController extends Controller
         $laradmin->assetManager->registerMainNavScheme('primary');
 
         //Get blog posts
-        $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->get();
+        $posts=collect();
+        if(config('laradmin.wp_enable',false)){
+            $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->get();
+        }
 
         return view('laradmin::user.index', compact('pageTitle', 'posts', 'laradmin'));
     }
@@ -77,7 +84,7 @@ class UserProfileController extends Controller
     //     switch ($form->getTag()) {
     //         case 'personal':
 
-                
+
 
     //             break;
     //     }
@@ -98,7 +105,6 @@ class UserProfileController extends Controller
         if (!$form_pack or !$form_tag) {
             return redirect()->route('user-profile', ['user_settings', 'personal']);
         }
-
 
 
         $pageTitle = 'Welcome ' . $user->name;
@@ -189,7 +195,7 @@ class UserProfileController extends Controller
                 $user = User::find(Auth::user()->id);
                 $user->name = $request->name;
                 $save_profile=true;
-                
+
                 break;
             case 'contacts':
                 break;
@@ -212,11 +218,11 @@ class UserProfileController extends Controller
         //     'country'=>'nullable|string|max:255',
         //   ]);
 
-        
+
 
         // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
         //update the user
-        
+
         //$user->first_names=$request->first_names;
         //$user->last_name=$request->last_name;
         //$user->year_of_birth=$request->year_of_birth;
@@ -240,10 +246,209 @@ class UserProfileController extends Controller
        */
     public function security()
     {
-        $this->authorize('update', Auth::user());
+        $user=Auth::user();
+        $this->authorize('update', $user);
         $this->laradmin->assetManager->setContainerType('fluid');
+
+
+        // $security_answers=$user->securityAnswers;
+        // $security_answers_count=config('laradmin.security_answers_count');
+
+        // $login_attempts=$user->loginAttempts;
+
+
         $pageTitle = "Security";
         return view('laradmin::user.security', compact('pageTitle'));
+    }
+
+
+       /**
+       * Display login attempts view
+       *
+       *  @return \Illuminate\Http\Response
+       */
+      public function loginAttempts()
+      {
+          $user=Auth::user();
+          $this->authorize('update', $user);
+          $this->laradmin->assetManager->setContainerType('fluid');
+  
+         
+   
+            
+          $login_attempts=$user->loginAttempts()->latest('updated_at')->get();
+          $pageTitle = "Security - Login attempts";
+          return view('laradmin::user.security_login_attempts', compact('pageTitle','login_attempts'));
+      }
+
+      /**
+       * Deletes login a attempt 
+       * @param $attempt_id The id of the attempt
+       * @return \Illuminate\Http\Response
+       */
+      public function loginAttemptDestroy(Request $request,$attempt_id)
+      {
+          $user=$request->user();
+          $this->authorize('update', $user);   
+            
+          $user->loginAttempts()->where('id',$attempt_id)->first()->delete();
+
+          return back()->with('success','Done');
+      }
+
+
+          
+        /**
+       * Display security questions view
+       *
+       *  @return \Illuminate\Http\Response
+       */
+      public function securityQuestions()
+      {
+          $user=Auth::user();
+          $this->authorize('update', $user);
+          $this->laradmin->assetManager->setContainerType('fluid');
+  
+  
+          $security_answers=$user->securityAnswers;
+          $security_answers_count=config('laradmin.security_answers_count');
+
+  
+  
+          $pageTitle = "Security - Security questions";
+          return view('laradmin::user.security_questions', compact('pageTitle','security_answers','security_answers_count'));
+      }
+
+    /**
+     * Display security questions view
+     *
+     *  @return \Illuminate\Http\Response
+     */
+    public function securityQuestionsEdit(){
+        $user=Auth::user();
+        $this->authorize('update', $user);
+        $this->laradmin->assetManager->setContainerType('fluid');
+
+        $security_answers=$user->securityAnswers;
+        
+        $security_answers_count=config('laradmin.security_answers_count');// The require number of security questions
+
+
+        // Turn the questions into options
+        $questions_options=[];
+        foreach(SecurityQuestion::all() as $sq){
+            $questions_options[$sq->id]=$sq->question;
+        }
+
+
+
+        // Turn the answers into key:value where the question id is the 'key' and the 'value' is an array such that [answer,reminder].
+        $answers_values=[];
+        if($security_answers->count()==$security_answers_count){
+            foreach($security_answers as $sa){
+                $answers_values[$sa->securityQuestion->id]=['answer'=>$sa->answer,'reminder'=>$sa->reminder];
+            }
+        }
+
+
+        $pageTitle = "Security questions";
+        return view('laradmin::user.security_questions_edit', compact('pageTitle','questions_options','answers_values','security_answers_count'));
+    }
+
+    /**
+     * Update security questions 
+     *  @param  \Illuminate\Http\Request  $request
+     *  @return \Illuminate\Http\Response
+     */
+    public function securityQuestionsUpdate(Request $request){
+        $user=Auth::user();
+        $this->authorize('update', $user);
+        $this->laradmin->assetManager->setContainerType('fluid');
+        //dd($request->security_questions);
+        
+        $security_answers_count=config('laradmin.security_answers_count');
+        
+        
+
+        
+
+        // Make sure apprioprate number of unique answers are provided.
+        $security_question_keys=\array_unique($request->security_questions);
+        if(!is_array($security_question_keys) or count($security_question_keys)!==$security_answers_count){
+            $request->flash();
+            return back()->with('warning','Please answer '. $security_answers_count.' unique questions');
+        }
+
+        // Turn the questions into array
+        $security_questions=[];
+        foreach(SecurityQuestion::all() as $sq){
+           $security_questions[$sq->id]=$sq->question;
+        }
+
+        //Make sure actuall questions are selected
+        foreach($request->security_questions as $sq_key){
+            if(!array_key_exists($sq_key,$security_questions)){
+                $request->flash();
+                return back()->with('warning','Please answer valid questions');
+            }
+        }
+
+        $security_answers=$request->security_answers;
+
+        
+        // Break all the reminders into comma separated words. And merge the comma separated words from all reminders. 
+        for ($i=0;$i<$security_answers_count;$i++) {
+            $reminder_pieces[]=preg_replace('/\s+/', ',', $request->security_answer_reminders[$i]);//replace white spaces with a single comma
+        }
+        $reminder_pieces=implode(',',$reminder_pieces);
+
+        
+        //TODO: validation to prevent having none common words that are present in both anwers and reminders.
+
+        
+        // Create a separate validation to check that answers do not exist in in any of the reminders
+        $validator= Validator::make($request->only('security_answers'),[
+            'security_answers.*'=>'not_in:'.$reminder_pieces,
+            ],
+            [
+                'security_answers.*.not_in'=>'An answer should not be contained in an reminder',         
+            ]
+        )->validate();
+
+
+        // Main validation
+        $validator= Validator::make($request->all(),[
+                'security_questions' => 'required|array|max:'.$security_answers_count,
+                'security_questions.*'=>'required|numeric|max:1000',
+                'security_answers'=>'required|array|max:'.$security_answers_count,
+                'security_answers.*'=>'required|string|max:250',
+                'security_answer_reminders'=>'nullable|array|max:'.$security_answers_count,
+                'security_answer_reminders.*'=>'nullable|string|max:250',
+            ],
+            [
+                'security_questions.*.max'=>'We may not know the ecurity question',
+                'security_questions.*.required'=>'Security question is required',
+                'security_questions.*.numeric'=>'Security format is unknown',
+                'security_answers.*.max'=>'Security answer must not exceed 250 characters',
+                'security_answers.*.required'=>'Security answer is required',
+                'security_answers.*.string'=>'Security answer must be a string',
+                'security_answer_reminders.*.string'=>'Security answer reminder must be a string',
+                'security_answer_reminders.*.max'=>'Security answer reminder not exceed 250 characters',
+                        
+            ]
+        )->validate();
+
+        $user->securityAnswers()->delete();
+        for($i=0;$i<count($request->security_questions);$i++){
+                        
+            $remind=$request->security_answer_reminders[$i];
+            
+            // And now save
+            $user->securityAnswers()->create(['security_question_id'=>$request->security_questions[$i],'answer'=>$security_answers[$i],'reminder'=>$remind]);
+        }
+
+        return redirect()->route('user-security-questions')->with('success','Done');
+
     }
 
     /**
@@ -281,9 +486,12 @@ class UserProfileController extends Controller
         //     $pass_match=$request->password.'make_no_match_by adding random letterdf fvdfv';
         // }
 
+        //dd(__('validation.custom.password.regex'));
+
+
         $this->validate($request, [
-            //'password'=>'required|in:'.$pass_match,
-            'new_password' => 'required|string|min:6|confirmed|max:255',
+            'new_password' =>config('laradmin.rules.password')
+
         ]);
         // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
         //update the user
@@ -313,7 +521,7 @@ class UserProfileController extends Controller
             return redirect()->route('user-home')->with('warning', 'Email is already confirmed');
         }
 
-        /* 
+        /*
         $confirmed=DB::table('confirmation')->where('user_id','=',$user->id)->where('type','=','email_confirmation')->delete();
 
         $key= str_random(40);
@@ -322,7 +530,7 @@ class UserProfileController extends Controller
         $confirmationLink= route('email-confirmation',[$user->email,$key]);
 
         \Illuminate\Support\Facades\Mail::to($user->email)
-        ->send(new \App\Mail\Laradmin\UserConfirmation($user,$confirmationLink)); 
+        ->send(new \App\Mail\Laradmin\UserConfirmation($user,$confirmationLink));
         */
 
         $sentEmail = $this->confirmEmailEmail($user);
@@ -334,10 +542,10 @@ class UserProfileController extends Controller
      * Confirm the email of a user who is identified my the specified email
      *
      * @param  string $email
-     * @param  string $key
-     * @return \Illuminate\Http\Response 
+     * @param  string $token
+     * @return \Illuminate\Http\Response
      */
-    function emailConfirmation($email, $key)
+    function emailConfirmation($email, $token)
     {
         $user = User::where('email', '=', $email)->get();
         if ($user->count() == 1) {
@@ -362,7 +570,7 @@ class UserProfileController extends Controller
             //dd(\Carbon\Carbon::parse($row->created_at));
             $expired = ($now > \Carbon\Carbon::parse($row->created_at)->addHours(1));
             //dd($expired);
-            if (!strcmp($key, $row->key) and !$expired) {
+            if (!strcmp($token, $row->token) and !$expired) {
                 $user->status = 1;
                 $user->save();
 
@@ -480,7 +688,7 @@ class UserProfileController extends Controller
     }
     /**
      * Self Reactivate account. If auto reactivation following login ever fails, this function allows a user to self reactivate from their settings page
-     * 
+     *
      *
     * @param  void
     * @return \Illuminate\Http\Response
@@ -534,47 +742,24 @@ class UserProfileController extends Controller
         return view('laradmin::user.plugin_settings', compact('pageTitle'));
     }
 
-    public function formCreate()
+    /**
+     * Display site privacy information
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function privacy()
     {
-        // $field=\BethelChika\Laradmin\Form\FormItem::make([   'type'=>'text',
-        // 'name'=>'comicpic_autor_r_name',
-        // 'label'=>'Comicpic 2 writer',
-        // 'group'=>'personal',
-        // 'order'=>0,
-        // 'help'=>'Help text',
-        // 'value'=>'Bethel',
-        // 'options'=>[],
-        // 'rules' => 'required|min:5',
-        // 'messages'=>['required'=>'Writer must be given',
-        //                 'min'=>'Cannot be less than five',
-        //             ]
-
-        // ]);
-
-        $form = new \BethelChika\Laradmin\Form\Form('profile');
-        //$form->addField($field);
-        return view('laradmin::user.profile_form', compact('form'));
-    }
-    public function updateForm(Request $request)
-    {
-        $form = new \BethelChika\Laradmin\Form\Form('profile');
-
-
-        $form = new \BethelChika\Laradmin\Form\Form('profile');
-        $form->addField($field);
-
-        $form->getValidator($request->all())->validate();
-        $form->store($request);
-
-        $fields = $form->getFields($form->getTag());
-        dd('Done');
-        $this->validate($request, [
-            //'password'=>'required|in:'.$pass_match,
-            'new_password' => 'required|string|min:6|confirmed|max:255',
-        ]);
-
-        $fieldables = $form->getFieldables($form->getTag());
-
-        dd($request);
+        //dd(\BethelChika\Laradmin\Social\Feed\Feed::getFeeds());
+        $pageTitle = 'Privacy policy';
+        $page=null;
+        $privacy_content=null;
+        if(config('laradmin.wp_enable') and config('laradmin.wp_use_privacy')){
+            $privacy_content=Page::getPageParts(['privacy']);
+            if(!$privacy_content){
+                $page=Page::where('post_name','privacy-policy')->first();
+                //dd($page);
+            }
+        }
+        return view('laradmin::user.privacy', compact('privacy_content','page','pageTitle'));
     }
 }

@@ -47,7 +47,7 @@ class Field extends FormItem
     public $value;
 
     /**
-     * All options for select field
+     * All options for select field. This should assoc array where key=value in html select field. 
      *
      * @var array
      */
@@ -77,7 +77,7 @@ class Field extends FormItem
     public $isReadOnly=false;
 
       /**
-     * Read only items are only displayed for editing page.
+     * Write only items are only displayed for editing page.
      *
      * @var boolean
      */

@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="timezone" content="{{session('timezone')}}">{{-- print prefered timezone for javascript --}}
 
     <meta name="description" content="{{$metas['description']?? env('APP_DESCRIPTION','Laradmin')}}" >
     <meta name="robots" content="{{$metas['robots'] ?? 'all'}}">
@@ -31,7 +32,7 @@
 </head>
 <body class="front-end user {{$laradmin->assetManager->getBodyClassesString()}}">
     {{--import facebook sdk--}}
-    @include('laradmin::user.partials.social.facebook_js_sdk')
+    @include($laradmin->theme->defaultFrom().'social.inc.facebook_js_sdk')
     <div id="app">
         <div id="site-top-and-content">
             <header role="banner">
@@ -58,7 +59,7 @@
                                 </div>
                                 @endif
                                 
-                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) {{''}} @endif">{{--if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file--}}
+                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) {{''}} @endif">{{-- if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero in the super mode--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file --}}
                                     <img class="logo " src="/img/logo{{$laradmin->assetManager->getLogoType('-')}}.svg" alt="{{ config('app.name', 'Laradmin')}}" />
                                 </div>
                             </a>
@@ -151,6 +152,9 @@
 
     {{--iconify.design--}}
     <script src="https://code.iconify.design/1/1.0.0-rc7/iconify.min.js"></script>
+
+    {{-- Stripe --}}
+    <script src="https://js.stripe.com/v3/"></script>
 
     {{--laradmin--}}
     {{--site--}}

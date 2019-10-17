@@ -21,7 +21,7 @@ class UserMessage extends Model
      * @var array
      */
     protected $fillable = [
-        'message', 'secrete',
+        'message', 'secret',
     ];
     /**
     * The attributes that should be mutated to dates.

@@ -93,7 +93,7 @@ class Navigation{
     public function getActiveTag($roottag){
 
         $at=null;
-        foreach(self::$activeTags as $at){
+        foreach(self::getActiveTags() as $at){
             if(starts_with($at,$roottag)){
                 break;//NOTE taht we are only cosidering the first match here.
             }
@@ -114,7 +114,8 @@ class Navigation{
 
     /**
      * Return the item tag that should be rendered for the current minor menu or null if all the parents befor the roottag has no children.
-     * Note that this function is based on the current active tag/s
+     * Note that this function is based on the current active tag/s.
+     * TODO: This method may have a slightly confusing name since it has nothing to do with the css class 'minor-nav'.
      *
      * @param string $roottag The roottag with which to base the miomor menu
      * @return string
@@ -144,6 +145,58 @@ class Navigation{
             return null;
         }
     }
+
+    /**
+     * Return the tags for the current breadcrumb or build one from the given tags
+     * @param $tags Dot separated tags 
+     * @return array
+     */
+    public static function getBreadcrumbTags($tags=null){
+        if(!$tags){
+            $ats=static::getActiveTags();
+        }else{
+            $ats=explode('.',$tags);
+        }
+        
+
+        $at_s=[];
+        foreach($ats as $at){
+            $temps=explode('.',$at);
+            if(count($at_s)<$temps){
+                $at_s=$temps;
+            }
+        }
+
+        $tag_s='';
+        $item_tags=[];
+        foreach($at_s as $at){
+            $tag_s=trim($tag_s.'.'.$at,'.');
+            $item_tags[]=$tag_s;
+        }
+
+        return $item_tags;
+    }
+
+     /**
+     * Return the items for the current breadcrumb or build one from the given tags
+     * @param $tags Dot separated tags 
+     * @return MenuItem[]
+     */
+    public static function getBreadcrumbItems($tags=null){
+        $item_tags=static::getBreadcrumbTags($tags);
+
+        $menuitems=[];
+        foreach($item_tags as $item_tag){
+            $menuitem=static::getMenuByTags($item_tag);
+            if($menuitem->isMenu()){
+                continue;
+            }
+            $menuitems[]=$menuitem;
+        }
+
+        return $menuitems;
+    }
+
     
     /**
      * Add a menu making sure tag is unique
@@ -216,12 +269,25 @@ class Navigation{
     //     }
     //     dd( collect($item));
     // }
+    
+    /**
+     * Checks if a tag refers to a navigation item is empty
+     *
+     * @param string $tags Each tag must be suitable for array indexing.
+     * @return boolean
+     */
+    public static function isEmptyTags($tags){
+        if(self::getMenuByTags($tags)){
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Checks if menu is empty
      *
      * @param string $tags Each tag must be suitable for array indexing. The first tag must be for a Menu and it is the only one used.
-     * @return boolean Null is returnd if menu does not exists.
+     * @return boolean Null is returned if menu does not exists.
      */
     public static function isEmpty($tags){
         $tags=explode('.',$tags);

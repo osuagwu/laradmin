@@ -6,18 +6,18 @@
 <section role="main" class="section section-first section-info section-full-page">
     <div class="container">
         <div class="row">
-            
+
             <div class="col-md-1 padding-top-x10">
                 <a class="heading-1 text-white" href="{{route('user-security')}}" title="Back to security">
-                        <span class="iconify" data-icon="entypo-chevron-thin-left" data-inline="false"></span>
-                    <noscript><i class="fas fa-chevron-left"></i></noscript>
+                        {{-- <span class="iconify" data-icon="entypo-chevron-thin-left" data-inline="false"></span> --}}
+                    <i class="fas fa-arrow-alt-circle-left"></i>
                 </a>
             </div>
-            
+
             <div class="col-md-8">
-                
+
                 <h1 class="heading-1 content-title">{{$pageTitle??'Edit profile'}}
-                    
+
                 </h1>
                 <p class=" fainted-08"><small>Note that for security reasons, your authentication for this page expires fast. So please make your edit as quick as you can!</small></p>
             </div>
@@ -34,23 +34,23 @@
                     {{ method_field('PUT') }}
                     {{ csrf_field() }}
 
-                    
-                    
 
-                    
-                    
+
+
+
+
                     {{--@component('laradmin::blade_components.input_password',['name'=>'password','label'=>'Confirm current password','required'=>'required'])
-                    
-                    @endcomponent 
+
+                    @endcomponent
                     --}}
                     @component('laradmin::blade_components.input_password',['name'=>'new_password','label'=>'New password','required'=>'required'])
-                    @endcomponent 
+                    @endcomponent
 
                     @component('laradmin::blade_components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation','required'=>'required'])
-                    @endcomponent 
+                    @endcomponent
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">
-                            
+
                             <a class="btn btn-subtle" href="{{route('user-security')}}">
                                 Cancel
                             </a>
@@ -59,29 +59,31 @@
                             </button>
                         </div>
                     </div>
-            
+
                 </form>
 
-                
-                
+
+
             </div>
             <div class="col-md-3 ">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <span class="heading-6 panel-title" >Password recommendations</span>
+                        <span class="heading-6 panel-title" >Password rules</span>
                     </div>
                     <div class="panel-body">
                         <ul>
-                            <li><small> Password should be 6 characters or more</small></li>
-                            <li><small> Use numbers, alpha-numeric and special characters</small></li>
-                            <li><small>Try to make it as random as possible.</small></li>
+                            @foreach(explode('.',__('passwords.password')) as $msg)
+                                @if(!strlen($msg)) @continue @endif
+                                <li><small>{{$msg}}</small></li>
+                            @endforeach
+
                         </ul>
                     </div>
                 </div>
-                
+
             </div>
-            
-        
+
+
         </div>
         <div class="padding-top-x6">
             <h6>Note on passwords</h6>

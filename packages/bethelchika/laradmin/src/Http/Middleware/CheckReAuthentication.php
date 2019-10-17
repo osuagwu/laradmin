@@ -20,6 +20,13 @@ class CheckReAuthentication
     private $TIME_OUT=60;  //TODO: move to and read from settings
     /**
      * Handle an incoming request.
+     * CAUTION: One can bypass the short $timeOut by first visiting a route with a 
+     * longer timeout. This is possible because the time,re_auth_at, is reset as 
+     * long as re-auth time is not reached (but also after re-authentication). 
+     * So calls for short $timeOut is at the 
+     * mercy of calls at longer $timeOut. So ultimately the most reliable 
+     * $timeOut is the longest one in the entire app. The best solution is 
+     * to keep $timeOut fixed for all calls to this middleware.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

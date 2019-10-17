@@ -4,7 +4,7 @@ The permission object can be accessed thus:
 ```php
 $perm=app('laradmin')->permission;
 ```
-To check if a user has permission, the can() and the isDisallowed() methods can be used.
+To check if a user has permission, the `can()` and the `isDisallowed()` methods can be used.
 ```php
 use BethelChika\Laradmin\Source;
 
@@ -113,7 +113,7 @@ $access=$perm->can($user,'table',$source_id,'update');
 See control panel for source for how to manage permissions.
 
 ## Policies and gate
-Laradmin provide some Laravel policies and gate which use the permission system to provide authorisation at the for sorce type of 'model' 'table'. These are already implemented in the admin and profile pages. So you can easily check access in controllers and views etc:
+Laradmin provides some Laravel policies and gates which use the permission system to provide authorisation  for source types of *model* and *table*. These are already implemented in the admin and profile pages. You can easily check access in controllers and views etc:
 ```php
 class UserProfileController extends Controller
 {
@@ -125,7 +125,7 @@ class UserProfileController extends Controller
     } 
 }
 ```
-The above will automatically check access using for the 'table' and 'model' for the $certain_user object. You can check for update, create and delete access aswell.
+The above will automatically check access using for the *table* and *model* for the `$certain_user` object. You can check for *update*, *create* and *delete* access aswell.
 
 More examples, 
 for UserMessage controller:
@@ -141,7 +141,7 @@ class UserMessageController extends Controller
 }
 ```
 
-for control panel you can use a gate which exploits the 'route_prefix' source type:
+for control panel you can use a gate which exploits the *route_prefix* source type:
 ```php
 class ControlpanelController extends Controller
 {

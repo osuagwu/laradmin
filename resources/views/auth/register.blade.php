@@ -8,8 +8,8 @@
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
                     <div class="text-center">
-                        <a class="btn btn-primary" href="{{route('social-user-callout','facebook')}}"><i class="fab fa-facebook-f"></i> Login with Facebook </a>
-                        <a class="btn btn-primary" href="{{route('social-user-callout','google')}}"> <i class="fab fa-google"></i> Login with Google </a>
+                        <a class="btn btn-primary" href="{{route('social-user-callout','facebook')}}"><i class="fab fa-facebook-f"></i> Register with Facebook </a>
+                        <a class="btn btn-primary" href="{{route('social-user-callout','google')}}"> <i class="fab fa-google"></i> Register with Google </a>
                     </div>
                     <hr >
                     <form class="form-horizontal" method="POST" action="{{ route('register') }}">

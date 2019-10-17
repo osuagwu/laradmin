@@ -79,7 +79,7 @@ class LinkEmailManager{
         return 1;
     }
 
-    public function linkEmailConfirmation(SocialUser $socialUser,$key,$expiry_time=null){
+    public function linkEmailConfirmation(SocialUser $socialUser,$token,$expiry_time=null){
         if(!$expiry_time){
             $expiry_time=$this->confirmationExpiryTime;
         }
@@ -98,7 +98,7 @@ class LinkEmailManager{
 
         if($user){        
             $confirmation=Confirmation::where('user_id','=',$user->id)
-                                        ->where('key','=',$key)
+                                        ->where('token','=',$token)
                                         ->where('email_to',$socialUser->social_email)
                                         ->where('type','=',$this->confirmationEmailType)->first();
         }
@@ -112,7 +112,7 @@ class LinkEmailManager{
             
             $expired=($now>$confirmation->created_at->addMinutes($expiry_time));
             
-            if(!strcmp($key,$confirmation->key) and !$expired){            
+            if(!strcmp($token,$confirmation->token) and !$expired){            
                 //$socialUser=$user->socialUsers()->where('social_id',$email);
                 $socialUser->status=1;
                 $socialUser->save();
@@ -144,9 +144,9 @@ class LinkEmailManager{
             $old->delete();
         }
         
-        $key= str_random(40);
+        $token= str_random(40);
         $confirmation=new Confirmation;
-        $confirmation->key=$key;
+        $confirmation->token=$token;
         $confirmation->type=$this->confirmationEmailType;
         $confirmation->email_to=$socialUser->social_email;
         $confirmation->user_id=$user->id;
@@ -154,7 +154,7 @@ class LinkEmailManager{
         $confirmation->save();
         
         
-        $confirmationLink= route($this->confirmationRouteName,[$socialUser->id,$key]);
+        $confirmationLink= route($this->confirmationRouteName,[$socialUser->id,$token]);
 
         Mail::to($socialUser->social_email)
             ->send(new LinkEmailConfirmation($user,$confirmationLink,$socialUser->social_email));
@@ -207,7 +207,7 @@ class LinkEmailManager{
         }
         
         // Check that it is confirmed
-        if(!$this->isEmailConfirmed($socialUser)){
+        if(!$socialUser->isEmailConfirmed()){
             return -2;
         }
 
@@ -237,15 +237,15 @@ class LinkEmailManager{
 
    }
 
-   /**
-    * Check if the email attched to the socialuser is confirmed
-    *
-    * @param SocialUser $socialUser
-    * @return boolean True if the email is confirmed
-    */
-   public function isEmailConfirmed(SocialUser $socialUser){
-       
-        return !($socialUser->status==-1);
-   }
+//    /**
+//     * Check if the email attched to the socialuser is confirmed
+//     *
+//     * @param SocialUser $social_user
+//     * @return boolean True if the email is confirmed
+//     */
+//    public static function isEmailConfirmed(SocialUser $social_user){
+//        return $social_user->isEmailConfirmed();
+        
+//    }
    
 }

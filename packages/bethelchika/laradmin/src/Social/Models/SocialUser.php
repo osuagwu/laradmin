@@ -29,12 +29,27 @@ class SocialUser extends Model
      * @return boolean True on success
      */
     public function updateField($name,$value){
-        //$d=$this->updated_at->diffForHumans().'<br>';//TODO:delete
-        //dd(strcmp($value,$this->social_token));
         $this->$name=$value;
         $r= $this->save();
        
-        //dd($this->updated_at->diffForHumans());
         return $r;
+    }
+
+    /**
+     * Checks if the email associated to this social user is confirmed
+     *
+     * @return boolean
+     */
+    public function isEmailConfirmed(){
+        return !$this->status==-1;
+    }
+
+    /**
+     * Getter for the associated email
+     *
+     * @return string
+     */
+    public function getEmail(){
+        return $this->social_email;
     }
 }

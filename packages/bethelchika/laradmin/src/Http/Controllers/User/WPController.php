@@ -2,16 +2,25 @@
 
 namespace BethelChika\Laradmin\Http\Controllers\User;
 
-use BethelChika\Laradmin\WP\Models\Page;
-use BethelChika\Laradmin\WP\Models\Post;
-use BethelChika\Laradmin\Http\Controllers\Controller;
+use Corcel\Model\Comment;
+use Illuminate\Http\Request;
+use BethelChika\Laradmin\User;
+use Illuminate\Support\Carbon;
 use BethelChika\Laradmin\Laradmin;
 use Illuminate\Support\Facades\Auth;
-use BethelChika\Laradmin\Http\Controllers\User\Traits\WPHomepage;
+use BethelChika\Laradmin\WP\Models\Page;
+use BethelChika\Laradmin\WP\Models\Post;
+use BethelChika\Laradmin\WP\Models\LarusPost;
+use BethelChika\Laradmin\Http\Controllers\Controller;
+use BethelChika\Laradmin\Http\Controllers\User\Traits\WP\Homepage;
+use BethelChika\Laradmin\Http\Controllers\User\Traits\WP\PostComment;
+use BethelChika\Laradmin\Theme\DefaultTheme;
+use Corcel\Model\Option;
 
 class WPController extends Controller
 {
-    use WPHomepage;
+    use Homepage;
+    use PostComment;
 
     private $laradmin;
     /**
@@ -22,155 +31,252 @@ class WPController extends Controller
     public function __construct(Laradmin $laradmin)
     {
         parent::__construct();
+        $this->middleware('auth', ['only' => ['createComment','larusPost']]);
         $this->laradmin = $laradmin;
 
         
     } 
 
-    
     /**
-     * Show page.
-     * Instruction:TODO:move instruction to doc
-     * Custom fields on Wordpress:
-     * 
-     * Fields                   | Value(s)                         | Description
-     * ---------------------------------------------------------------------------------
-     * scheme                   | subtle|primary|success|info|...  | The scheme for the page, primarily currently used to style the main section. Any of the brands is valid. the default in most pages is 'default' while it is 'primary' in hero pages
-     * minor_nav                | on|off                           | Turns minor nav ON and OFF
-     * minor_nav_scheme         | subtle|primary                   | Determines the class of minor nav
-     * blog_listing             | off|left|right|bottom            | If not 'off' determines which part of the page shows blog listing. Setting this to 'right' turns ON the rightbar.
-     * blog_listing_count       | [Integer]                        | The maximum number of blog posts to display
-     * main_nav_scheme          | subtle|primary                   | Sets the scheme of the main nav
-     * hero_height              | dynamic|full|[Integer]           | Determine if the height of the hero should be made to fill the page height or be dynamic relative to content. If integer it will be interpreted as css vh unit.
-     * hero_headline_justify    | left|center|right|               | Horizontal position of the content of a hero
-     * hero_shade               | default(default)|angle|smooth|flat| The shade the help things on the hero like the menu to be seen especially when the hero image is not very dark
-     * hero_headline_shade      | on|off                           | When 'on' adds extra shade behind hero content to make it easier to see. Note this is different from section overlay; The default section overlay might already make it easy to see the content.
-     * rightbar                 | on|off                           | Enable or disable the right bar
-     * wide_screen              | on|off(default)                  | When 'on' bootstraps 'container' is replaced with 'container-fluid'
-     * hero_fullscreen          | on|off(default)                  | Makes the hero image full screen     
-     * hero_headline_align      | top|middle|bottom                | Used to verticaly position the headline inside the hero NOTE: you may need to use numeric hero_height to create the enough vertical height for this setting to have effect
-     * hero_type                | super|hero(default)              | Determines the type of hero. Super hero extends to the top nav
-     * social_share_top         | on|off                           | Turn on or off social share at page top
-     * social_share_bottom      | on|off                           | Turn on or off social share at page bottom
-     * rightbars                | [String]                         | Comma separated list of page_part slugs whose content should be included in the rightbar. When defined the default rightbar must be included in the list for it to be displayed.
-     * sidebars                 | [String]                         | Comma separated list of page_part slugs whose content should be included in the sidebar.
-     * footers                  | [String]                         | Comma separated list of page_part slugs whose content should be included in the footer.
-     * linear_gradient_brand2   | primary|success|info|...         | A brand name to use to make gradient with the current scheme
-     * linear_gradient_direction| [top,left top, left, ...]        | Any of the CSS linear gradient function direction i.e linear-gradient(to left top,), So e.g {left top, top, right bottom, ...}.
-     * linear_gradient_fainted  | [Integer] {1,2,3 ...100}         | The faint level of the colors used for gradient. Higher value equals more opaque=>less faint.
-     * 
-     * Keys: ? => not implemented
-     * 
-     * @return \Illuminate\Http\Response
+     * DO prechecks before a post is displayed
+     *
+     * @param Post $post
+     * @return \Illuminate\Http\Response|null
      */
-    public function page($slug)
-    {
-        
-        
-
-        
-
-        
-
-        // Get page
-        $page = Page::published()->where('post_name', $slug)->first();
-
-        // First check if page needs authentication/authorisation
-        if(config('laradmin.wp_page_auth') and $page->needsAuth()){
-            if(Auth::guest()){
-                $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
-                return view('laradmin::user.wp.needs_auth');
-            }
-            if(!Auth::user()->can('view',$page)){
-                $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
-                return view('laradmin::user.wp.unauthorised');
-            }
-        }
-
-         // Lets make sidebar white
-        $this->laradmin->assetManager->registerBodyClass('sidebar-white');
-
-        if(!$page){
+    private function checkBefore(Post $post){
+        if(!$post){
             abort(404,'The page you are looking for was not found');
         }
-        
+
+        if($post->needsAuth()){
+            if(Auth::guest()){
+                $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
+                return view($this->laradmin->theme->from.'wp.needs_auth');
+            }
+            if(!Auth::user()->can('view',$post)){
+                $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
+                return view($this->laradmin->theme->from.'wp.unauthorised');
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Perform general settings especially based on post custom fields
+     *
+     * @param Post $post
+     * @return void
+     */
+    private function presets(Post $post){
         //Set container type
-        if(str_is(strtolower(trim($page->meta->wide_screen)),'on')){
+        if(str_is(strtolower(trim($post->meta->wide_screen)),'on')){
             $this->laradmin->assetManager->setContainerType('fluid',true);
         }
 
+         // Remove border-bottom on major nav
+        if($post->meta->scheme or !str_is(strtolower($post->meta->main_nav_border_bottom),'off')){
+            $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom'); 
+        }
 
-        // Remove border-bottom on major nav only if minor nav is ON
-        //if(!str_is(strtolower($page->meta->minor_nav),'off')){
-           // $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom'); 
-        //}
-
-        $pageTitle = $page->title;
+        
+        
 
         // Main nav scheme
-        $main_nav_scheme=$page->meta->main_nav_scheme;
+        $main_nav_scheme=$post->meta->main_nav_scheme;
         
         if($main_nav_scheme){
             $this->laradmin->assetManager->registerMainNavScheme($main_nav_scheme);
         }
         
+    }
+
+    /**
+     * Returns an array of meta items
+     *
+     * @param Post $post
+     * @param string $post_url The url of te post
+     * @return array
+     */
+    private function makeMeta(Post $post,$post_url=null){
+        $metas['url'] = $post_url?:route('page', $post->slug);
+        $metas['type'] = 'article';
+        $metas['title'] = $post->title;
+        $metas['description'] = $post->post_excerpt ? $post->post_excerpt : strip_tags(str_limit($post->content, 280,'...'));
+        $metas['image'] = $post->image;//TODO: check that this is right
+        $metas['tweet'] = str_finish($post->post_excerpt, 277,'...') . '#' . config('app.name');
+
+        return $metas;
+        
+    }
+    
+    /**
+     * Custom fields on Wordpress:
+     * Instruction:TODO:move custom field to doc when it is all set
+     * 
+     * Fields                       | Value(s)                              | Description
+     * ---------------------------------------------------------------------------------
+     * scheme                       | subtle|primary|success|info|...       | The scheme for the page, primarily currently used to style the main section. Any of the brands is valid. the default in most pages is 'default' while it is 'primary' in hero pages
+     * minor_nav                    | on|off                                | Turns minor nav ON and OFF
+     * minor_nav_scheme             | subtle|primary                        | Determines the class of minor nav
+     * blog_listing                 | off|left|right|bottom                 | If not 'off' determines which part of the page shows blog listing. Setting this to 'right' turns ON the rightbar. Setting it to 'left' activates the sidebar unless the sidebar is explicitly off (see sidebar field).
+     * blog_listing_count           | [Integer]                             | The maximum number of blog posts to display
+     * main_nav_scheme              | subtle|primary                        | Sets the scheme of the main nav
+     * main_nav_border_bottom       | on|off                                | Remove the border bottom on main nave when 'off'
+     * hero_height                  | dynamic|full|[Integer]                | Determine if the height of the hero should be made to fill the page height or be dynamic relative to content. If integer it will be interpreted as css vh unit.
+     * hero_headline_justify        | left|center|right|                    | Horizontal position of the content of a hero
+     * hero_content_shade           | on|off                                | Turn the shade for only the content area of the hero ON or OFF. If the scheme custom field is set them the shade will be based on the scheme color. This is unrelated to hero_shade which can shade most of the hero section.
+     * hero_content_width           | [Number 0:100%]                       | The width in % of the content area of the hero
+     * hero_shade                   | default(default)|angle|smooth|flat    | The shade the help things on the hero like the menu to be seen especially when the hero image is not very dark
+     * hero_headline_shade          | on|off                                | When 'on' adds extra shade behind hero content to make it easier to see. Note this is different from section overlay; The default section overlay might already make it easy to see the content.
+     * sidebar                      | on|off                                | Allows for the sidebar to be explicitly set to 'on' or 'off'. This field has no effect on page_templates that explicitly include the sidebar (e.g. with_sidebar.blade.php)
+     * rightbar                     | on|off                                | Enable or disable the right bar
+     * wide_screen                  | on|off(default)                       | When 'on' bootstraps 'container' is replaced with 'container-fluid'
+     * hero_fullscreen              | on|off(default)                       | Makes the hero image full screen     
+     * hero_headline_align          | top|middle|bottom                     | Used to verticaly position the headline inside the hero NOTE: you may need to use numeric hero_height to create the enough vertical height for this setting to have effect
+     * hero_type                    | super|hero(default)                   | Determines the type of hero. Super hero extends to the top nav. For a Larus post, setting this field is enough for the post to be considered a hero.
+     * social_share_top             | on|off                                | Turn on or off social share at page top
+     * social_share_bottom          | on|off                                | Turn on or off social share at page bottom
+     * rightbars                    | [String]                              | Comma separated list of page_part slugs whose content should be included in the rightbar. When defined the default rightbar must be included in the list for it to be displayed.
+     * sidebars                     | [String]                              | Comma separated list of page_part slugs whose content should be included in the sidebar. Setting this field activates the sidebar unless the sidebar is explicitly set to off (see sidebar field).
+     * footers                      | [String]                              | Comma separated list of page_part slugs whose content should be included in the footer.
+     * linear_gradient_brand2       | primary|success|info|...              | A brand name to use to make gradient with the current scheme
+     * linear_gradient_direction    | [top,left top, left, ...]             | Any of the CSS linear gradient function direction i.e linear-gradient(to left top,), So e.g {left top, top, right bottom, ...}.
+     * linear_gradient_fainted      | [Integer] {1,2,3 ...100}              | The faint level of the colors used for gradient. Higher value equals more opaque=>less faint.
+     * 
+     * Keys: ? => not implemented
+     * 
+     * Shows a page
+     *
+     * @param string $slug Page slug
+     * @return \Illuminate\Http\Response
+     */
+    public function page($slug)
+    {   
+        // Get page
+        $post = Page::published()->where('post_name', $slug)->first();
+        
+        // First check if post needs authentication/authorisation
+        if(config('laradmin.wp_page_auth') ){
+            $res=$this->checkBefore($post);
+            if($res){
+                return $res;
+            }
+        }
+
+         // Lets make sidebar white
+        $this->laradmin->assetManager->registerBodyClass('sidebar-white');
+        
+        $this->presets($post);
+
+        $pageTitle = $post->title;
+        
         //// Get the template
-        $tpl = $page->meta->_wp_page_template;
+        $tpl = $post->meta->_wp_page_template;
         // if (!strlen($tpl) or !file_exists(config('view.paths')[0] . '/vendor/laradmin/user/wp/' . $tpl)) {//NOTE: The corresponding view must be published for this to work, othwerwise the template cannot be found
         //     $tpl = 'page_templates/index.blade.php';
         // }
         $tpl = str_replace('/', '.', $tpl);
         $tpl = str_replace('.blade.php', '', $tpl);
-        $tpl='laradmin::user.wp.' . $tpl;
+        $tpl=$this->laradmin->theme->from.'wp.' . $tpl;
         //dd($tpl);
-        $tpl_default = 'laradmin::user.wp.page_templates.index';
+        $tpl_default = $this->laradmin->theme->from.'wp.page_templates.index';
 
         // Define metas;
-        $metas['url'] = route('page', $slug);
-        $metas['type'] = 'article';
-        $metas['title'] = $page->title;
-        $metas['description'] = $page->post_excerpt ? $page->post_excerpt : strip_tags(str_limit($page->content, 280,'...'));
-        $metas['image'] = $page->image;//TODO: check that this is right
-        $metas['tweet'] = str_finish($page->post_excerpt, 277,'...') . '#' . config('app.name');
-        
+        $metas=$this->makeMeta($post,route('page', $slug));
 
         //Make page family/related menu
-        $this->makePageFamilyMenu($page);
+        $this->makePageFamilyMenu($post);
         $has_page_family = $this->laradmin->navigation->isEmpty('page_family');
 
         // Make hero if applicable. 
         $tpl_filename=array_reverse(explode('.',$tpl))[0];
         if(starts_with($tpl_filename,'hero_') or str_is($tpl_filename,'hero')) // we assume  hero if the template starts with 'hero_' or the name is 'hero'     
         {
-           $metas['hero']=$this->content2Hero($page);
-           $this->laradmin->assetManager->registerHero($page->getHeroImages(),$page->meta->hero_type);
+           $metas['hero']=$this->content2Hero($post);
+           $this->laradmin->assetManager->registerHero($post->getHeroImages(),$post->meta->hero_type);
         }
         
         //Get blog posts
-        $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($page->meta->blog_listing_count??4)->get();
+        $posts = Post::where(function($query){
+            $query->where('post_type', 'post')->orWhere('post_type', 'laradmin_larus_post');
+        })->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
 
         //$is_bs_container_fluid = $this->laradmin->assetManager->isContainerFluid();
-        
+         
 
-        return view('laradmin::user.wp.page', compact('pageTitle','tpl','tpl_default', 'page', 'metas', 'posts', 'has_page_family'));
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts', 'has_page_family'));
+
     }
 
-    
+        /**
+     * Shows a Larus post
+     *
+     * @param string $slug Larus post slug
+     * @return \Illuminate\Http\Response
+     */
+    public function larusPost($slug)
+    {
+       
+        // Get Larus post
+        $post = LarusPost::published()->where('post_name', $slug)->first();
 
+        // First check if post needs authentication/authorisation
+        if(config('laradmin.wp_larus_post_auth')){
+            $res=$this->checkBefore($post);
+            if($res){
+                return $res;
+            }
+        }
+       
+
+        // Lets remove the main menu bottom
+        $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
+        
+        // Lets make sidebar white
+        $this->laradmin->assetManager->registerBodyClass('sidebar-white');
+
+        $this->presets($post);
+
+        $pageTitle = $post->title;
+        
+        $tpl=$this->laradmin->theme->from.'wp.page_templates.index';
+        $tpl_default = $this->laradmin->theme->from.'wp.page_templates.index';
+
+        // Define metas;
+        $metas=$this->makeMeta($post,route('larus-post', $slug));
+
+        
+
+        // Make hero if applicable. 
+        if($post->meta->hero_type){
+            $tpl=$this->laradmin->theme->from.'wp.page_templates.hero';
+            $metas['hero']=$this->content2Hero($post);
+            $this->laradmin->assetManager->registerHero($post->getHeroImages(),$post->meta->hero_type);
+        }
+        
+        //Get blog posts
+        $posts = Post::where('post_type', 'laradmin_larus_post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
+        
+
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts'));
+
+    }
+
+   
     /**
      * Gets basic hero content parts
      *
-     * @param Page $page
+     * @param Post $post
      * @return array
      */
-    private function content2Hero( $page){
+    private function content2Hero( $post){
         $hero=[
             'title'=>'',
             'btns'=>[],
             'extra'=>'',
             'is_fullscreen'=>false,
         ];
-        $content=$page->content;
+        $content=$post->content;
             
         $dom=new \DOMDocument();
         $dom->preserveWhiteSpace = false;
@@ -211,8 +317,8 @@ class WPController extends Controller
         //dd($hero['extra']);
 
         // Check if is fullscreen
-        if($page->meta->hero_fullscreen and str_is(strtolower(trim($page->meta->hero_fullscreen)),'on') 
-            or str_contains($page->meta->hero_type,'super') ){
+        if($post->meta->hero_fullscreen and str_is(strtolower(trim($post->meta->hero_fullscreen)),'on') 
+            or str_contains($post->meta->hero_type,'super') ){
             $hero['is_fullscreen']=true;
         }
 
@@ -273,6 +379,8 @@ class WPController extends Controller
 
     /**
      * Retreives inner html of a node
+     * 
+     * TODO: This Method should be move out of this class into a more general class.
      *
      * @param \DOMNode $node
      * @return void
@@ -281,7 +389,7 @@ class WPController extends Controller
         $innerHTML= ''; 
         $children = $node->childNodes; 
         foreach ($children as $child) { 
-            $innerHTML .= $child->ownerDocument->saveXML( $child ); 
+            $innerHTML .= $child->ownerDocument->saveXML( $child,LIBXML_NOEMPTYTAG); 
         } 
     
         return $innerHTML; 
@@ -294,13 +402,46 @@ class WPController extends Controller
      */
     public function post($slug)
     {
-        return redirect()->route('wp', $slug);
-        // $post = Post::published()->where('post_name',$name)->first();
-        // //dd($posts);
-        // $pageTitle = $post->title;
-         
 
-        // return view('laradmin::user.page.index', compact('pageTitle', 'post'));
+        if(!Option::get('wp_blogpost_on_laravel')){
+            return redirect()->route('wp', $slug);
+        }
+        
+        
+        // Get post
+        $post = Post::published()->where('post_name', $slug)->first();
+
+
+        // Lets remove the main menu bottom
+        $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
+        
+        // Lets make sidebar white
+        $this->laradmin->assetManager->registerBodyClass('sidebar-white');
+
+        $this->presets($post);
+
+        $pageTitle = $post->title;
+        
+        $tpl=$this->laradmin->theme->from.'wp.page_templates.index';
+        $tpl_default = $this->laradmin->theme->from.'wp.page_templates.index';
+
+        // Define metas;
+        $metas=$this->makeMeta($post,route('post', $slug));
+
+        
+
+        // Make hero if applicable. 
+        if($post->meta->hero_type){
+            $tpl=$this->laradmin->theme->from.'wp.page_templates.hero';
+            $metas['hero']=$this->content2Hero($post);
+            $this->laradmin->assetManager->registerHero($post->getHeroImages(),$post->meta->hero_type);
+        }
+        
+        //Get blog posts
+        $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
+        
+
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts'));
     }
 
 

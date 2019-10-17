@@ -54,6 +54,11 @@ class WPServiceProvider extends ServiceProvider
             return ShortCodes::heroUrl($shortcode);
         });
 
+        //Short code for page_part
+        Post::addShortcode('page_part', function ($shortcode) {
+            return ShortCodes::pagePart($shortcode);
+        });
+
         //Short code for push
         Post::addShortcode('push', function ($shortcode) {
             return ShortCodes::push($shortcode);
@@ -67,6 +72,16 @@ class WPServiceProvider extends ServiceProvider
         //Short code for feeds
         Post::addShortcode('feeds', function ($shortcode) {
             return ShortCodes::feeds($shortcode);
+        });
+
+        //Short code for social_feeds
+        Post::addShortcode('social_feeds', function ($shortcode) {
+            return ShortCodes::socialFeeds($shortcode);
+        });
+
+        //Short code for facebook_page
+        Post::addShortcode('facebook_page', function ($shortcode) {
+            return ShortCodes::facebookPage($shortcode);
         });
 
 
@@ -93,7 +108,6 @@ class WPServiceProvider extends ServiceProvider
         });
 
 
-        
         
 
 

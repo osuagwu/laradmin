@@ -17,9 +17,11 @@ class AssetManager
     private static $logoType = '';
 
     /**
-     * The navbar class the defines the look and feel of the main navigation
+     * The navbar class the defines the look and feel of the main navigation.
+     * Possible values include bootstrap brand classes ={primary,danger,success,
+     * warning,info}; although some of these may not be implemented.
      *
-     * @var string Possible values include bootsrap brand classes ={primary,danger,success,warning,info}; although some of these may not be implemented
+     * @var string 
      */
     private static $mainNavClass = '';
 
@@ -133,30 +135,42 @@ class AssetManager
     /**
      * Add a body class
      * Defined classes:
-     * sidebar-white : makes side bg white
-     * header-transparent: makes the main menu transparent
-     * main-nav-no-border-bottom: This class allows you to add 'main-nav-no-border-bottom' to the body tag to remove the border bottom on the main menu
-     * has-sidebar: The doc has sidebar.
-     * has-minor-nav: The doc has minor navigation
-     * navbar-$scheme: The scheme of the main nav. Where $scheme ={primary,subtle,etc.}
+     * sidebar-white : makes side bg white. No tag required.
+     * header-transparent: makes the main menu transparent. No tag required.
+     * main-nav-no-border-bottom: This class allows you to add 'main-nav-no-border-bottom' to the body tag to remove the border bottom on the main menu. No tag required.
+     * has-sidebar: The doc has sidebar. No tag required.
+     * has-minor-nav: The doc has minor navigation. No tag required.
+     * navbar-$scheme: The scheme of the main nav. Where $scheme ={primary,subtle,etc.}. Since there is more than one possible values for this, you may (not required) add the scheme with a tag. The corresponding tag=>navbar_scheme
      * 
      * @param string $class
+     * @param string $tag A unique tag for the class
      * @return void
      */
-    public static function registerBodyClass($class)
+    public static function registerBodyClass($class,$tag=null)
     {
-        self::$bodyClasses[] = $class;
+        if($tag){
+            self::$bodyClasses[$tag] = $class;
+        }else{
+            self::unregisterBodyClass($class);//remove class if it exists
+            self::$bodyClasses[] = $class;
+        }
+        
     }
 
     /**
-     * eRemov a body class
+     * Removs a body class
      *
      * @param string $class
+     * @param string $tag The unique tag of the class to remove.
      * @return void
      */
-    public static function unregisterBodyClass($class)
+    public static function unregisterBodyClass($class,$tag=null)
     {
-        $key = array_search($class, self::$bodyClasses);
+        if($tag){
+            $key=$tag;
+        }else{
+            $key = array_search($class, self::$bodyClasses);
+        }
         if ($key !== false) {
             unset(self::$bodyClasses[$key]);
         }
@@ -289,11 +303,12 @@ class AssetManager
     public static function registerMainNavScheme($class)
     {
         self::$mainNavClass = $class;
-        self::registerBodyClass('navbar-' . $class);
+        self::registerBodyClass('navbar-' . $class,'navbar_scheme');
 
         switch (strtolower($class)) {
             case 'default':
             case 'subtle':
+                self::registerLogoType('');
                 break;
             default:
                 self::registerLogoType('white');

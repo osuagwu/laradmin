@@ -16,13 +16,17 @@ if(!defined('ABSPATH')){
 include __DIR__.'/inc/tools.php';
 
 
-register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
+register_deactivation_hook( __FILE__, 'laradmin_deactivation' );
 register_activation_hook( __FILE__, 'laradmin_activation' );
 
 // Activation of plugin
 function laradmin_activation(){
-    //create_laradmin_cpt();
-    //create_laradmin_hs_cpt();
+    update_option('wp_blogpost_on_laravel',1);
+    flush_rewrite_rules();
+}
+
+// Deactivation of plugin
+function laradmin_deactivation(){
     flush_rewrite_rules();
 }
 
@@ -67,14 +71,44 @@ function create_laradmin_hs_cpt(){
 add_action('init','create_laradmin_hs_cpt');
 
 
+
+
+// Add larus_post custom post type
+function create_laradmin_larus_cpt(){
+    $labels=array(
+        'name'=>__('Laradmin Larus posts'),
+        'singular_name'=> __('Laradmin Larus post'),
+    );   
+
+    $supports=['title','editor','author','thumbnail','excerpt',
+                'custom-fields','revisions','page-attributes','post-formats','comments','post-formats'];
+    
+    register_post_type('laradmin_larus_post',array(
+                                                    'labels'=>$labels,
+                                                    'public'      => false,
+                                                    'show_ui'=>true,
+                                                    'show_in_menu'=>false,
+                                                    'supports'=>$supports,
+                                                    'taxonomies'=>['category','post_tag'],
+                                                )
+                        );
+}
+add_action('init','create_laradmin_larus_cpt');
+
+
+
 // Add admin menus
 add_action('admin_menu','laradmin_menu');
 function laradmin_menu(){
     add_menu_page('Laradmin','Laradmin',4,'laradmin-index','laradmin_index');
 
+    // Add settings submenu
+    add_submenu_page('laradmin-index','Settings','Settings',4,'laradmin-settings','laradmin_settings_page');
+
     // Add the custom post types as submenu
     add_submenu_page('laradmin-index','Laradmin page parts','Page parts',4,'edit.php?post_type=laradmin_page_part');
     add_submenu_page('laradmin-index','Laradmin homepage sections','Homepage sections',4,'edit.php?post_type=laradmin_home_sec');
+    add_submenu_page('laradmin-index','Laradmin Larus posts','Larus posts',4,'edit.php?post_type=laradmin_larus_post');
 }
 function laradmin_index(){
 
@@ -112,21 +146,57 @@ function laradmin_index(){
     ';
 }
 
+/**
+ * Settings page
+ *
+ * @return string
+ */
+function laradmin_settings_page(){
+    
+    
+
+    // Settings Routing
+
+    // Set whether blog post should be handled by laravel
+    if(isset($_POST['wp_blogpost_on_laravel'])){
+        
+        update_option('wp_blogpost_on_laravel',intval($_POST['wp_blogpost_on_laravel']));
+    }
+
+    // Now Show Settings
+
+    echo '<h3>Laradmin settings</h3>';
+    include __DIR__.'/tpl/settings.php';
+    
+}
+
 // Adding excerpt for page
 add_post_type_support( 'page', 'excerpt' );
 
 
-// Now add hook to redirect all pages to laravel
-function redirect_pages_to_laravel()
+// Now add hook to redirect to laravel
+function redirect_to_laravel()
 {
-    if( is_page(  ) )
+    //if( is_page(  ) )
+    switch(get_post_type())
     {
-        $slug=get_post()->post_name;
-        wp_redirect('/_page-wp-to-laradmin/'.$slug );//REF:PAGE-ROUTE-URL-PRE-WP-PLUG-1
-        die;
+        case 'page':
+            $slug=get_post()->post_name;
+            wp_redirect('/_page-wp-to-laradmin/'.$slug );//REF:PAGE-ROUTE-URL-PRE-WP-PLUG-1
+            die;
+        case 'laradmin_larus_post':
+            $slug=get_post()->post_name;
+            wp_redirect('/_larus-post-wp-to-laradmin/'.$slug );//REF:LARUS-POST-ROUTE-URL-PRE-WP-PLUG-1
+            die;
+        case 'post':
+            if(get_option('wp_blogpost_on_laravel')){
+                $slug=get_post()->post_name;
+                wp_redirect('/_post-wp-to-laradmin/'.$slug );//REF:POST-ROUTE-URL-PRE-WP-PLUG-1
+            }  
+            die;
     }
 }
-add_action( 'template_redirect', 'redirect_pages_to_laravel' );
+add_action( 'template_redirect', 'redirect_to_laravel' );
 
 
 // Define image sizes

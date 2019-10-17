@@ -123,8 +123,17 @@ class UserPolicy
         $m=$this->modelCheckHelper($user,'update',$userToUpdate);
         
         if($r and $m){
-            //Do not allow the super to be updated
-            return !($user->getSuperId()==$userToUpdate->id);
+            //Do not allow the super to be updated by any one else but super. 
+
+            //return !( ($user->getSuperId()==$userToUpdate->id) and ($userToUpdate->id!=$user->id) );// Note that this single line can replace the below code.
+            //OR
+            // Note the code above works but we are using the ifs below for easy readability.
+            if(($user->getSuperId()==$userToUpdate->id) ){
+                if($userToUpdate->id!=$user->id){
+                    return false;//Supper can only be updated by super.
+                } 
+            }
+            return true;
         }else{
             //If a user is trying to edit herself and she is not 'super' then allow
             //if($user->id==$userToUpdate->id and ($perm->getSuperId()!=$userToUpdate->id)){

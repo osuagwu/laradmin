@@ -117,7 +117,7 @@ use BethelChika\Laradmin\Form\Contracts\Fieldable;
       * Construct a new form
       * @param string $pack       
       * @param string $tag A tag that uniquely identify this form
-       * @param string $mode Tells what mode the form should be opened: {'index','edit'}
+      * @param string $mode Tells what mode the form should be opened: {'index','edit'}
       * @param string $name
       */
      public function __construct($pack,$tag,$mode,$name=null){

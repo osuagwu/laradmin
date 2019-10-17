@@ -27,10 +27,11 @@
             <div class="mainbar" role="main">
                 <div class="row">
                     <div class="col-md-12">    
-                        @include ('laradmin::inc.msg_board')
-                        @include('laradmin::inc.email_confirmation_prompt')
+                        @include('laradmin::menu.breadcrumb')
 
                         <div class="heading-huge">Manage your account access and security settings</div>
+                        @include ('laradmin::inc.msg_board')
+                        @include('laradmin::inc.email_confirmation_prompt')
                         <nav class="nav nav-tabs nav-flat">
                                 @include('laradmin::menu',['tag'=>$laradmin->navigation->getMinorNavTag()])
                         </nav>
@@ -44,6 +45,9 @@
                             </div>
                         </div>
                         <div class="text-right"><a class="btn btn-primary btn-sm" href="{{route('user-edit-password')}}" title="Edit password"> <i class="fas fa-user-edit"></i> Edit password</a></div>
+
+
+                        
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 namespace BethelChika\Laradmin\Listeners;
 
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -26,13 +27,33 @@ class OnSuccessfulLogin
      */
     public function handle(Login $event)
     {
+        // We first make sure that the user object is uptodate
+        $user=$event->user->fresh();
+
         // Update last login
-        $event->user->loginAt();
+        $user->loginAt();
+
+        
 
         // Check if there is restriction and apply it
-        $event->user->applyLoginRestrictions();
+        $user->applyLoginRestrictions();
+
+        // Log login
+        $attempt=$user->logSuccessfulLogin();
+
+        if(!Auth::viaRemember()){
+            $attempt->checkXfactor();
+        }
+            
+
+        
 
         // Check if user is self-deactivated and cancel it
-        $event->user->autoReactivate();
+        $user->autoReactivate();
+        
+        // Verify
+        //AuthVerificationManager::checkSuccessfulLogin($user,$attempt);
+            
+        
     }
 }

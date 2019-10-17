@@ -45,7 +45,7 @@
 
             @if($plugin['installed'])
                 
-                <form class="text-right" method="post" action="{{route('cp-plugin')}}" style="display:inline"> 
+                <form class="text-right" method="post" action="{{route('cp-plugin-uninstall')}}" style="display:inline"> 
                     {{csrf_field()}} {{method_field('delete')}}
                     <input type="hidden" name="tag" value="{{$plugin['tag']}}"> 
                     <button type="submit"  class="btn btn-primary btn-small">Uninstall</button>               
@@ -72,7 +72,7 @@
                 @endif
 
             @elseif($plugin['installed']==0 and !$plugin['error_count'])
-                <form method="post" action="{{route('cp-plugin')}}" style="display:inline" > 
+                <form method="post" action="{{route('cp-plugin-install')}}" style="display:inline" > 
                         {{csrf_field()}}  
                         <input type="hidden" name="tag" value="{{$plugin['tag']}}">   
                     <button type="submit"  class="btn btn-primary btn-small">Install</button>               

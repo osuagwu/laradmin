@@ -2,7 +2,7 @@
 @extends('laradmin::user.layouts.app')
 
 @section('content')
-<section role="main" class="section section-warning  section-last  section-full-page section-diffuse section-light-bg section-diffuse-no-shadow">
+<section role="main" class="section section-warning    section-full-page section-diffuse section-light-bg section-diffuse-no-shadow">
     <div class="container">
         <div class="row extra-padding-top">
             <div class="col-md-8 col-md-offset-2">

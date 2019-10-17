@@ -265,12 +265,12 @@ class ContentManager
         switch($name){
 
             case 'user_settings':
-                //Acount
+                //Account
                 $navigation->create('Dashboard','dashboard','user_settings',[
                     'url'=>route('user-home'),'iconClass'=>'fas fa-home','order'=>0.0,'comment'=>'Users dashboard with summary of activities.']);
                 
                     $navigation->create('Account','account','user_settings',[
-                    'namedRoute'=>'user-profile','iconClass'=>'fas fa-user','order'=>1.0,'comment'=>'Manage you account details howevr you want.']);
+                    'namedRoute'=>'user-profile','iconClass'=>'fas fa-user','order'=>1.0,'comment'=>'Manage you account details however you want.']);
                 // $navigation->create('Personal information','personal_information','user_settings.account',[
                 //     'url'=>route('user-profile'),'urlFragment'=>'PD-personal-information','iconClass'=>'fas fa-info-circle']);
                 // $navigation->create('Contact details','contact_details','user_settings.account',[
@@ -285,10 +285,39 @@ class ContentManager
                     'namedRoute'=>'user-security','iconClass'=>'fas fa-user-lock','order'=>2.0,'comment'=>'Manage your account access and security with a strong password.']);
                 $navigation->create('Password','password','user_settings.security',[
                     'namedRoute'=>'user-security','iconClass'=>'fas fa-lock']);
+                $navigation->create('Security questions','security_questions','user_settings.security',[
+                    'namedRoute'=>'user-security-questions','iconClass'=>'fas fa-lock','activateStartWith'=>true]);
+                
+                $navigation->create('Login attempts','attempts','user_settings.security',[
+                    'namedRoute'=>'user-login-attempts','iconClass'=>'fas fa-lock']);
+
+                //Billing
+                $navigation->create('Billing','billing','user_settings',[
+                    'namedRoute'=>'user-billing','iconClass'=>'fas fa-file-invoice','order'=>3.0,'comment'=>'Billing information']);
+                $navigation->create('Payment methods','payment_methods','user_settings.billing',[
+                    'namedRoute'=>'user-billing-methods','iconClass'=>'fas fa-file-invoice','activateStartWith'=>true,]);
+                
+                //Billing Arbitrary
+                $navigation->create('One off-payment','arbitrary_payment','user_settings.billing',[
+                    'namedRoute'=>'user-billing-pay-arb','iconClass'=>'fas fa-file-invoice','activateStartWith'=>true,]);
+                
+                //Billing subscription
+                $navigation->create('Subscriptions','subscriptions','user_settings.billing',[
+                    'namedRoute'=>'user-billing-subs','iconClass'=>'fas fa-wallet']);
+
+                //Billing subscription plans
+                $navigation->create('Plans','plans','user_settings.billing.subscriptions',[
+                    'namedRoute'=>'user-billing-sub-plans','iconClass'=>'fas fa-tasks']);
+                    
+                
+                //Billing Invoice
+                $navigation->create('Invoices','invoices','user_settings.billing',[
+                    'namedRoute'=>'user-billing-invoices','iconClass'=>'fas fa-file-invoice']);
+                    
 
                 //External accounts
                 $navigation->create('External','external_accounts','user_settings',[
-                    'namedRoute'=>'social-user-external' ,'iconClass'=>'fas fa-share','order'=>3.0,'comment'=>'Connect and manage social and email accounts linked to this account']);
+                    'namedRoute'=>'social-user-external' ,'iconClass'=>'fas fa-share','order'=>4.0,'comment'=>'Connect and manage social and email accounts linked to this account']);
                 //$navigation->create('External accounts','external_accounts2','user_settings.external_accounts',[
                 //    'namedRoute'=>'social-user-external','iconClass'=>'fas fa-external-link-alt']);
                 $navigation->create('Social User accounts','social_user_accounts','user_settings.external_accounts',[
@@ -298,7 +327,7 @@ class ContentManager
 
                 // Control
                 $navigation->create('Control','account_control','user_settings',[
-                    'namedRoute'=>'user-account-control' ,'iconClass'=>'fas fa-gamepad','order'=>3.1,'comment'=>'Temporarily or permanently disable your account']);
+                    'namedRoute'=>'user-account-control' ,'iconClass'=>'fas fa-gamepad','order'=>4.1,'comment'=>'Temporarily or permanently disable your account']);
                 break;
 
             case 'primary':

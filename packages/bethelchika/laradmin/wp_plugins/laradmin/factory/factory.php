@@ -108,7 +108,7 @@ function create_laradmin_factory_items($menu_name){
         'thumbnail_filename'=>__DIR__.'/samples/img/example_hero_from_PAYPAL.jpg',
         'post_parent'=>$templates_page_id,
         'menu_item_parent_id'=>$templates_menu_item_id,
-        'meta'=>['hero_type' => 'super'],
+        'meta'=>['hero_type' => 'hero'],
         ],
         ['title'=>'With sidebar',
         'sample'=>'/samples/with_sidebar.html',

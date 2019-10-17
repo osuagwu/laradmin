@@ -15,7 +15,7 @@ use BethelChika\Laradmin\Http\Controllers\CP\Controller; //NOTE: This is explici
 class UserController extends Controller
 {
     use EmailConfirmationEmail;
-    
+
     /**
      * Create a new controller instance.
      *
@@ -25,9 +25,9 @@ class UserController extends Controller
      {
          $this->middleware('auth');
          parent::__construct();
-         
+
      }
-     
+
     /**
      * Display a listing of the resource.
      *
@@ -38,12 +38,12 @@ class UserController extends Controller
         $this->cpAuthorize();
         //var_dump(\Illuminate\Support\Facades\Auth::user());exit();
         $this->authorize('views','BethelChika\Laradmin\User');
-        
+
         //$users=User::paginate(10);
-        
+
 
         $request=Request();
-        
+
         $order_by=$request->get('order_by','id');
         $order_by_dir=$request->get('order_by_dir','asc');
         $currentOrder=$order_by.':'.$order_by_dir;
@@ -54,12 +54,12 @@ class UserController extends Controller
             $request->flash('users_search');
         }
         else{
-                
+
             $users=User::orderBy($order_by,$order_by_dir)->paginate(10);
         }
         return view('laradmin::cp.users',['users'=>$users,'currentOrder'=>$currentOrder]);
-       
-       
+
+
     }
 
     /**
@@ -94,7 +94,7 @@ class UserController extends Controller
             //'first_names'=>'nullable|max:255|string',
             //'last_name'=>'nullable|max:255|string',
             //'year_of_birth'=>'nullable|integer|max:10000',
-            'new_password' => 'required|string|min:6|confirmed|max:255',
+            'new_password' =>config('laradmin.rules.password'),
             //'gender'=>'nullable|string|max:10000',
             //'faith'=>'nullable|string|max:255',
             //'country'=>'nullable|string|max:255',
@@ -109,10 +109,10 @@ class UserController extends Controller
            //$user->gender=$request->gender;
            //$user->faith=$request->faith;
            //$user->country=$request->country;
- 
+
            $user->password=Hash::make($request->new_password);
            $user->save();
-           
+
            return redirect()->route('cp-user',$user->id)->with('success', 'User created successfully!');
     }
 
@@ -124,16 +124,16 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        
+
         $this->cpAuthorize();
 
         $this->authorize('view',$user);
 
         $user_groups=[];
         foreach ($user->userGroupMap as $ugm){
-           
+
             $user_groups[]=UserGroup::find($ugm->user_group_id);
-        }        
+        }
         //exit(var_dump($user_groups[0]->name));
         return view('laradmin::cp.user',compact('user','user_groups'));
     }
@@ -150,10 +150,10 @@ class UserController extends Controller
 
         $this->authorize('update',$user);
 
-        $countries=Lang::get('laradmin::list_of_countries');
-        $faiths=Lang::get('laradmin::list_of_faiths');
+        //$countries=Lang::get('laradmin::list_of_countries');
+        //$faiths=Lang::get('laradmin::list_of_faiths');
         //var_dump($faiths);exit();
-        return view('laradmin::cp.user_edit',compact('user','countries','faiths'));
+        return view('laradmin::cp.user_edit',compact('user'));
     }
 
     /**
@@ -174,11 +174,11 @@ class UserController extends Controller
             //'first_names'=>'nullable|max:255|string',
             //'last_name'=>'nullable|max:255|string',
             //'year_of_birth'=>'nullable|integer|max:10000',
-            'new_password' => 'nullable|string|min:6|confirmed|max:255',
+            //'new_password' =>config('laradmin.rules.password'),
             //'gender'=>'nullable|string|max:10000',
             //'faith'=>'nullable|string|max:255',
             //'country'=>'nullable|string|max:255',
-          ]);
+          ]); 
          // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
           //update the user
 
@@ -191,13 +191,21 @@ class UserController extends Controller
           //$user->faith=$request->faith;
           //$user->country=$request->country;
 
-          if(strcmp($request->new_password,''))$user->password=Hash::make($request->new_password);
+          if (strcmp($request->new_password, '')) {
+
+            // Validate for password
+            $this->validate($request, [
+                'new_password' =>config('laradmin.rules.password'),
+            ]);
+
+            $user->password=Hash::make($request->new_password);
+          }
           $user->save();
 
           return redirect()->route('cp-user',$user->id)->with('success', 'User updated!');
     }
 
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -210,9 +218,9 @@ class UserController extends Controller
         $this->cpAuthorize();
 
         $this->authorize('delete',$user);
-        
+
         foreach ($user->userGroupMap as $userGroupMap){
-            //NOTE:: open the next line if you want to delete the groups as well 
+            //NOTE:: open the next line if you want to delete the groups as well
             $userGroupMap->delete();
         }
         $user->hardDelete();
@@ -238,7 +246,7 @@ class UserController extends Controller
             //If the login user is authorised to delete the user then the user should be allowed to delete the user_group mappings
             if(!$user)continue;
             foreach ($user->userGroupMap as $userGroupMap){
-                //NOTE:: open the next line if you want to delete the groups as well 
+                //NOTE:: open the next line if you want to delete the groups as well
                 $userGroupMap->delete();//NOTE that databse level constrain may have taken care of this.
             }
             $i++;
@@ -246,7 +254,7 @@ class UserController extends Controller
         }
          if($i)
          return back()->with('success', $i.' user(s) sucessfully deleted');
-         else 
+         else
          return back()->with('info', 'Nothing was deleted');
      }
 
@@ -259,9 +267,9 @@ class UserController extends Controller
      function sendEmailConfirmation(User $user){
         $this->cpAuthorize();
 
-        $this->authorize('update',$user);//We just authorise this as an update      
+        $this->authorize('update',$user);//We just authorise this as an update
 
-        /* 
+        /*
         $confirmed=DB::table('confirmation')->where('user_id','=',$user->id)->where('type','=','email_confirmation')->delete();
 
         $key= str_random(40);
@@ -271,14 +279,14 @@ class UserController extends Controller
 
         \Illuminate\Support\Facades\Mail::to($user->email)
         ->send(new \App\Mail\Laradmin\UserConfirmation($user,$confirmationLink)); */
-        
+
         $sentEmail=$this->confirmEmailEmail($user);
 
         return back()->with('success','Confirmation email has been sent to '. $user->email.'.');
      }
 
      /**
-     * Accept the email of the specified user 
+     * Accept the email of the specified user
      *
      * @param  \App\User $user
      * @return \Illuminate\Http\Response
@@ -290,7 +298,7 @@ class UserController extends Controller
         // DB::table('confirmation')
         // ->where('user_id','=',$user->id)
         // ->where('type','=','email_confirmation')
-        // ->delete();//delete confirmation 
+        // ->delete();//delete confirmation
 
         // $user->status=1;
         // $user->save();
@@ -299,17 +307,17 @@ class UserController extends Controller
         }else{
             return back()->with('danger','There was a problem accepting Email ('. $user->email.') as confirmed');
         }
-        
+
      }
 
 
 
 
-   
 
-    
+
+
      /**
-     * Disable the specified user 
+     * Disable the specified user
      *
      * @param  \App\User $user
      * @return \Illuminate\Http\Response
@@ -319,7 +327,7 @@ class UserController extends Controller
         $this->authorize('update',$user);
 
         if($user->is_active==0){
-            return back()->with('warning','No change required'); 
+            return back()->with('warning','No change required');
         }
         $user->is_active=0;
         $user->save();
@@ -328,17 +336,17 @@ class UserController extends Controller
      }
 
      /**
-     * Enable the specified user 
+     * Enable the specified user
      *
      * @param  \App\User $user
      * @return \Illuminate\Http\Response
      */
      function enableUser(User $user){
         $this->cpAuthorize();
-        
+
         $this->authorize('update',$user);
         if($user->is_active==1){
-            return back()->with('warning','No change required'); 
+            return back()->with('warning','No change required');
         }
         $user->is_active=1;
         $user->save();

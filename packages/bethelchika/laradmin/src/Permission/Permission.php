@@ -268,6 +268,8 @@ class Permission
         return false;
     }
 
+    
+
     /**
      * Check if the specified user is disabled. Note that if the user is 
      * actually disabled then he/she might be forced to logout before 
@@ -282,6 +284,43 @@ class Permission
 
         if ($user->is_active==0){
             return true;
+        }
+        return false;
+    }
+
+    /** TODO: Untested function
+     * Checks if a user is member of a group with a given ID.
+     * 
+     * @param BethelChika\Laradmin\User $user
+     * @param integer $group_id
+     * @return boolean True if in group
+     */
+    public function isInGroup(User $user,$group_id){
+        $userGroups=$this->getUserGroups($user);
+        foreach($userGroups as $userGroup){
+            if ($userGroup->id==$group_id){
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    /** TODO: Untested function
+     * Checks if a given user is a member of a named group. Can serve as a role 
+     * checking functionality.
+     * 
+     * @param BethelChika\Laradmin\User $user
+     * @param string $group_name
+     * @return boolean True if in group
+     */
+    public function isMemberOf(User $user,$group_name){
+        $userGroups=$this->getUserGroups($user);
+        foreach($userGroups as $userGroup){
+            if (str_is($userGroup->name,$group_name)){
+                return true;
+            }
+
         }
         return false;
     }

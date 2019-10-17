@@ -19,10 +19,10 @@ trait EmailConfirmationEmail
 
         DB::table('confirmations')->where('user_id','=',$user->id)->where('type','=','email_confirmation')->delete();
 
-        $key= str_random(40);
+        $token= str_random(40);
         $now=\Carbon\Carbon::now();
-        DB::table('confirmations')->insert(['key'=>$key,'type'=>'email_confirmation','user_id'=>$user->id,'created_at'=>$now,'updated_at'=>$now]);
-        $confirmationLink= route('email-confirmation',[$user->email,$key]);
+        DB::table('confirmations')->insert(['token'=>$token,'type'=>'email_confirmation','user_id'=>$user->id,'created_at'=>$now,'updated_at'=>$now]);
+        $confirmationLink= route('email-confirmation',[$user->email,$token]);
 
         \Illuminate\Support\Facades\Mail::to($user->email)
         ->send(new UserConfirmation($user,$confirmationLink));

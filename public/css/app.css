@@ -10738,13 +10738,14 @@ ul {
   list-style-type: square;
 }
 
+.site-roof {
+  background-color: #f4f4f4;
+  position: relative;
+}
+
 .nav .external-link,
 .nav .custom-caret {
   font-size: 75%;
-}
-
-.navbar-default .navbar-nav > li > a {
-  color: #5b5b5b;
 }
 
 @media (min-width: 768px) {
@@ -10864,8 +10865,8 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   margin-bottom: 0px;
 }
 
-.main-nav .navbar-nav > .active > a {
-  font-weight: 500;
+.main-nav.navbar-default .navbar-nav > li > a {
+  color: #353535;
 }
 
 .main-nav.navbar-default {
@@ -10891,13 +10892,13 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
   font-weight: 500;
   color: #6b6b6b;
   display: inline-block;
-  padding: 0px 0px 1px 45px;
+  padding: 0px 0px 1px 10px;
   border-left: 0px solid;
   position: relative;
 }
 
 .main-nav .navbar-brand .sub-app-brand .sub-app-name:before {
-  /*  content:'';
+  /*    content:'';
   position:absolute;
   top:0;
   right:0;
@@ -10909,10 +10910,11 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 }
 
 @media only screen and (max-width: 1440px) {
-  /* Desktops and laptops ----------- */
+  /* Desktops and laptops :: TODO: why is this applied to only screen and max-width:1440px?-----------  */
 
   .main-nav li a {
     font-size: 13px;
+    font-weight: 500;
   }
 }
 
@@ -10937,6 +10939,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 .minor-nav li a {
   font-size: 13px;
+  font-weight: 400;
   border-bottom: 2px solid transparent;
 }
 
@@ -11681,6 +11684,35 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 
 .hero-content-box {
   padding: 15px;
+  width: 100%;
+}
+
+.hero-content-box.shade {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.section-primary .hero-content-box.shade {
+  background-color: rgba(74, 74, 127, 0.39);
+}
+
+.section-success .hero-content-box.shade {
+  background-color: rgba(0, 204, 102, 0.39);
+}
+
+.section-info .hero-content-box.shade {
+  background-color: rgba(126, 163, 204, 0.39);
+}
+
+.section-warning .hero-content-box.shade {
+  background-color: rgba(244, 162, 97, 0.39);
+}
+
+.section-danger .hero-content-box.shade {
+  background-color: rgba(237, 106, 90, 0.39);
+}
+
+.section-subtle .hero-content-box.shade {
+  background-color: rgba(244, 244, 244, 0.12);
 }
 
 @media (min-width: 768px) {
@@ -11931,7 +11963,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar {
 .mainbar aside .right h6 {
   color: #353535;
   margin-bottom: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
   font-weight: 400;
   line-height: 1.28;
 }
@@ -11968,6 +12000,8 @@ body.sidebar-white .sidebar {
 .sidebar h6 {
   font-weight: 400;
   color: #353535;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .sidebar .sidebar-title {
@@ -11992,8 +12026,8 @@ body.sidebar-white .sidebar {
 .sidebar ul li a {
   color: #585858;
   display: block;
-  font-weight: 400;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
 }
 
 body.sidebar-white .sidebar ul li a {
@@ -12010,6 +12044,10 @@ body.sidebar-white .sidebar ul li a {
   position: relative;
   font-weight: 700;
   color: #353535;
+}
+
+.sidebar li.has-children.active > a {
+  color: #4A4A7F;
 }
 
 .sidebar ul li.title {
@@ -12620,7 +12658,7 @@ nav.table-nav.navbar {
   padding-left: 0;
 }
 
-.breadcrumb.bg-transparent:before {
+.breadcrumb.bg-transparent li:first-of-type:before {
   font-family: 'Glyphicons Halflings';
   content: "\E021";
   display: inline-block;
@@ -12866,13 +12904,15 @@ body.has-sidebar .breadcrumb {
   background-color: #a5601b;
 }
 
-.btn-subtle {
+.btn-subtle,
+.cookie-consent .cookie-consent-agree {
   color: #353535;
   background-color: #f4f4f4;
   border-color: #353535;
 }
 
-.btn-subtle:hover {
+.btn-subtle:hover,
+.cookie-consent .cookie-consent-agree:hover {
   color: #353535;
   background-color: #fff;
   border-color: #353535;
@@ -14601,6 +14641,145 @@ article.page .featured-image-box .featured-image {
 
 .form-page fieldset .value {
   padding-right: 15px;
+}
+
+.cookie-consent {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: small;
+  text-align: center;
+}
+
+.cookie-consent .cookie-consent-message {
+  background-color: #f4f4f4;
+  color: #757575;
+}
+
+.social-feeds {
+  max-width: 600px;
+}
+
+.social-feeds .social-feed .twitter-feed {
+  background-color: #fff;
+  border-bottom-color: #757575;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.social-feeds .social-feed .twitter-feed .tweetlink {
+  font-size: 11px;
+  padding-top: 5px;
+}
+
+.social-feeds .social-feed .twitter-feed .imgalign {
+  float: left;
+  margin-right: 10px;
+  opacity: 1;
+}
+
+.social-feeds .social-feed .twitter-feed .imgalign:hover {
+  opacity: 0.5;
+}
+
+.social-feeds .social-feed .twitter-feed .title {
+  font-weight: bold;
+  padding-bottom: 15px;
+}
+
+.social-feeds .social-feed .twitter-feed .tweettext {
+  color: #353535;
+}
+
+.social-feeds .social-feed .twitter-feed .tweettext a {
+  color: #4A4A7F;
+}
+
+.social-feeds .social-feed .twitter-feed .tweettext a:hover {
+  color: #585858;
+  text-decoration: underline;
+}
+
+.social-feeds .social-feed .twitter-feed .tweettxts {
+  overflow: hidden;
+  line-height: 18px;
+}
+
+.social-feeds .social-feed .twitter-feed .tweet-author-name a {
+  color: #353535;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.social-feeds .social-feed .twitter-feed .tweet-author-name a:hover {
+  color: #585858;
+  text-decoration: none;
+}
+
+.social-feeds .social-feed .twitter-feed .tweet-author a {
+  color: #757575;
+  font-size: 14px;
+}
+
+.social-feeds .social-feed .twitter-feed .tweet-author a:hover {
+  color: #585858;
+  text-decoration: none;
+}
+
+.social-feeds .social-feed .twitter-feed .media-img-box {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.social-feeds .social-feed .twitter-feed .media-img-box img {
+  max-width: 100%;
+  height: auto;
+}
+
+.social-feeds .social-feed .twitter-feed .tweetlink a {
+  color: #757575;
+  font-size: 11px;
+}
+
+.social-feeds .social-feed .twitter-feed .tweetlink a:hover {
+  color: #585858;
+  text-decoration: none;
+}
+
+.laradmin-wp-comments-box .comment-wrapper .media-list .media img {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #e5e7e8;
+}
+
+.laradmin-wp-comments-box .write-comment textarea {
+  height: 40px;
+}
+
+.laradmin-wp-comments-box .text-content {
+  color: #353535;
+}
+
+.laradmin-wp-comments-box .reply-btn,
+.laradmin-wp-comments-box .replies-btn {
+  border: none;
+  background-color: transparent;
+  color: #4A4A7F;
+  font-size: 60%;
+}
+
+.laradmin-wp-comments-box .date {
+  font-size: 60%;
+}
+
+.section-primary .laradmin-wp-comments-box .comment-wrapper .media-list .media,
+.section-info .laradmin-wp-comments-box .comment-wrapper .media-list .media,
+.section-success .laradmin-wp-comments-box .comment-wrapper .media-list .media,
+.section-danger .laradmin-wp-comments-box .comment-wrapper .media-list .media,
+.section-warning .laradmin-wp-comments-box .comment-wrapper .media-list .media,
+.section-subtle .laradmin-wp-comments-box .comment-wrapper .media-list .media {
+  background-color: #fefefe;
+  padding: 15px;
 }
 
 /* Sticky footer styles

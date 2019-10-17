@@ -82,7 +82,7 @@
                         <div class="col-xs-6 col-md-3 text-right"><strong>Screen name</strong></div>
                         <div class="col-xs-6 col-md-9 ">{{$user->name}}</div>
                     </div>
-                    <div class="row">
+                    {{--  <div class="row">
                         <div class="col-xs-6 col-md-3 text-right"><strong>First names</strong></div>
                         <div class="col-xs-6 col-md-9 ">{{$user->first_names}}</div>
                     </div>
@@ -102,7 +102,7 @@
                     <div class="row">
                         <div class="col-xs-6 col-md-3 text-right"><strong>Faith</strong></div>
                         <div class="col-xs-6 col-md-9 ">{{ucfirst($user->faith)}}</div>
-                    </div>
+                    </div>  --}}
                 
                     <p class="text-right"><a href="{{route('cp-user-edit',$user->id)}}">Edit</a></p>
                     
@@ -119,7 +119,7 @@
                         <div class="col-xs-6 col-md-9 ">*******  <p class="text-right"><a href="{{route('cp-user-edit',$user->id)}}">Reset</a></p></div>
                     </div>
                     
-
+{{--  
                     <h4>Location</h4><hr class="hr">
 
                     <div class="row">
@@ -127,7 +127,7 @@
                         <div class="col-xs-6 col-md-9 ">{{ __( 'laradmin::list_of_countries.'.$user->country )}}</div>
                     </div>
                     
-                    <p class="text-right"><a href="{{route('cp-user-edit',$user->id)}}">Edit</a></p>
+                    <p class="text-right"><a href="{{route('cp-user-edit',$user->id)}}">Edit</a></p>  --}}
 
                     <h4>User group membership</h4><hr class="hr">
 

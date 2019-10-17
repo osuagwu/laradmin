@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3" >
                 <h1 class="heading-1 content-title text-center">What's happening?</h1>
-                @include('laradmin::user.partials.feed.feeds',['allow_fetch_on_scroll'=>'false', 'box_class'=>'flat-design'])
+                @include('laradmin::partials.feed.feeds',['allow_fetch_on_scroll'=>'false', 'box_class'=>'flat-design'])
             </div>
         </div>
     </div>

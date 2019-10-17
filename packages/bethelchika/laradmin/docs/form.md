@@ -185,7 +185,7 @@ The simplest way to render a form is to include the form view in blade:
 
 ### Fields
 If you want more control on how the form is rendered you can call the fields view yourself. Here is an example for the edit page of the form:
-```blade.php
+```html
 <form method="@if(str_is(strtolower($form->method),'get')){{'GET'}}@else{{'POST'}}@endif" action="{{$form->getEditLink()}}"
         @if($form->hasImageField($form->getFields())) enctype="multipart/form-data" @endif >
     

@@ -8,21 +8,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use BethelChika\Laradmin\Feed\FeedManager;
 use Illuminate\View\Factory as ViewFactory;
+use BethelChika\Laradmin\Asset\AssetManager;
 use BethelChika\Laradmin\Media\MediaManager;
 use Intervention\Image\ImageServiceProvider;
 use BethelChika\Laradmin\Notifications\Notice;
+use BethelChika\Laradmin\WP\WPServiceProvider;
+use BethelChika\Laradmin\Permission\Permission;
+use BethelChika\Laradmin\Content\ContentManager;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use BethelChika\Laradmin\Form\FormServiceProvider;
 use BethelChika\Laradmin\Menu\MenuServiceProvider;
+use BethelChika\Laradmin\Plugin\PluginServiceProvider;
 use BethelChika\Laradmin\Providers\AuthServiceProvider;
 use BethelChika\Laradmin\Providers\EventServiceProvider;
 use BethelChika\Laradmin\Http\Middleware\CheckReAuthentication;
 use BethelChika\Laradmin\Providers\BladeDirectivesServiceProvider;
-use BethelChika\Laradmin\Asset\AssetManager;
-use BethelChika\Laradmin\Content\ContentManager;
-use BethelChika\Laradmin\Plugin\PluginServiceProvider;
-use BethelChika\Laradmin\WP\WPServiceProvider;
-use BethelChika\Laradmin\Form\FormServiceProvider;
-use BethelChika\Laradmin\Permission\Permission;
+use BethelChika\Laradmin\Theme\DefaultTheme;
 
 class LaradminServiceProvider extends ServiceProvider
 {
@@ -41,7 +43,7 @@ class LaradminServiceProvider extends ServiceProvider
  
          //Register Laradmin singleton
          $this->app->singleton('laradmin', function ($app) {
-            return new Laradmin(new MediaManager($app->make('filesystem')),new FeedManager,new AssetManager, new ContentManager,new Permission );
+            return new Laradmin(new MediaManager($app->make('filesystem')),new FeedManager,new AssetManager, new ContentManager,new Permission, new DefaultTheme );
         });
         $this->app->alias('laradmin','BethelChika\Laradmin\Laradmin');
 
@@ -65,6 +67,7 @@ class LaradminServiceProvider extends ServiceProvider
         // Register form service provider
         $this->app->register(FormServiceProvider::class);
         
+
         
     }
 
@@ -78,6 +81,7 @@ class LaradminServiceProvider extends ServiceProvider
     {
         
 
+        
         //check if a user  was deactivated and  auto reactivate him
         if(Auth::check()){
             if(Auth::user()->autoReactivate()){
@@ -93,7 +97,9 @@ class LaradminServiceProvider extends ServiceProvider
 
         // Register User Fieldables
         $laradmin->formManager->registerFieldable('user_settings','personal',\BethelChika\Laradmin\Tools\Forms\ProfileFieldable::class);
-        $laradmin->formManager->registerFieldable('user_settings','address',\BethelChika\Laradmin\Tools\Forms\ProfileContactsFieldable::class);
+        //$laradmin->formManager->registerFieldable('user_settings','address',\BethelChika\Laradmin\Tools\Forms\ProfileContactsFieldable::class);
+        $laradmin->formManager->registerFieldable('user_settings','preference',\BethelChika\Laradmin\Tools\Forms\ProfilePreferenceFieldable::class);
+        
         
         
 
@@ -106,7 +112,8 @@ class LaradminServiceProvider extends ServiceProvider
         $view->share('laradmin', $laradmin);
 
 
-        //Check if this user has login restrictions and prevent him from login in
+        
+        // Check if this user has login restrictions and prevent him from login in
         if(Auth::check()){
             if(Auth::user()->hasLoginRestrictions()){
                 //Auth::logout();
@@ -114,9 +121,13 @@ class LaradminServiceProvider extends ServiceProvider
             }
         }
 
-
+        
         
 
+        // Cookie consent: Let us not encript the consent cookie
+        $this->app->resolving(EncryptCookies::class, function (EncryptCookies $encryptCookies) {
+            $encryptCookies->disableFor(config('laradmin.cookie_consent.name'));
+        });
         
 
         
@@ -124,23 +135,26 @@ class LaradminServiceProvider extends ServiceProvider
         
         $laradminPath=dirname(__DIR__);
 
-        // Middlewares
+        // Route Middlewares
         $router->aliasMiddleware('re-auth',CheckReAuthentication::class);
         $router->aliasMiddleware('pre-authorise','BethelChika\Laradmin\Permission\Http\Middleware\PreAuthorise');
-
         
-        // Register Global Middleware
-        //$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
-        //$kernel->pushMiddleware('BethelChika\Laradmin\Http\Middleware\Url');
-        //$kernel->pushMiddleware('BethelChika\Laradmin\Http\Middleware\Route');
-
-
+        // Middleware groups
+        $router->pushMiddlewareToGroup('web','BethelChika\Laradmin\AuthVerification\Http\Middleware\AuthVerification');
+        $router->pushMiddlewareToGroup('web','BethelChika\Laradmin\Http\Middleware\Preference');
         
         
         // Load route
         $this->loadRoutesFrom($laradminPath.'/routes/web.php');
 
-       
+        //dd($_SERVER);
+        // Detect when we are in admin and load the cp routes
+        // NOTE: If this gives problem just merge the cp_wep.php into web.php or just load cp_web.php all the time
+        if(strpos($_SERVER['REQUEST_URI'],'/cp/')===0 or $this->app->runningInConsole()){// NOTE: this prohibits the use of 'domain/cp' i.e with the trailing slash '/'
+            $this->loadRoutesFrom($laradminPath.'/routes/cp_web.php');
+        }
+        
+
 
 
         // Translations
@@ -156,7 +170,7 @@ class LaradminServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             // Publish confi
             $this->publishes(
-                [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')], 'laradmin_config'
+                [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')], 'laradmin-config'
             );
             
             // Load migrations
@@ -164,18 +178,18 @@ class LaradminServiceProvider extends ServiceProvider
 
             $this->publishes([
                 $laradminPath.'/resources/lang' => resource_path('lang/vendor/laradmin'),
-            ],'laradmin_lang');
+            ],'laradmin-lang');
 
 
             $this->publishes([
                 $laradminPath.'/resources/views' => resource_path('views/vendor/laradmin'),
-            ], 'laradmin_view');
+            ], 'laradmin-view');
             
 
             // Assets
             $this->publishes([
                 $laradminPath.'/publishable/assets' => public_path('vendor/laradmin'),
-            ], 'laradmin_asset');
+            ], 'laradmin-asset');
         }
 
 

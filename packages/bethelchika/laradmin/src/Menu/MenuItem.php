@@ -251,8 +251,10 @@ class MenuItem extends NavigationItem
      */
     public function isExternalLink(){
         $link=$this->getLink();
+        $links_no_protocol=str_replace(['http://','https://','ftp://'],'',[$link,env('APP_URL')]);
+
         return (strpos($link,'http://')===0 or strpos($link,'https://')===0 or strpos($link,'ftp://')===0)
-                and !str_contains($link,env('APP_URL'));
+                and !str_contains($links_no_protocol[0],$links_no_protocol[1]);
     }
 
     /**

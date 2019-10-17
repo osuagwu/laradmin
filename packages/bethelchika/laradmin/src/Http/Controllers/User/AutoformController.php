@@ -7,7 +7,7 @@ use BethelChika\Laradmin\User;
 use Illuminate\Http\Request;
 
 use BethelChika\Laradmin\Http\Controllers\Controller;
-use BethelChika\Laradmin\Traits\ReAuthController;
+
 use BethelChika\Laradmin\Laradmin;
 
 use BethelChika\Laradmin\Form\Form;

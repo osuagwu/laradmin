@@ -34,6 +34,6 @@ class LinkEmailConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->markdown('laradmin::user.social_user.emails.link_email_confirmation');
+        return $this->markdown('laradmin::user.social.user.emails.link_email_confirmation');
     }
 }

@@ -334,7 +334,8 @@ class UserMessageController extends Controller
         /*
             Note that it is possible for a malicious user to check if an email is registered by trying to
             send a message to the user. We can prevent this by returning a generic message regardless of
-            whether the email supplied is registered or not.
+            whether the email supplied is registered or not. But we could also prevent this by just 
+            preventing know admin users from sending email to users using the users' email.
         */
         $userNotFoundErrorMessage=false;
 

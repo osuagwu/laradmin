@@ -1,1 +1,1 @@
-{"installed":[{"tag":"bethelchika\/isthisfake","enabled":0,"plugable":"\\BethelChika\\IsThisFake\\IsThisFakePlugable","psr4":{"\\BethelChika\\IsThisFake\\":"src\/"},"updating":0},{"tag":"bethelchika\/comicpic","enabled":1,"plugable":"\\BethelChika\\Comicpic\\ComicpicPlugable","psr4":{"\\BethelChika\\Comicpic\\":"src\/"},"updating":0}]}
+{"installed":[{"tag":"bethelchika\/isthisfake","enabled":0,"plugable":"\\BethelChika\\IsThisFake\\IsThisFakePlugable","psr4":{"\\BethelChika\\IsThisFake\\":"src\/"},"updating":0}]}

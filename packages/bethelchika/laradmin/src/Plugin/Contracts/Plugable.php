@@ -67,6 +67,8 @@ interface Plugable{
      * service provider so do not do here what you would not do in a service
      * provider register method. You may only need to register your plugin
      * service provider here.
+     * 
+     * TODO: When an error occurs in this method, it is only recorded in the log but not displayed. 
      *
      * @param Application $app
      * @return void

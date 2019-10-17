@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use BethelChika\Laradmin\Social\SocialUserManager;
 use BethelChika\Laradmin\Social\Models\SocialUser;
-use BethelChika\Laradmin\Traits\ReAuthController;
+use BethelChika\Laradmin\Http\Controllers\User\Traits\ReAuthController;
 use Illuminate\Support\Facades\Log;
 use BethelChika\Laradmin\Laradmin;
 
@@ -50,7 +50,7 @@ class SocialUserController extends Controller
 
         $socialUsers=$user->socialUsers()->where('provider','!=','email')->get();
         $pageTitle='Social user account';
-        return view('laradmin::user.social_user.index',compact('socialUsers','pageTitle'));
+        return view('laradmin::user.social.user.index',compact('socialUsers','pageTitle'));
     }
 
   
@@ -216,7 +216,7 @@ class SocialUserController extends Controller
         $this->laradmin->assetManager->registerBodyClass('sidebar-white') ;
         
         $pageTitle='External accounts';
-        return view('laradmin::user.social_user.external_accounts',compact('pageTitle'));
+        return view('laradmin::user.social.user.external_accounts',compact('pageTitle'));
     }
 
 }

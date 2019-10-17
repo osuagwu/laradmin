@@ -27,12 +27,19 @@ class EventServiceProvider extends ServiceProvider
         'BethelChika\Laradmin\Events\AuthRestrict' => [
             'BethelChika\Laradmin\Listeners\OnAuthRestrict',
         ],
+        'Illuminate\Auth\Events\Registered' => [
+            'BethelChika\Laradmin\Listeners\OnRegistered',
+        ],
         'Illuminate\Auth\Events\Login' => [
             'BethelChika\Laradmin\Listeners\OnSuccessfulLogin',
+        ],
+        'Illuminate\Auth\Events\Failed' => [
+            'BethelChika\Laradmin\Listeners\OnFailedLogin',
         ],
         'Illuminate\Auth\Events\Logout' => [
             'BethelChika\Laradmin\Listeners\OnSuccessfulLogout',
         ],
+        
     ];
 
     /**

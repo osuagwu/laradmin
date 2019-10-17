@@ -86,7 +86,7 @@ class FeedManager{//TODO: SHould convert entire class to static, this should not
      * Gets formatted dynamic feeds. These are feeds the will be supplied by getFormattedFeeds of feedables
      *
      * @param integer $limit
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getFormattedDynamicFeeds($limit=10){
         $feeds=new Collection;
@@ -119,19 +119,20 @@ class FeedManager{//TODO: SHould convert entire class to static, this should not
     }
 
     /**
-     * Get Dynamic feeds. These are feeds the will be supplied by feedables
+     * Get Dynamic feeds. These are feeds that will be supplied by feedables
      *
      * @param integer $limit
      * @return array
      */
     private function getDynamicFeeds($limit=1){
+        $feeds_export=[];
         /////////////////////////////////////////////////////////////////
         $prob=self::$dynamicProbability;//we only try to return something $prob% of the times else we return empty array b/c we dont want too many temp feeds which can be ads
         $r=rand (1,100);
         if($prob>=$r){
             
         }else{
-            return [];
+            return  $feeds_export;
         }
         $feeds=new Collection;
        
@@ -144,7 +145,7 @@ class FeedManager{//TODO: SHould convert entire class to static, this should not
         $feedables=$this->getFeedables()->shuffle();//Shuffle to randomise which feedable is selected first
 
         if (!$feedables->count()){
-            return $feeds;
+            return $feeds_export;
         }
         
         $l=ceil($this->limit/$feedables->count());
@@ -158,7 +159,7 @@ class FeedManager{//TODO: SHould convert entire class to static, this should not
             }
         }
         
-        $feeds_export=[];
+        
         foreach($feeds as $feed){
             $temp['typeString']=$feed->getTypes()[$feed->type];
             foreach(self::$exportFields as $ef){

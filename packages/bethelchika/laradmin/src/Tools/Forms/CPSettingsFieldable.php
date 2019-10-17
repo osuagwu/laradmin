@@ -15,8 +15,6 @@ class CPSettingsFieldable implements Fieldable{
      */
     public function handle($pack,$tag,Field $field){
         
-        //dd($field);
-        //dd(\Auth::user());
         return 1;
     }
 
@@ -48,7 +46,12 @@ class CPSettingsFieldable implements Fieldable{
                     if(is_array($v)){
                         $v_temp='';
                         foreach($v as $k2=>$v2){
-                            $v_temp=$v_temp.'; '.$k2.':'.$v2;
+                            if(is_array($v2)){
+                                $v_temp=$v_temp.'; '.$k2.':Array (see config for details)';
+                            }else{
+                                $v_temp=$v_temp.'; '.$k2.':'.$v2;
+                            }
+                            
                         }
                         $v=trim($v_temp,';');
                     }

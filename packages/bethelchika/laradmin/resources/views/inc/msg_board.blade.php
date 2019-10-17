@@ -17,7 +17,7 @@
     @if(Session::has($msg))
         <div class="alert alert-{{ $msg }} alert-dismissable fade in padding-top-x3">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            @if(!strcmp($msg,'success'))<h4><i class="fas fa-check"> </i> That is nice; it actually worked</h4>@endif  
+            @if(!strcmp($msg,'success'))<h4><i class="fas fa-check"> </i> All is good</h4>@endif  
             @if(!strcmp($msg,'danger'))<h4><i class="fas fa-times"> </i> Something went wrong</h4>@endif
             @if(!strcmp($msg,'warning'))<h4><i class="fas fa-exclamation-triangle"> </i> Something is not right</h4>@endif
             @if(!strcmp($msg,'info'))<h4><i class="fas fa-info-circle"> </i> We have information</h4>@endif

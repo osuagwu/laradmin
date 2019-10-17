@@ -61,7 +61,7 @@
                 </nav>
                 
             </div>
-
+        
             <h6 class="padding-top-x7 padding-bottom-x3 ">
                 Blog and latest news
             </h6>
@@ -70,7 +70,7 @@
                 <div class="blog-posts blog-posts-h0" >
                     @if($posts->count())
                         @foreach($posts as $post)
-                            @include('laradmin::user.wp.partials.blog_post',['post'=>$post,'class'=>'flat blog-post-sm v0','summary'=>1])
+                            @include($laradmin->theme->defaultFrom().'wp.partials.blog_post',['post'=>$post,'class'=>'flat blog-post-sm v0','summary'=>1])
                         @endforeach
                     @else
                         <p class="alert alert-warning"> No post</p>
@@ -79,6 +79,21 @@
             </div>
 
 
+
+            @if(config('laradmin.social_feeds.limit'))
+            <h6 class="padding-top-x7 padding-bottom-x3 ">
+                    Social feeds
+                </h6>
+                <div class="sub-content with-padding no-border no-elevation">
+                    @include($laradmin->theme->defaultFrom().'social.feed.feeds')
+                    
+                </div>
+            @endif
+
+
+           
+
+            
 
 
             
@@ -92,7 +107,7 @@
                         <div class="blog-listing" >
                             @if($posts->count())
                                 @foreach($posts as $post)
-                                    @include('laradmin::user.wp.partials.blog_post',['post'=>$post,'class'=>'flat'])
+                                    @include($laradmin->theme->defaultFrom().'wp.partials.blog_post',['post'=>$post,'class'=>'flat'])
                                 @endforeach
                             @else
                                 <p class="alert alert-warning"> No post</p>
@@ -108,8 +123,19 @@
                 Feeds
             </h6>
             <div>
-                @include('laradmin::user.partials.feed.feeds',['allow_fetch_on_scroll'=>'false','box_class'=>'flat-design no-border'])
+                @include('laradmin::partials.feed.feeds',['allow_fetch_on_scroll'=>'false','box_class'=>'flat-design no-border'])
             </div>
+
+            @if(config('services.facebook.page_url'))
+            <h6 class="padding-top-x7 padding-bottom-x3 ">
+                Facebook
+            </h6>
+            <div class="sub-content with-padding no-border no-elevation">
+                @include($laradmin->theme->defaultFrom().'social.inc.facebook_page',['page_name'=>'Laradmin'])
+                
+            </div>
+            @endif
+
         </div>
         
     </div>

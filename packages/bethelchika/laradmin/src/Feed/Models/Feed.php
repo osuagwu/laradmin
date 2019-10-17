@@ -93,9 +93,8 @@ class Feed extends Model{
         if($this->created_at){
             $jdate=json_decode(json_encode($this->created_at));
             $date['timestamp'] =$this->created_at->timestamp;
-            $date['date'] =$jdate->date;
-            $date['timezone']=$jdate->timezone;
-            $data['timezone_type']=$jdate->timezone_type;
+            $date['date'] =$this->created_at->format('M, y');
+            $date['timezone']=$this->created_at->timezone->getName();
         }
         return $date;
     }

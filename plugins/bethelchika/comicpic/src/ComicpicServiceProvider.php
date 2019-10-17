@@ -101,12 +101,12 @@ class ComicpicServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 $path.'/resources/views' => resource_path('views/vendor/comicpic'),
-            ],'laradmin_view'); 
+            ],'laradmin-view'); 
 
             // Assets
             $this->publishes([
                 $path.'/publishable' => public_path('vendor/comicpic'),
-            ], 'laradmin_asset');
+            ], 'laradmin-asset');
 
             // Load migrations
             $this->loadMigrationsFrom($path.'/database/migrations');

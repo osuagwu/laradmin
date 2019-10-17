@@ -18,7 +18,8 @@
 </head>
 <body class="comicpic og">
 <!--Facebook social button stuff-->
-<div id="fb-root"></div>
+@include($laradmin->theme->defaultFrom().'social.inc.facebook_js_sdk')
+{{--  <div id="fb-root"></div>
     <script>(function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
@@ -26,7 +27,8 @@
         js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0&appId=1637625109865347&autoLogAppEvents=1';
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
-    </script>
+    </script>  --}}
+
 
     <div class="og-btns">
         <div class="fb-like" data-href="{{url('/comicpic/show/'.$comicpic->id)}}" data-width="47" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>

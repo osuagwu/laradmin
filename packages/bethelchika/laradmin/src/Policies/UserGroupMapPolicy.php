@@ -92,7 +92,7 @@ class UserGroupMapPolicy
         $m=$this->modelCheckHelper($user,'update',$userToMap);
 
         if($r and $m){
-            //Do not allow the group mapping of super to be alttered
+            //Do not allow the group mapping of super to be altered
             return !($user->getSuperId()==$userToMap->id);
         }else{
             return false;

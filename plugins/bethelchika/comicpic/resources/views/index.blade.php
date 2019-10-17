@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('laradmin::user.layouts.app')
 @include('comicpic::scripts')
 @section('content')
 <section class="section section-primary  section-title section-diffuse section-light-bg">

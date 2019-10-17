@@ -166,8 +166,8 @@ class SocialUserManager{
         }
         
         if($su){
-            $linkEmailManager=new LinkEmailManager;
-            $isConfirmed=$linkEmailManager->isEmailConfirmed($su);//Note: Confirmation is unneccessary here b/c Social accounts are by definition confirmed
+            //$linkEmailManager=new LinkEmailManager;
+            $isConfirmed=$su->isEmailConfirmed();//Note: Confirmation is unneccessary here b/c Social accounts are by definition confirmed
 
             if($isConfirmed  and !$su->user->is($user)){//stop if this acoount has been confirmed by another person
                 return -1;//the associated email to the social account has been confirmed by another user.
@@ -199,8 +199,8 @@ class SocialUserManager{
             }
         }
         if($su){
-            $linkEmailManager=new LinkEmailManager;
-            $isConfirmed=$linkEmailManager->isEmailConfirmed($su);
+            //$linkEmailManager=new LinkEmailManager;
+            $isConfirmed=$su->isEmailConfirmed();
 
             if($isConfirmed  and !$su->user->is($user)){//stop if this acoount has been confirmed by another person
                 return -1;//the associated email to the social account has been confirmed by another user.
@@ -304,7 +304,8 @@ class SocialUserManager{
     }
 
     /**
-     * Registeres a social user in the User model. TODO: This funtion to moved to user model or its traits, this might be better moving only the $user->save() function below
+     * Registeres a social user in the User model. 
+     * TODO: Only a suggestion: Move this funtion to user model or its traits, this might be better moving only the $user->save() function below
      *
      * @param SocialUser $socialUser
      * @return User
@@ -320,7 +321,9 @@ class SocialUserManager{
         //$user->password=bcrypt(str_random(40));
         //$user->is_password_auto_gen=1;
                                 
-        $user->save();// TODO: This should be done by passing temp user to a function in the user model. This is to avoid issues when the fields in the user models change, But it might be better to just move the entire function as stated above
+        $user->saveAsRegistration();
+ 
+
         return $user;
         
 
@@ -382,8 +385,8 @@ class SocialUserManager{
 
         if($su){
             
-            $linkEmailManager=new LinkEmailManager;
-            $isConfirmed=$linkEmailManager->isEmailConfirmed($su);//FIXME: this will lead to an error
+            //$linkEmailManager=new LinkEmailManager;
+            $isConfirmed=$su->isEmailConfirmed();//FIXME: this will lead to an error
             if($isConfirmed and $this->interProviderEmailAccess){
                 return $this->linkSocialUser($socialUser,$su->user);
             }else{
@@ -411,8 +414,8 @@ class SocialUserManager{
         }
         
         if($su){            
-            $linkEmailManager=new LinkEmailManager;
-            $isConfirmed=$linkEmailManager->isEmailConfirmed($su);
+            //$linkEmailManager=new LinkEmailManager;
+            $isConfirmed=$su->isEmailConfirmed();
             if(!$isConfirmed){
                 //SHould we release the email since it is unconfirmed
                 if($this->releaseUnconfirmedEmail){

@@ -58,7 +58,7 @@ class SocialUserLinkEmailController extends Controller
 
         $pageTitle='Linked email addresses';
 
-        return view('laradmin::user.social_user.link_email_index',compact('socialUsers','pageTitle'));
+        return view('laradmin::user.social.user.link_email_index',compact('socialUsers','pageTitle'));
     }
 
     public function store(Request $request){
@@ -123,8 +123,8 @@ class SocialUserLinkEmailController extends Controller
 
     }
 
-    public function linkEmailConfirmation(SocialUser $socialUser,$key){
-        $re=$this->linkEmailManager->linkEmailConfirmation($socialUser,$key);
+    public function linkEmailConfirmation(SocialUser $socialUser,$token){
+        $re=$this->linkEmailManager->linkEmailConfirmation($socialUser,$token);
 
         if(Auth::check()){
             if($re){
@@ -137,10 +137,10 @@ class SocialUserLinkEmailController extends Controller
 
             if($re){
                 session()->flash("success",'Email confirmed');
-                return view('laradmin::user.social_user.link_email_confirmation_result',compact('pageTitle'));
+                return view('laradmin::user.social.user.link_email_confirmation_result',compact('pageTitle'));
             }{
                 session()->flash('danger','There was an unspecified error. Please try again.');
-                return view('laradmin::user.social_user.link_email_confirmation_result',compact('pageTitle'));
+                return view('laradmin::user.social.user.link_email_confirmation_result',compact('pageTitle'));
             }
             
         }

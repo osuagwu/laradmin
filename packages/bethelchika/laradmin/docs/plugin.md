@@ -11,7 +11,7 @@ $pluginmanager=$laradmin->pluginManager;
 ## Configuration.
 The default plugin folder is /plugins relative to application root. The folder can be changed by changing Laradmin config 'plugins_path' or setting the 'LARADMIN_PLUGINS_PATH' in env file. Set these to empty string to use the default path.
 
-## Installing  and unintalling a plugin
+## Installing  and uninstalling a plugin
 Copy the plugin folder to the plugin folder. Login to the Laradmin admin area, from the sidebar select plugins under General and follow the process.
 
 
@@ -81,7 +81,7 @@ return $pluginmanager->adminView(....) ;
 ```
 
 ### User settings page
-In addition to creating admin pages for a plugin, you can create also a user settings page.The following are required to create a user settinsg page:
+In addition to creating admin pages for a plugin, you can create also a user settings page.The following are required to create a user settings page:
 - create a menu item with parent tag of 'user_settings', e.g in the boot method of your service provider. see menu documentation for how to create a menu. TODO: Note that because the rest of the menu items are loaded later, your menu will be first on the list; This should be fixed in the future.
 - Add a corresponding Laravel route to the menu.
 - Create a controller  and method for the route. 
@@ -91,10 +91,42 @@ return $pluginmanager->userView(....) ;
 ```
 - Done.
 
-A few things to note: When the plugin has php error, the whole page will break because they is not processed separatly. The view of the plugin is rendered as part of the user settings page which already is wrapped with the '.container(-fluid)' css class of Bootstrap, so no need to add another one; you can just use 'row's and 'col's css classes as normal. The the view content of the plugin is also wrapped with the '.mainbar' css class which add content padding tot he content as well as display it on the right side of sidebar. So if you want to use the standard '.section' css class inside your view and want the section to offset the content padding of '.mainbar' then you can add the following css classes to the '.section' 
+A few things to note: When the plugin has php error, the whole page will break because they are not processed separately. The view of the plugin is rendered as part of the user settings page which already is wrapped with the '.container(-fluid)' css class of Bootstrap, so do not add another one; you can just use 'row's and 'col's css classes as normal. The the view content of the plugin is also wrapped with the '.mainbar' css class which add content padding to he content as well as display it on the right side of sidebar. So if you want to use the standard '.section' css class inside your view and want the section to offset the content padding of '.mainbar' then you can add the following css classes to the '.section' 
 - 'section-offset-mainbar-top' : to offset the top margin
 - 'section-offset-mainbar-sides' : to offset the left and right margins
-There are offcourse not neccessary.
+These are of course not necessary.
 
 ### Plugin image
 You can specify an image for your plugin. The best size should be at least 150x150 pixels. You should keep the file size small. The file should be saved as img.jpg in your plugin root directory.
+
+## Themes
+Themes are special plugins. Basically a plugin is used to drive a theme. But a Theme itself is a class that extends `\BethelChika\Laradmin\Theme\Contracts\Theme`.  An example of a Theme is 
+`\BethelChika\Laradmin\Theme\DefaultTheme`;
+
+You should override the `name` and the `from` properties of  parent theme.
+*  `name` The name of the theme
+* `from` The base directory location of views. See `\BethelChika\Laradmin\Theme\Contracts\Theme` for the how to define it. You can set to empty string if the base location is at */resources/views* of Laravel.
+
+An example theme call Ulooma:
+```php
+use BethelChika\Laradmin\Theme\Contracts\Theme;
+
+class Ulooma extends Theme{
+    public function __construct(){
+        $this->name='Ulooma';
+        $this->from='ulooma::'; 
+    }
+}
+
+```
+
+To apply the theme, assign it to 
+```php
+app('laradmin')->theme=new Ulooma;
+```
+This can be done in the `boot` method of the driving plugin service provider.
+
+Also use the plugin service provider `boot` method to register the views to corresspone the thr `from` property above.
+```php
+$this->loadViewsFrom('path', 'ulooma');
+```

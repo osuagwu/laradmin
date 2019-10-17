@@ -124,7 +124,7 @@ class PreAuthorise
      */
     private function authoriseRoute(){
         $route=app('router')->current();
-        
+       
         //Check route
         $source_id=Source::getRouteSourceId($route);
         $source_type='route';
@@ -136,7 +136,7 @@ class PreAuthorise
                  abort(403,'You must login to access the request.');
              }
              $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
-         }
+         } 
 
          // Now do permission
         if($this->perm->isDisallowed($user,$source_type,$source_id,'read')){
@@ -162,6 +162,7 @@ class PreAuthorise
             if($this->perm->hasDenyEntry($source_type,$source_id,'read')){
                 abort(403,'You must login to access the request.');
             }
+             
             $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
         }
 

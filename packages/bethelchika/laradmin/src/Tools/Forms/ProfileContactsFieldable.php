@@ -6,6 +6,10 @@ use BethelChika\Laradmin\Form\Field;
 use BethelChika\Laradmin\Form\Group;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * NOTE: UNUSED: This Fieldable class can be used to provide fields for address. But is not currently used in Laradmin.
+ */
+
 class ProfileContactsFieldable implements Fieldable{
 /**
      * 
@@ -17,8 +21,8 @@ class ProfileContactsFieldable implements Fieldable{
         $user=Auth::user();
         switch($field->name){
             case 'country':
-            $user->country=$field->value;
-            $user->save();
+                $user->country=$field->value;
+                $user->save();
         }
         
         return 1;

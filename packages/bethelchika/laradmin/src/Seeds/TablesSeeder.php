@@ -6,6 +6,7 @@ use BethelChika\Laradmin\UserGroup;
 use BethelChika\Laradmin\UserGroupMap;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use BethelChika\Laradmin\SecurityQuestion;
 
 class TablesSeeder extends Seeder {
 
@@ -52,28 +53,30 @@ class TablesSeeder extends Seeder {
         //DB::table('users')->delete(); // Open this to wipe table first
         $users=[];
             // #1 Control Panel (system)
-            $users['cp']=User::create(['email' => 'cp@webferendum.com',
+            $users['cp']=User::create(['email' => 'cp@localhost',
                         'name'=>'Control Panel',
                         'is_active'=>1,
                         'password'=>bcrypt(str_random(40)),
             ]);
 
             // #2 Super user
-            $users['super']=User::create(['email' => 'super@webferendum.com',
+            $users['super']=User::create(['email' => 'super@localhost',
                         'name'=>'Super',
                         'is_active'=>1,
                         'password'=>bcrypt('super'),
                         ]);
+            $users['super']->status=1;
+            $users['super']->save();
 
             // #3 admin User
-            $users['admin']=User::create(['email' => 'admin@webferendum.com',
+            $users['admin']=User::create(['email' => 'admin@localhost',
                         'name'=>'Administrator',
                         'is_active'=>1,
                         'password'=>bcrypt('admin'),
                         ]);
 
             // #4 Power user a
-            $users['power']=User::create(['email' => 'powera@naemail.com',
+            $users['power']=User::create(['email' => 'powera@localhost',
                         'name'=>'Power User a',
                         'is_active'=>0,
                         'password'=>bcrypt('powera'),
@@ -82,7 +85,7 @@ class TablesSeeder extends Seeder {
            
 
             // #5 Guest user, any person who visits the site without login in
-            $users['guest']=User::create(['email' => 'guest'.str_random(5).'@naemail.com',
+            $users['guest']=User::create(['email' => 'guest'.str_random(5).'@localhost',
                         'name'=>'Guest user',
                         'is_active'=>1,
                         'password'=>bcrypt(str_random(40)),
@@ -90,14 +93,14 @@ class TablesSeeder extends Seeder {
 
 
             // #6 dummy user a
-            $users['usera']=User::create(['email' => 'usera@gmail.com',
+            $users['usera']=User::create(['email' => 'usera@localhost',
                         'name'=>'Dummy User a',
                         'is_active'=>0,
                         'password'=>bcrypt('usera'),
                         ]);
 
             // #7 dummy user b
-            $users['userb']=User::create(['email' => 'userb@gmail.com',
+            $users['userb']=User::create(['email' => 'userb@localhost',
                         'name'=>'Dummy User b',
                         'is_active'=>0,
                         'password'=>bcrypt('userb'),
@@ -138,11 +141,38 @@ class TablesSeeder extends Seeder {
                     
         $this->command->info('User_group_maps table seeded!');
     }
+
+
+
+    private function seedSecurityQuestions()
+    {
+        DB::table('security_questions')->delete();
+
+        SecurityQuestion::create(['question' => 'What is the name of your favourite musical artist?'
+        ]);
+
+        SecurityQuestion::create(['question' => 'What is the name of your favourite teacher?'
+        ]);
+
+        SecurityQuestion::create(['question' => 'What is the name of your pet?'
+        ]);
+
+        SecurityQuestion::create(['question' => 'Where is your home town?'
+        ]);
+
+        $this->command->info('security_questions table seeded!');
+    }
+
+
+
+
     public function run()
     {
         $userGroups=$this->seedUserGroups();
         $users=$this->seedUsers();
         $this->seedUserGroupMaps($users,$userGroups);
+
+        $this->seedSecurityQuestions();
 
        
 
@@ -156,7 +186,7 @@ class TablesSeeder extends Seeder {
             $this->command->info(' LARADMIN_ADMIN_USERGROUP_ID='.$userGroups['admin_users']->id);
         }
         if($users['cp']->id !=config('laradmin.cp_id',1)){
-            $this->command->info(' LARADMIN_CP_ID'.$users['cp']->id);
+            $this->command->info(' LARADMIN_CP_ID='.$users['cp']->id);
         }
         if($users['super']->id !=config('laradmin.super_id',2)){
             $this->command->info(' LARADMIN_SUPER_ID='.$users['super']->id);

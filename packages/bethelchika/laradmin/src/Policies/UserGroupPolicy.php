@@ -100,7 +100,7 @@ class UserGroupPolicy
 
 
         if($r and $m){
-            //Do not allow the group mapping for Admin user group to be altered
+            //Do not allow the group details for Admin user group to be altered
             return !($user->getAdminUserGroupId()==$userGroup->id);
         }else{
             return false;

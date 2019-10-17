@@ -73,11 +73,15 @@ class Source extends Model
                         $_tables= \DB::connection($con)->select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
                         break;
                     default:
-                        continue;
+                        
                         //return view('laradmin::cp.sources', compact('tables'))->with('warning',' Could not list tables. Unknown database: '.env('DB_CONNECTION'));
                 }
             }catch(\Illuminate\Database\QueryException $qex){
                 //$with_exception[]=$con;
+            }
+            
+            if (!count($_tables)) {
+                continue;
             }
 
             //attach connection to each table

@@ -213,6 +213,12 @@ ul{
     
 }
 
+.site-roof{
+    background-color: $brand-subtle;
+    position:relative;
+
+}
+
 // Nav______________________________________________________________
 .nav{
     //external links
@@ -221,7 +227,7 @@ ul{
     }
 }
 .navbar-default .navbar-nav > li > a {
-    color: lighten($text-color,15);
+    //color: lighten($text-color,15); //TODO: Open this? 
 }
 @media (min-width: 768px){
     .navbar-nav > li > a {
@@ -381,10 +387,10 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
     
 }
 .main-nav.navbar-default .navbar-nav > li > a {
-    //color: #262626;
+    color:$gray-dark;// #262626;
 }
 .main-nav .navbar-nav > .active > a{
-    font-weight: 500;
+    //font-weight: 500;
 }
 
 .main-nav.navbar-default{
@@ -415,12 +421,12 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
     font-weight: 500;
     color:lighten($text-color,21);
     display: inline-block;
-    padding: 0px 0px 1px 45px;
+    padding: 0px 0px 1px 10px;// the last was 45px
     border-left: 0px solid ;
     position:relative;
 }
 .main-nav .navbar-brand .sub-app-brand .sub-app-name:before{
-  /*  content:'';
+/*    content:'';
   position:absolute;
   top:0;
   right:0;
@@ -430,9 +436,14 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
   //opacity:.7;
   */
 }
-@media only screen  and (max-width : 1440px) {/* Desktops and laptops ----------- */
+@media only screen  and (max-width : 1440px) {/* Desktops and laptops :: TODO: why is this applied to only screen and max-width:1440px?-----------  */
     .main-nav li a{
         font-size:13px;
+        font-weight: 500;
+        //OR
+        //font-size:13px;
+        //font-weight: 700;
+
     }
 }
 .main-nav .nav > li > a:not(.bubble-nav-link):not(.guest-nav-link) {
@@ -468,6 +479,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
 
 .minor-nav li a{
     font-size:13px;
+    font-weight: 400;
     border-bottom: 2px solid transparent;
 }
 .minor-nav .navbar-nav > li > a {
@@ -1211,7 +1223,33 @@ section{
 
 .hero-content-box{
     padding: 15px;
+    width:100%;
 }
+
+// Hero content box shading with background color
+.hero-content-box.shade{//default shade
+    background-color: rgba(0,0,0,0.2);
+}
+.section-primary .hero-content-box.shade{//primary
+    background-color: rgba($brand-primary,0.39);
+}
+.section-success .hero-content-box.shade{//success
+    background-color: rgba($brand-success,0.39);
+}
+.section-info .hero-content-box.shade{
+    background-color: rgba($brand-info,0.39);
+}
+.section-warning .hero-content-box.shade{
+    background-color: rgba($brand-warning,0.39);
+}
+.section-danger .hero-content-box.shade{
+    background-color: rgba($brand-danger,0.39);
+}
+.section-subtle .hero-content-box.shade{
+    background-color: rgba($brand-subtle,0.12);
+}
+
+
 //hero headline positioning
 @media(min-width:768px){ // REF: LOGO-V12DG7
     .hero-content-box{
@@ -1551,7 +1589,7 @@ section{
     h1,h2,h3,h4,h5,h6{
         color:$gray-dark;
         margin-bottom: 10px;
-        margin-top: 10px;
+        margin-top: 20px;
         font-weight: 400;
         line-height: 1.28;
     }
@@ -1560,33 +1598,7 @@ section{
     font-weight:bold; 
 }
 
-// // Main bar specifics
-// .mainbar .title{
-//     font-weight:100;
-//     font-size:48px;
-//     @extend .jumbotron;
-// }
-// .mainbar .sub-title{
-//     font-weight:100;
-//     @extend .h-title;
-// }
-// .mainbar .heading-1{
-//     @extend .h1;
-//     font-weight:100;
-    
-// }
-// .mainbar .heading-2{
-//     @extend .h2;
-//     font-weight:100;
-// }
-// .mainbar .heading-3{
-//     @extend .h3;
-//     font-weight:100;
-// }
-// .mainbar .heading-4{
-//     @extend .h4;
-//     font-weight:100;
-// }
+
 
 
 // Sidebar specific stuff
@@ -1624,6 +1636,8 @@ body.has-minor-nav .sidebar {
     h1,h2,h3,h4,h5,h6{
         font-weight:400;
         color:$gray-dark;
+        margin-bottom: 10px;
+        margin-top: 20px;
     }
 }
 
@@ -1655,8 +1669,8 @@ body.has-minor-nav .sidebar {
     color:$gray;
     
     display: block;
-    font-weight:400;
-    font-size: $font-size-base - 1;
+    font-weight:600;
+    font-size: $font-size-base - 2;
     
     //border:1px solid green;
     //min-width:220px;
@@ -1674,11 +1688,16 @@ body.sidebar-white .sidebar ul li a {
     
 }
 
-.sidebar li:not(.has-children).active > a{ //NOTE: the not selector is not so important and can be removed if it is cause undesirablr=e behavior. It prevent active looks when an item has children
+.sidebar li:not(.has-children).active > a{ //NOTE: the not selector is not so important and can be removed if it is cause undesirable behavior. It prevent active looks when an item has children
     position:relative;
     font-weight: 700;
     color:$gray-dark;
     //background-color: #eeeeee;
+}
+
+.sidebar li.has-children.active > a{ 
+    color:$brand-primary;
+
 }
 
 
@@ -1690,6 +1709,7 @@ body.sidebar-white .sidebar ul li a {
     margin-bottom:12px;
     font-size:16px;
     font-weight: 600;
+    
 }
 
 
@@ -2444,7 +2464,7 @@ nav.table-nav.navbar{
     padding-left:0;
     
 }
-.breadcrumb.bg-transparent:before{
+.breadcrumb.bg-transparent li:first-of-type:before{
     font-family: 'Glyphicons Halflings';
     content:"\e021";
     display: inline-block;
@@ -2459,7 +2479,9 @@ nav.table-nav.navbar{
 body.has-sidebar .breadcrumb{
     text-align: right;
 }
-
+body.has-sidebar.sidebar-collapsed .breadcrumb{
+    //margin-left: 50px;
+}
 
 // Block content
 .block-content{
@@ -4055,3 +4077,125 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
         }
     }
 }
+
+
+// Cookie Consent
+.cookie-consent{
+     margin-top:15px ;
+     margin-bottom: 15px;
+     font-size: small;
+     text-align: center;
+     .cookie-consent-message{
+         background-color: $brand-subtle;
+         color: $gray-light;
+     }
+     .cookie-consent-agree{
+         @extend .btn-subtle;
+     }
+     
+}
+
+//**********************************************
+//********************************************
+// Social feeds
+.social-feeds{
+    max-width: 600px;
+    // Twitter feeds
+    .social-feed .twitter-feed{
+        background-color: #fff;
+        border-bottom-color: $gray-light;
+        display: block;
+        margin-bottom: 30px;
+
+        .tweetlink {font-size:11px; padding-top:5px;}
+        .imgalign {float:left; margin-right:10px; opacity:1;}
+        .imgalign:hover {opacity: 0.5;}
+        .title {font-weight:bold; padding-bottom:15px;}
+        .tweettext { 
+            color:$gray-dark; 
+        }
+        .tweettext a { color:$brand-primary; }
+        .tweettext a:hover { color:$gray; text-decoration: underline; }
+        .tweettxts {overflow:hidden; line-height:18px; }
+        
+         .tweet-author-name a { color:$gray-dark; font-weight: bold; font-size:16px;}
+         .tweet-author-name a:hover { color:$gray; text-decoration: none; }
+         .tweet-author a { color:$gray-light; font-size:14px; }
+         .tweet-author a:hover { color:$gray; text-decoration: none; }
+         .media-img-box{
+             width:100%;
+             text-align: center;
+             margin-top: 10px;
+            img{
+                max-width: 100%;
+                height: auto;
+            }
+            
+         }
+         .tweetlink a { color:$gray-light; font-size:11px; }
+         .tweetlink a:hover { color:$gray; text-decoration: none; } 
+
+    }
+
+}
+
+// WP Comments
+.laradmin-wp-comments-box{
+    // .comment-wrapper .panel-body {
+    //     //max-height:650px;
+    //     //overflow:auto;
+    // }
+
+    
+
+    .comment-wrapper .media-list .media img {
+        width:64px;
+        height:64px;
+        border:2px solid #e5e7e8;
+    }
+
+    .comment-wrapper .media-list .media {
+        //border-bottom:1px dashed #efefef;
+        //margin-bottom:25px;
+    }
+
+    .laradmin-wp-comment .laradmin-wp-comment{
+        
+    }
+
+    // // After three replies of replies, stop right- shifting the media
+    // .media .media .media{
+
+    // }
+
+    .write-comment textarea{
+        height: 40px;
+    }
+
+    .text-content{
+        color:$gray-dark;
+    }
+    .reply-btn, .replies-btn{
+        border: none;
+        background-color: transparent;
+        color: $brand-primary;
+        font-size: 60%;
+    }
+    .date{
+        font-size: 60%;
+    }
+}
+.section-primary,
+.section-info,
+.section-success,
+.section-danger,
+.section-warning,
+.section-subtle {
+    .laradmin-wp-comments-box{
+        .comment-wrapper .media-list .media {
+            background-color: #fefefe;
+            padding:15px;
+        }
+    }
+}
+    

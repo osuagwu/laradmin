@@ -18,7 +18,7 @@ class FormServiceProvider extends ServiceProvider
         $this->app->singleton('BethelChika\Laradmin\Form\FormManager', function ($app) {
             return new \BethelChika\Laradmin\Form\FormManager();
         });
-        //$this->app->alias('BethelChika\Laradmin\Plugin\PluginManager','pluginmanager');//OPEN THIS if you want to access the singleton directly instead of through laradmin
+        
 
         // Attach to Laradmin so that we can access it through laradmin
         $this->app->make('laradmin')->formManager=$this->app->make('BethelChika\Laradmin\Form\FormManager');

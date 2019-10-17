@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+    <meta name="timezone" content="{{session('timezone')}}">{{-- print prefered timezone for javascript --}}
    
     <meta name="description" content="{{$metas['description']?? env('APP_DESCRIPTION','Laradmin')}}" >
     <meta name="robots" content="{{$metas['robots'] ?? 'all'}}">
@@ -42,9 +42,15 @@
 <body class="front-end user {{$laradmin->assetManager->getBodyClassesString()}}">
 
     {{--import facebook sdk--}}
-    @include('laradmin::user.partials.social.facebook_js_sdk')
+    {{-- @include($laradmin->theme->defaultFrom().'social.inc.share.facebook_js_sdk') --}}
+    @include($laradmin->theme->defaultFrom().'social.inc.facebook_js_sdk')
 
     <div id="app">
+        <div class="site-roof">
+            <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
+                @include('laradmin::inc.cookie_consent')
+            </div>
+        </div>
         <div id="site-top-and-content">
             <header role="banner">
                 <nav id="site-top" class="navbar navbar-default navbar-static-top main-nav">
@@ -64,10 +70,17 @@
 
                             <!-- Branding Image -->
                             <a class=" navbar-brand " href="{{ url('/') }}">
-                                <div class="">
+                                @if(str_contains($laradmin->assetManager->getHeroType(),'super'))  {{--print the special logo for hero --}}
+                                <div class="logo-hero-super ">{{-- The visibility class here is not required as this has already been done in the css file--}}
+                                    <img class="logo " src="/img/logo-hero-super.svg" alt="{{ config('app.name', 'Laradmin')}}" />
+                                </div>
+                                @endif
+                                
+                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) {{''}} @endif">{{-- if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero in the super mode--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file --}}
                                     <img class="logo " src="/img/logo{{$laradmin->assetManager->getLogoType('-')}}.svg" alt="{{ config('app.name', 'Laradmin')}}" />
                                 </div>
                             </a>
+
                             @if($laradmin->contentManager->hasSubAppName()) 
                             
                             <a  class="navbar-brand" href="{{$laradmin->contentManager->getSubAppUrl('/')}}">
@@ -173,7 +186,9 @@
 
     {{--iconify.design--}}
     <script src="https://code.iconify.design/1/1.0.0-rc7/iconify.min.js"></script>
-    
+
+    {{-- Stripe --}}
+    <script src="https://js.stripe.com/v3/"></script>
 
     {{--site--}}
     <script src="{{asset('vendor/laradmin/js/gen.js')}}"></script>

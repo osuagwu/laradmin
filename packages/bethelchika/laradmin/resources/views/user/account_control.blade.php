@@ -16,10 +16,10 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-               {{-- <h1 class="heading-1 content-title">
+               <h1 class="heading-1 content-title">
                     {{$pageTitle}} 
                       <small>Suspend or delete this account</small>  
-                </h1>--}}
+                </h1>
 
                 @include ('laradmin::inc.msg_board')
                 @include('laradmin::inc.email_confirmation_prompt')  
@@ -27,7 +27,7 @@
                         
                 <h3  class="heading-3 title-underline" >Account activation/deactivation</h3>
                 <p>When you deactivate your account it will be temporarily suspended and the process should not delete your data. You should be logged out after deactivation. To reactivate your account, simply log back in. </p>
-                <p>You can use the link below to activate your account</p>
+                <p>You can use the link below to activate/deactivate your account</p>
                 <div class="text-right">
                     @if(Auth::user()->self_deactivated_at)
                         <p ><a href="{{route('user-self-reactivate')}}" class="btn btn-primary"><strong>Reactivate my account</strong></a></p>
@@ -37,7 +37,7 @@
                 </div>
 
                 <h3  class="heading-3 title-underline" >Account deletion</h3>
-                <p>Once you account is deleted it cannot be recovered. After you initiate the deletion of your account, you will be logged out and a message will inform you of an estimated date on which you account will be permanently deleted. If you change you mind before the date, you should be able to stop the deletion by logging back in back here to cancel the deletion. Stopping the deletion is not guaranteed closer to the deletion date.</p>
+                <p>Once you account is deleted it cannot be recovered. After you initiate the deletion of your account, you will be logged out and a message will inform you of an estimated date on which your account will be permanently deleted. If you change you mind before the date, you should be able to stop the deletion by logging back in here to cancel the deletion. Stopping the deletion is not guaranteed closer to the deletion date.</p>
                 <p>You can use the link below to initiate the deletion of your account or cancel it</p>
 
                 <div class="text-right">

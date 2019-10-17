@@ -35,7 +35,7 @@
                     <!-- Page Content Holder -->
                 <div class="mainbar" role="main">
 
-
+                    @include('laradmin::menu.breadcrumb')
                        
                     
                         <h1 class="heading-4 page-title">Welcome to profile</h1> 
