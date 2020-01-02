@@ -29,7 +29,7 @@
         </div>
         @endif
     </div>
-    <!-------------end header------------------>
+    <!-- end header -->
 
     
     @if($form->isEmpty())

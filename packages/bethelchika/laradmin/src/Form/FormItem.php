@@ -106,6 +106,13 @@ abstract class FormItem
     public $type;
 
     /**
+     * Id of the form field
+     *
+     * @var string
+     */
+    public $id;
+
+    /**
      * Name of the form field
      *
      * @var string
@@ -155,6 +162,19 @@ abstract class FormItem
     public $editDescription='';
 
 
+    /**
+     * When true, it will be assumed that the field has safe html which can be safely displayed on the index mode. Applicable for textarea. It is currently not used on the edit mode.
+     *
+     * @var boolean
+     */
+    public $indexAllowHTML=false;
+
+    /**
+     * If true fields like textarea will be displayed with html editor in the edit mode.
+     *
+     * @var boolean
+     */
+    public $isRichText=false;
 
 
     /**

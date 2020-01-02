@@ -13,7 +13,7 @@
 @section('content')
 
 
-            @component('laradmin::blade_components.panel')
+            @component('laradmin::components.panel')
                 @slot('title')
                     Edit profile
                 @endslot 
@@ -30,32 +30,32 @@
 
                    
 
-                    @component('laradmin::blade_components.input_text',['name'=>'name','value'=>$user->name,'label'=>'Name (Screen name)','required'=>'required'])
+                    @component('laradmin::components.input_text',['name'=>'name','value'=>$user->name,'label'=>'Name (Screen name)','required'=>'required'])
                     @endcomponent 
 
-                    {{--  @component('laradmin::blade_components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
+                    {{--  @component('laradmin::components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
                     @endcomponent 
 
-                    @component('laradmin::blade_components.input_text',['name'=>'last_name','value'=>$user->last_name,'label'=>'Last name'])
+                    @component('laradmin::components.input_text',['name'=>'last_name','value'=>$user->last_name,'label'=>'Last name'])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_text',['name'=>'year_of_birth','value'=>$user->year_of_birth,'label'=>'Year of birth'])
+                    @component('laradmin::components.input_text',['name'=>'year_of_birth','value'=>$user->year_of_birth,'label'=>'Year of birth'])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_select',['name'=>'gender','value'=>$user->gender,'options'=>['female'=>'Female','male'=>'Male'],])
+                    @component('laradmin::components.input_select',['name'=>'gender','value'=>$user->gender,'options'=>['female'=>'Female','male'=>'Male'],])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_select',['name'=>'country','value'=>$user->country,'options'=>$countries,])
+                    @component('laradmin::components.input_select',['name'=>'country','value'=>$user->country,'options'=>$countries,])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_select',['name'=>'faith','value'=>$user->faith,'options'=>$faiths,])
+                    @component('laradmin::components.input_select',['name'=>'faith','value'=>$user->faith,'options'=>$faiths,])
                     @endcomponent  --}}
                     
                     <hr class="hr">
-                    @component('laradmin::blade_components.input_password',['name'=>'new_password','label'=>'New password'])
+                    @component('laradmin::components.input_password',['name'=>'new_password','label'=>'New password'])
                     @endcomponent 
 
-                    @component('laradmin::blade_components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation'])
+                    @component('laradmin::components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation'])
                     @endcomponent 
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

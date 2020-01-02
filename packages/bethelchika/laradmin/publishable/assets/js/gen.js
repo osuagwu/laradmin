@@ -99,224 +99,224 @@ function viewportSizeGroup(){
 
 
 
-//Vue will have the object Ajaxifier as one of its data. each time vue makes an ajax call, the backend must send data that with corresponding fields to Vue fileds 
+// //Vue will have the object Ajaxifier as one of its data. each time vue makes an ajax call, the backend must send data that with corresponding fields to Vue fileds 
 
-class Ajaxifier{
-    /**
-     * Create a new Errors instance.
-     */
-    constructor() {
-        this.errors = {};
-    }
-
-
-    /**
-     * Write data to html
-     *
-     * @param {string} selector jquery compactible selector including '#' and '.'
-     * @param {mixed} data
-     * @param {string} template Mustash compatible template
-     */
-    toHtml(selector,data,template) {
-        $(selector).html(Mustash.render($template,data));
-    }
-}
+// class Ajaxifier{
+//     /**
+//      * Create a new Errors instance.
+//      */
+//     constructor() {
+//         this.errors = {};
+//     }
 
 
-class Errors {
-    /**
-     * Create a new Errors instance.
-     */
-    constructor() {
-        this.errors = {};
-    }
+//     /**
+//      * Write data to html
+//      *
+//      * @param {string} selector jquery compactible selector including '#' and '.'
+//      * @param {mixed} data
+//      * @param {string} template Mustash compatible template
+//      */
+//     toHtml(selector,data,template) {
+//         $(selector).html(Mustash.render($template,data));
+//     }
+// }
 
 
-    /**
-     * Determine if an errors exists for the given field.
-     *
-     * @param {string} field
-     */
-    has(field) {
-        return this.errors.hasOwnProperty(field);
-    }
+// class Errors {
+//     /**
+//      * Create a new Errors instance.
+//      */
+//     constructor() {
+//         this.errors = {};
+//     }
 
 
-    /**
-     * Determine if we have any errors.
-     */
-    any() {
-        return Object.keys(this.errors).length > 0;
-    }
+//     /**
+//      * Determine if an errors exists for the given field.
+//      *
+//      * @param {string} field
+//      */
+//     has(field) {
+//         return this.errors.hasOwnProperty(field);
+//     }
 
 
-    /**
-     * Retrieve the error message for a field.
-     *
-     * @param {string} field
-     */
-    get(field) {
-        if (this.errors[field]) {
-            return this.errors[field][0];
-        }
-    }
+//     /**
+//      * Determine if we have any errors.
+//      */
+//     any() {
+//         return Object.keys(this.errors).length > 0;
+//     }
 
 
-    /**
-     * Record the new errors.
-     *
-     * @param {object} errors
-     */
-    record(errors) {
-        this.errors = errors;
-    }
+//     /**
+//      * Retrieve the error message for a field.
+//      *
+//      * @param {string} field
+//      */
+//     get(field) {
+//         if (this.errors[field]) {
+//             return this.errors[field][0];
+//         }
+//     }
 
 
-    /**
-     * Clear one or all error fields.
-     *
-     * @param {string|null} field
-     */
-    clear(field) {
-        if (field) {
-            delete this.errors[field];
-
-            return;
-        }
-
-        this.errors = {};
-    }
-}
+//     /**
+//      * Record the new errors.
+//      *
+//      * @param {object} errors
+//      */
+//     record(errors) {
+//         this.errors = errors;
+//     }
 
 
-class Form {
-    /**
-     * Create a new Form instance.
-     *
-     * @param {object} data
-     */
-    constructor(data) {
-        this.originalData = data;
+//     /**
+//      * Clear one or all error fields.
+//      *
+//      * @param {string|null} field
+//      */
+//     clear(field) {
+//         if (field) {
+//             delete this.errors[field];
 
-        for (let field in data) {
-            this[field] = data[field];
-        }
+//             return;
+//         }
 
-        this.errors = new Errors();
-    }
-
-
-    /**
-     * Fetch all relevant data for the form.
-     */
-    data() {
-        let data = {};
-
-        for (let property in this.originalData) {
-            data[property] = this[property];
-        }
-
-        return data;
-    }
+//         this.errors = {};
+//     }
+// }
 
 
-    /**
-     * Reset the form fields.
-     */
-    reset() {
-        for (let field in this.originalData) {
-            this[field] = '';
-        }
+// class Form {
+//     /**
+//      * Create a new Form instance.
+//      *
+//      * @param {object} data
+//      */
+//     constructor(data) {
+//         this.originalData = data;
 
-        this.errors.clear();
-    }
+//         for (let field in data) {
+//             this[field] = data[field];
+//         }
 
-    /**
-     * Send a POST request to the given URL.
-     * .
-     * @param {string} url
-     */
-    get(url) {
-        return this.submit('get', url);
-    }
+//         this.errors = new Errors();
+//     }
 
 
-    /**
-     * Send a POST request to the given URL.
-     * .
-     * @param {string} url
-     */
-    post(url) {
-        return this.submit('post', url);
-    }
+//     /**
+//      * Fetch all relevant data for the form.
+//      */
+//     data() {
+//         let data = {};
+
+//         for (let property in this.originalData) {
+//             data[property] = this[property];
+//         }
+
+//         return data;
+//     }
+
+
+//     /**
+//      * Reset the form fields.
+//      */
+//     reset() {
+//         for (let field in this.originalData) {
+//             this[field] = '';
+//         }
+
+//         this.errors.clear();
+//     }
+
+//     /**
+//      * Send a POST request to the given URL.
+//      * .
+//      * @param {string} url
+//      */
+//     get(url) {
+//         return this.submit('get', url);
+//     }
+
+
+//     /**
+//      * Send a POST request to the given URL.
+//      * .
+//      * @param {string} url
+//      */
+//     post(url) {
+//         return this.submit('post', url);
+//     }
 
     
 
 
-    /**
-     * Send a PUT request to the given URL.
-     * .
-     * @param {string} url
-     */
-    put(url) {
-        return this.submit('put', url);
-    }
+//     /**
+//      * Send a PUT request to the given URL.
+//      * .
+//      * @param {string} url
+//      */
+//     put(url) {
+//         return this.submit('put', url);
+//     }
 
 
-    /**
-     * Send a PATCH request to the given URL.
-     * .
-     * @param {string} url
-     */
-    patch(url) {
-        return this.submit('patch', url);
-    }
+//     /**
+//      * Send a PATCH request to the given URL.
+//      * .
+//      * @param {string} url
+//      */
+//     patch(url) {
+//         return this.submit('patch', url);
+//     }
 
 
-    /**
-     * Send a DELETE request to the given URL.
-     * .
-     * @param {string} url
-     */
-    delete(url) {
-        return this.submit('delete', url);
-    }
+//     /**
+//      * Send a DELETE request to the given URL.
+//      * .
+//      * @param {string} url
+//      */
+//     delete(url) {
+//         return this.submit('delete', url);
+//     }
 
 
-    /**
-     * Submit the form.
-     *
-     * @param {string} requestType
-     * @param {string} url
-     */
-    submit(requestType, url) {
-        return $.ajax({
-            url:url,
-            data:this.data(),
-            dataType:'json',
-            type: requestType
-        })
-    }
+//     /**
+//      * Submit the form.
+//      *
+//      * @param {string} requestType
+//      * @param {string} url
+//      */
+//     submit(requestType, url) {
+//         return $.ajax({
+//             url:url,
+//             data:this.data(),
+//             dataType:'json',
+//             type: requestType
+//         })
+//     }
 
 
-    /**
-     * Handle a successful form submission.
-     *
-     * @param {object} data
-     */
-    onSuccess(data) {
-        alert(data.message); // temporary
+//     /**
+//      * Handle a successful form submission.
+//      *
+//      * @param {object} data
+//      */
+//     onSuccess(data) {
+//         alert(data.message); // temporary
 
-        this.reset();
-    }
+//         this.reset();
+//     }
 
 
-    /**
-     * Handle a failed form submission.
-     *
-     * @param {object} errors
-     */
-    onFail(errors) {
-        this.errors.record(errors);
-    }
-}
+//     /**
+//      * Handle a failed form submission.
+//      *
+//      * @param {object} errors
+//      */
+//     onFail(errors) {
+//         this.errors.record(errors);
+//     }
+// }

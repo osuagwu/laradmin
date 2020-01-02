@@ -1,30 +1,59 @@
 <?php
 namespace BethelChika\Laradmin\Media;
 
+use BethelChika\Laradmin\Media\Exceptions\ReservedImageSizeException;
 use BethelChika\Laradmin\Media\Models\Media;
+use BethelChika\Laradmin\Meta\Exceptions\MetaSaveContextException;
+use BethelChika\Laradmin\Meta\Option;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\FilesystemManager as FileSystem;
+use Illuminate\Support\Facades\Log;
+use Intervention\Image\Image;
 
 class MediaManager
 {
+    //private $add_image_size( 'custom-size', 220, 180 );
+    /**
+     * In addition to thumbnail, this array holds sizes that should be created from any given image with adequate dimension. 
+     *  The sizes are in pixels
+     * @var array
+     */
+    private $imageSizes=[ 
+        
+        'full'=>['w'=>null,'h'=>null],//reserved tag which refers to the main uploaded image.
+        //'thumb'=>['w'=>400,'h'=>300],
+        
+    ];
+    /**
+     * Stores the image sizes retrieved from options table.
+     *
+     * @var array
+     */
+    private $imageOptionSizes=[];
 
+    /**
+     * The name of the images sizes in the options table
+     *
+     * @var string
+     */
+    private $imageSizesOptionName='__media_image_sizes';
 
     /**
      * The default width of thumbnails in pixels
-     *
+     * 
      * @var integer
      */
     private $thumbWidth = 400;
 
     /**
      * The default height of thumbnails in pixels
-     *
+     * 
      * @var integer
      */
     private $thumbHeight = 300;
 
     /**
-     * The folder name relative to a Media's folder where thubnails are kept
+     * The folder name relative to a Media's folder where thumbnails are kept
      *
      * @var string
      */
@@ -45,14 +74,21 @@ class MediaManager
   //protected $managerModel;
 
     /**
+     * The max aspect ratio difference between two dimensions for them to be 
+     * considered to have the same aspect ratio. 
+     *
+     * @var float
+     */
+    protected $aspectRatioTolerance=0.3;
+
+    /**
      * Construct a new media
      *
-     * @param Factory $filesystem
+     * @param \Illuminate\Filesystem\FilesystemManager $filesystem
      */
-    public function __construct(FileSystem $filesystem)
+    public function __construct(/*FileSystem $filesystem*/)
     {
-        $this->filesystem = $filesystem;
-     //$this->model=$model;
+        
     }
 
 
@@ -66,6 +102,62 @@ class MediaManager
         return app('image');
     }
 
+    /**
+     * Registers an image size
+     *
+     * @param string $tag
+     * @param integer $width
+     * @param integer $height
+     * @return void
+     * @throws MetaSaveContextException|ReservedImageSizeException
+     */
+    public function registerImageSize($tag,$width,$height,$save=false){
+        if(!strcmp($tag,'full') or !strcmp($tag,'thumbs')){
+            throw new ReservedImageSizeException('The tags, full and thumbs, are reserved');
+        }
+        if($save){
+            if(app()->runningInConsole()){
+                $sizes=Option::get($this->imageSizesOptionName);
+                $sizes=unserialize($sizes);
+                $sizes[$tag]=['w'=>$width,'h'=>$height];
+                Option::add($this->imageSizesOptionName,serialize($sizes));
+            }else{
+                throw new MetaSaveContextException();
+            }
+            
+        }
+        
+        $this->imageSizes[$tag]=['w'=>$width,'h'=>$height];
+    }
+
+     /**
+     * Returns the available image sizes including those added to the options table
+     *
+     * @return array
+     */
+    public function imageSizes(){
+        
+        static $has_loaded_options=false;//$this->$hasLoadedImageOptionSizes;
+
+        if(!$has_loaded_options){
+            $this->imageOptionSizes=$this->imageOptionSizes()??[];
+            $has_loaded_options=true;
+        }
+        return  array_merge($this->imageSizes,$this->imageOptionSizes);
+     }
+
+     /**
+      * Return the Image sizes added to options table
+      *
+      * @return mixed
+      */
+     private function imageOptionSizes(){
+        $meta=Option::get($this->imageSizesOptionName);
+        if($meta){
+            return unserialize($meta);
+        }
+        return null;
+     }
 
 
     /**
@@ -85,21 +177,22 @@ class MediaManager
      *
      * @param string $source The file source - i.e url/location
      * @param string $destination The folder in which to save file
-     * @param string $name The name to used to save the file. This excludes the directory name
-     * @param string $disk
-     * @param string $visibility
+     * @param string $name The name to used to save the file. This excludes the directory name, {default:AUTO GENERATED}
+     * @param string $disk {default:local}
+     * @param string $visibility {default:private}
      * @return Media 
      */
     public function fromSource($source, $destination, $name = null, $disk = null, $visibility = null, Model $user = null)
     {
     //$im=$this->getImageManager();
-    //print_r($this->filesystem);
+    
       //$name='change';
         $disk = $disk ? $disk : 'local';
         $visibility = $visibility ? $visibility : 'private';
         $user_id = $user ? $user->id : 1; //Need to change the default to CP_ID
 
         $media = new Media;
+        $media->disk=$disk;
 
         $destination = $this->sanitizePath($destination);
         
@@ -128,17 +221,17 @@ class MediaManager
             $name_only =$name_only_temp;
             $name=implode('.',[$name_only,$extension]);
 
-            $path = $this->filesystem->disk($disk)->put(
+            $path = $media->fileSystem()->put(
                 $destination . '/' . $name,
                 $source,
                 $visibility
             );
         } else {//dd($source);
-            $path = $this->filesystem->disk($disk)->putFile(
+            $path = $media->fileSystem()->putFile(
                 $destination,
                 $source
             );
-            $this->filesystem->disk($disk)->setVisibility($path, $visibility);
+            $media->fileSystem()->setVisibility($path, $visibility);
 
             $name_temp=trim(str_replace($destination,'',$path),'/\\');
             $name_temp=explode('.',$name_temp);
@@ -149,9 +242,9 @@ class MediaManager
     //
 
         $media->dir = $destination;
-        $media->mime_type = $this->filesystem->disk($disk)->mimeType($path);
-        $media->size = $this->filesystem->disk($disk)->size($path);
-        $media->disk = $disk;
+        $media->mime_type = $media->fileSystem()->mimeType($path);
+        $media->size = $media->fileSystem()->size($path);
+        //$media->disk = $disk;
         $media->user_id = $user_id;
         $media->fn = $name;
         $media->ext = $extension;
@@ -190,7 +283,7 @@ class MediaManager
      */
     public function existsInDisk(Media $media)
     {
-        return $this->filesystem->disk($media->disk)->exists($media->getFullName());
+        return $media->fileSystem()->exists($media->getFullName());
     }
 
     /**
@@ -267,6 +360,8 @@ class MediaManager
         return $media->getFolderName() . '/' . trim($this->thumbRelativeFolder, '/\\');
     }
 
+   
+
     /**
      * Makes generic thumbnail for a media file
      *
@@ -294,14 +389,14 @@ class MediaManager
      * @param string $ext The extension name of the file
      * @return string Path of the created thumb
      */
-    private function imageThumb(Media $media, $width = null, $height = null, $destination = null, $name = null, $ext)
+    private function imageThumb(Media $media, $width, $height , $destination , $name, $ext)
     {
         
 
         // Save thumb at the same disk as the media to keep things simple.
-        $disk = $media->disk;
-        //dd($this->filesystem->disk($disk)->get($media->fn));
-        $visibility = $this->filesystem->disk($disk)->getVisibility($media->getFullName());
+        //$disk = $media->disk;
+        
+        $visibility = $media->fileSystem()->getVisibility($media->getFullName());
 
         // create new image with transparent background color
         $background = $this->getImageManager()->canvas($width, $height);
@@ -310,7 +405,7 @@ class MediaManager
         // but keep aspect-ratio and do not size up,
         // so smaller sizes don't stretch
 
-        //$source = $this->filesystem->disk($disk)->get($media->getFullName());
+        
         $source=$this->getContent($media);
 
 
@@ -332,7 +427,7 @@ class MediaManager
 
         // save
 
-        $path = $this->filesystem->disk($disk)->put(
+        $path = $media->fileSystem()->put(
             $destination . '/' . $name . '.' . $ext,
             $source,
             $visibility
@@ -343,25 +438,319 @@ class MediaManager
     }
 
     /**
-     * Return the width of the image
+     * Makes a size, overwriting the size if it exists, of a an Media image
+     *
      * @param Media $media
-     * @return int
+     * @param string $size_tag A name of a registered size tag
+     * @param string $type   {aspect,fit,force}If 'aspect', create an image with the specifies dimension, with respect to the aspect ratio, and using a background to fill the area if the image is smaller or the aspect ratio is different from the specified dimension. 
+     *                       If 'fit' The intervention fit method will be used which could involve cropping part of the image out.
+     *                       If 'force' null will be return if the image is smaller than the specified dimension; the aspect ratio is not respected.
+     * @return string|null
      */
-    public function getWidth(Media $media){
+    public function makeImageSize(Media $media, $size_tag,$type='force')
+    {
+
+        $d=$this->sizeDimension($size_tag);
+        if(!$d or !$d['w'] or !$d['h']){
+            return null;
+        }
+        $width=$d['w'];
+        $height=$d['h'];
+
         $image = $this->getImageManager()->make($this->getContent($media));
-        return $image->width() ;
+        $w=$image->width();
+        $h=$image->height();
+
+        
+        
+       
+        
+        switch($type){
+            case 'aspect':
+
+                //Is the image larger in both width and height?
+                if($w > $width and $h>$height){
+                    
+                    $ratio_diff=abs(($width/$height)-($w/$h));
+                    if($ratio_diff<$this->aspectRatioTolerance){
+                        $image->resize($width, $height);//The Image should now have the correct dimension and we should really go strait to save it. .
+                    }else{
+                        //let us randomly assume that the width is more important
+                        $image->resize($width, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        });
+                    }
+                    
+                    $w=$image->width();
+                    $h=$image->height();
+                }
+
+                // Is the image already in the required dimension?
+                if ($w != $width or $h!=$height) {
+
+                    $insert_background=false;
+
+                    // Is the image smaller in width and height?
+                    if ($w <= $width and $h<=$height) {
+                        $insert_background=true;
+                    }
+
+                    // Is the image larger in width but smaller in height?
+                    elseif ($w > $width and $h<=$height) {
+                        // resize the image to a width of 300 and constrain aspect ratio (auto height)
+                        $image->resize($width, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        });
+                        $insert_background=true;
+                    }
+
+                    // Is the image smaller in width but larger in height?
+                    elseif ($w <= $width and $h>=$height) {
+                        // resize the image to a width of 300 and constrain aspect ratio (auto height)
+                        $image->resize(null, $height, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        });
+                        $insert_background=true;
+                    }
+                    else {
+                        Log::warning(__METHOD__.':'.__LINE__.': msg=>Unknown image dimension issue');
+                        return false;
+                    }
+
+                
+
+
+                    if ($insert_background==true) {
+                        // create new image with  background color ;
+                        $background = $this->getImageManager()->canvas($width, $height)->fill('#cccccc');
+                        // insert resized image centered into background
+                        $background->insert($image, 'center');
+
+                        $image=$background;
+                        unset($background);
+                    }
+                }
+                break;
+            
+            case 'fit':
+
+                if ($w > $width or $h > $height) {
+                    //large enough
+                    $image->fit($width, $height, function ($c) {
+                        $c->aspectRatio();
+                        $c->upsize();
+                    },'center');
+                } 
+
+                // create new image with transparent background color ;
+                $background = $this->getImageManager()->canvas($width, $height);
+                // insert resized image centered into background
+                $background->insert($image, 'center');
+
+                $image=$background;
+                unset($background);
+
+                break;
+
+            case 'force':
+                if ($w < $width or $h<$height){ 
+                    return null;
+                }
+                $image->resize($width, $height, function ($constraint) {
+                    //$constraint->aspectRatio();
+                    //$constraint->upsize();
+                });
+                break;
+
+            default:
+                Log::warning(__METHOD__.':'.__LINE__.': msg=>Unknown resize type');
+                // unknown type
+
+        }
+
+
+        // Prep saving
+        // Save at the same disk as the media to keep things simple.
+        $disk = $media->disk;
+        
+        $visibility = $media->fileSystem()->getVisibility($media->getFullName());
+        $ext=$media->getExtension();
+        $name=$media->getFileName();
+        $destination=rtrim($media->getFolderName(),'/').'/'.$this->sizeFolderName($media,$size_tag);
+        
+        // Convert to stream
+        $source = $image->stream($ext);
+
+        // save
+
+        $path = $media->fileSystem()->put(
+            $destination . '/' . $name . '.' . $ext,
+            $source,
+            $visibility
+        );
+
+        return $path; //TODO: Why this method is retuning null, why is $path null.
+
+    }
+
+    /**
+     * Returns folder name for a size for a given Media
+     *
+     * @param Media $media
+     * @param string $size_tag
+     * @return string|null This method can also return an empty string when there is not special folder for the given tag; so be careful when checking for null which is returned when the given size_tag does not exist.
+     */
+    public function sizeFolderName(Media $media,$size_tag){
+        if($size_tag=='full'){// is the main uploaded file
+            return '';
+        }
+         foreach($this->imageSizes() as $tag=>$px){
+             if($size_tag==$tag){
+
+                // return $px['w'].'x'.$px['h'];
+                //OR
+                return $tag.'_'.$px['w'].'x'.$px['h'];
+             }
+         }
+        return null;
+    }
+    
+
+    /**
+     * Gets the dimension of a size.
+     *
+     * @param string $size_tag The tag of the image size.
+     * @return array
+     */
+    private function sizeDimension($size_tag){
+        return $this->imageSizes()[$size_tag]??null;
+    }
+
+    /**
+     * Resize the given image
+     *
+     * @param Image $image
+     * @param int $width
+     * @param int $height
+     * @return Image
+     */
+    private function resizeImage(Image $image,$width,$height){
+        return $image->resize($width,$height);
+    }
+
+    /**
+     * Resize the given Image but keep aspect-ratio and do not size up so smaller sizes don't stretch
+     *
+     * @param Image $image
+     * @param int $width
+     * @param int $height
+     * @return Image
+     */
+    private function fitImage(Image $image,$width,$height){
+        if ($image->width() > $width or $image->height() > $height) {
+
+            $image->fit($width, $height, function ($c) {
+                $c->aspectRatio();
+                $c->upsize();
+            },'center');
+
+        } 
+        return $image;
+    }
+
+    /**
+     * Return the width of the image by using the image content. May not be adequate to run 
+     * this on every page load since it may be quite heavy since it is loading the entire image first.
+     * @param Media $media
+     * @return int|null
+     */
+    public function imageWidth(Media $media){
+        if ($media->storage()->exists($media->getFullName('full'))) {
+            $image = $this->getImageManager()->make($this->getContent($media));
+            return $image->width() ;
+        }
+        return null;
     }
 
      /**
-     * Return the height of the image
+     * Return the height of the image by using the image content. May not be adequate to run 
+     * this on every page load since it may be quite heavy since it is loading the entire image first. 
      * @param Media $media
      * @return int
      */
-    public function getHeight(Media $media){
-        $image = $this->getImageManager()->make($this->getContent($media));
-        return $image->height() ;
+    public function imageHeight(Media $media){
+
+        if ($media->storage()->exists($media->getFullName('full'))) {
+            $image = $this->getImageManager()->make($this->getContent($media));
+            return $image->height() ;
+        }
+        return null;
         
     }
+
+    /**
+     * Resize and crop the media source and replaces the source on disk. If the image is smaller than given dimension, then the image will not be touched when the $type='fit'.
+     * 
+     * @param Media $media
+     * @param $width
+     * @param $height
+     * @param $type {fit,fixed} The type of the resize. 'fixed' is normal image resize. 'fit' will keep the aspect ratio.
+     * @return void
+     */
+    public function constrainSaved(Media $media,$width,$height,$type='fit'){
+        // but keep aspect-ratio and do not size up,
+        // so smaller sizes don't stretch
+
+        
+        $source=$this->getContent($media);
+
+
+        $image = $this->getImageManager()->make($source);
+        $changed=false;
+        switch($type){
+            case 'fit':// Respects aspect ration and do not strech.
+                if ($image->width() > $width or $image->height() > $height) {
+                    //large enough
+                    $image->fit($width, $height, function ($c) {
+                        $c->aspectRatio();
+                        $c->upsize();
+                    },'center');
+
+                    $changed=true;
+                } 
+                break;
+            case 'fixed':
+                $image->resize($width,$height);
+                $changed=true;
+                break;
+            
+        }
+
+        if($changed){
+            // Convert to stream
+            $source = $image->stream($media->getExtension());
+
+            // save i.e overwrite
+            $visibility = $media->fileSystem()->getVisibility($media->getFullName());
+
+            $path = $media->fileSystem()->put(
+                $media->getFullName(),
+                $source,
+                $visibility
+            );
+
+            //Update the size
+            $media->size = $media->readSize();
+            $media->save();
+        }
+        
+
+    }
+
+
 
     /**
      * Get raw string file content
@@ -370,7 +759,9 @@ class MediaManager
      * @return string
      */
     private function getContent(Media $media){
-        return $this->filesystem->disk($media->disk)->get($media->getFullName());
+        return $media->fileSystem()->get($media->getFullName());
     }
+
+
 
 }

@@ -105,16 +105,19 @@ class AddLaradminUserFields extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->nullable(false)->change();
-        });
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('password')->nullable(false)->change();
-        });
+    {   $with_null=\Illuminate\Support\Facades\DB::table('users')->whereNull('password')->orWhereNull('email')->count();
+        if (!$with_null) { //I.E Do not try to make these non-null if there are already users with null values, as it will fail
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('email')->nullable(false)->change();
+            });
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('password')->nullable(false)->change();
+            }
+            );
+        }
 
 
-        //TODO: b/c its hard to tell if we actually added the fileds(as they may have been added before)we will not do too many droppings here. Consequently we may not be performing clean uninstall of the fields we added
+        //TODO: b/c its hard to tell if we actually added the fields(as they may have been added before)we will not do too many droppings here. Consequently we may not be performing clean uninstall of the fields we added
         Schema::table('users', function (Blueprint $table) {
             // Drop only one column inside this closure to avoid 'No such column error in sqlite'
             if (Schema::hasColumn('users', 'self_delete_initiated_at')) {

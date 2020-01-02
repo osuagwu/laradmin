@@ -50,18 +50,18 @@
                         {{ method_field('PUT') }}
                         {{ csrf_field() }}
                         <input type="hidden" name="comicpic_id" value="{{$comicpic->id}}" />  
-                        @component('laradmin::blade_components.input_text',['name'=>'title','value'=>$comicpic->title,'required'=>'required','placeholder'=>'Title'])
+                        @component('laradmin::components.input_text',['name'=>'title','value'=>$comicpic->title,'required'=>'required','placeholder'=>'Title'])
                         @endcomponent        
-                        @component('laradmin::blade_components.textarea',['name'=>'description','value'=>$comicpic->description,'required'=>'required','placeholder'=>'Description'])
+                        @component('laradmin::components.textarea',['name'=>'description','value'=>$comicpic->description,'required'=>'required','placeholder'=>'Description'])
                         @endcomponent 
-                        @component('laradmin::blade_components.input_text',['name'=>'hashtags','value'=>$comicpic->hashtags,'help'=>'e.g #fun,#love,#vote ','placeholder'=>'e.g #fun,#love,#vote','placeholder'=>'Comma separated hashtags'])
+                        @component('laradmin::components.input_text',['name'=>'hashtags','value'=>$comicpic->hashtags,'help'=>'e.g #fun,#love,#vote ','placeholder'=>'e.g #fun,#love,#vote','placeholder'=>'Comma separated hashtags'])
                         @endcomponent 
-                        @component('laradmin::blade_components.input_text',['name'=>'twitter_screen_names','value'=>$comicpic->twitter_screen_names,'help'=>'e.g bethelchika,obama','placeholder'=>'Comma separated screen names'])
+                        @component('laradmin::components.input_text',['name'=>'twitter_screen_names','value'=>$comicpic->twitter_screen_names,'help'=>'e.g bethelchika,obama','placeholder'=>'Comma separated screen names'])
                         @endcomponent 
-                        @component('laradmin::blade_components.input_text',['name'=>'twitter_via','value'=>$comicpic->twitter_via,'help'=>'BBCNEWS','placeholder'=>'Via name'])
+                        @component('laradmin::components.input_text',['name'=>'twitter_via','value'=>$comicpic->twitter_via,'help'=>'BBCNEWS','placeholder'=>'Via name'])
                         @endcomponent 
                         {{--
-                        @component('laradmin::blade_components.input_text',['name'=>'tags','value'=>'','required'=>'required'])
+                        @component('laradmin::components.input_text',['name'=>'tags','value'=>'','required'=>'required'])
                         @endcomponent
                         --}}
                         <div class="form-group">
@@ -105,7 +105,7 @@
             <div class="col-md-10 col-md-offset-1">
                 {{--  <h1 class="heading-1 text-center extra-padding-bottom">{{$pageTitle}}</h1>  --}}
 
-                @component('laradmin::blade_components.form_dropzone',['action'=>route('comicpic.create'),'name'=>'file','help'=>'Upload an image such as jpg, png, gif, svg etc'])
+                @component('laradmin::components.form_dropzone',['action'=>route('comicpic.create'),'name'=>'file','help'=>'Upload an image such as jpg, png, gif, svg etc'])
                     @slot('script')
                         <script src="{{url('vendor/comicpic/assets/js/dropzone_manager.js')}}">
                         </script>

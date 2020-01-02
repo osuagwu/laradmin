@@ -62,7 +62,7 @@
                 
                 <div class="padding-top-x7 padding-bottom-x2 text-center text-warning">
                     <i class="fas fa-shield-alt  fainted-01 " style="font-size:3.38rem"></i>
-                    @component('laradmin::blade_components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
+                    @component('laradmin::components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
                         
                     @endcomponent
                     

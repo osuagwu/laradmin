@@ -7,7 +7,7 @@
         <div class="row extra-padding-top">
             <div class="col-md-8 col-md-offset-2">
 
-                @component('laradmin::blade_components.panel', ['class'=>'panel-default text-reset'])
+                @component('laradmin::components.panel', ['class'=>'panel-default text-reset'])
                     @slot('title')
                         {{$pageTitle??'Password confirmation'}}
                     @endslot
@@ -45,7 +45,7 @@
                         {{ csrf_field() }}
 
                         
-                        @component('laradmin::blade_components.input_password',['name'=>'password','label'=>'Current password','required'=>'required',])
+                        @component('laradmin::components.input_password',['name'=>'password','label'=>'Current password','required'=>'required',])
                         @endcomponent 
 
                         

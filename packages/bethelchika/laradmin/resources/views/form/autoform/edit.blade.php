@@ -27,7 +27,7 @@
                     <h1 class=" title heading-2 page-title">{{$pageTitle}}</h1> 
                 </div>
             </div>
-            <!-------------end header------------------>
+            <!-- end header -->
         
             
                 

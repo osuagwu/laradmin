@@ -22,6 +22,9 @@ abstract class Theme{
      * If templates are stores in /views/themes/default/
      * $from='laradmin::themes.default.'
      * 
+     * For the case where views can be located via Laravel's 'views' folder, e.g views/mytheme/ then:
+     * $from='mytheme.'
+     * 
      * 
      *
      * @var string

@@ -31,6 +31,13 @@ class Navigation{
     protected static $activeTags=[];
 
     /**
+     * Stores list of item tags to be removed. Any item whose tag is in this list can then be removed before rendering items.
+     * 
+     * @var array
+     */
+    protected static $tagsToRemove=[];
+
+    /**
      * Construct new navigation
      *
      * @param string $navigationFile
@@ -65,6 +72,33 @@ class Navigation{
             
         }
         
+    }
+
+    /**
+     * Register a tag/dot separated tags to be removed.
+     * 
+     * @param $tags
+     * @return void
+     */
+    public static function registerTagsToRemove($tags){
+        self::$tagsToRemove[]=$tags;
+    }
+
+    /**
+     *Returns tag/dot separated tags to be removed.
+     * @return array
+     */
+    public static function getTagsToRemove($tags){
+        return self::$tagsToRemove;
+    }
+     /**
+     *Remove tag/dot separated tags registered to be removed.
+     * @return void
+     */
+    public static function applyTagsToRemove(){
+        foreach(self::$tagsToRemove as $tags){
+            self::removeByTags($tags);
+        } 
     }
 
     /**
@@ -113,7 +147,7 @@ class Navigation{
     }
 
     /**
-     * Return the item tag that should be rendered for the current minor menu or null if all the parents befor the roottag has no children.
+     * Return the item tag that should be rendered for the current minor menu or null if all the parents before the roottag has no children.
      * Note that this function is based on the current active tag/s.
      * TODO: This method may have a slightly confusing name since it has nothing to do with the css class 'minor-nav'.
      *
@@ -121,13 +155,13 @@ class Navigation{
      * @return string
      */
     public function getMinorNavTag($roottag='primary'){
-
+//dd($roottag);
         //First make sure navoigation is activated
-        self::activates();//Makes sure that menus are activated else null will be returned
+        self::activates($roottag=null);//Makes sure that menus are activated else null will be returned
 
         // Now carry on
         $at=self::getActiveTag($roottag);
-        
+        //dd($at);
         if (!$at)return null;
         
         $item=self::getMenuByTags($at);
@@ -148,21 +182,21 @@ class Navigation{
 
     /**
      * Return the tags for the current breadcrumb or build one from the given tags
-     * @param $tags Dot separated tags 
+     * @param string $tags Dot separated tags 
      * @return array
      */
     public static function getBreadcrumbTags($tags=null){
         if(!$tags){
             $ats=static::getActiveTags();
         }else{
-            $ats=explode('.',$tags);
+            $ats=[$tags];
         }
         
 
         $at_s=[];
         foreach($ats as $at){
             $temps=explode('.',$at);
-            if(count($at_s)<$temps){
+            if(count($at_s)<count($temps)){ //Choose the longest path as it is likely the most reliable
                 $at_s=$temps;
             }
         }
@@ -179,10 +213,19 @@ class Navigation{
 
      /**
      * Return the items for the current breadcrumb or build one from the given tags
-     * @param $tags Dot separated tags 
+     * @param string $tags Dot separated tags 
+     * @param boolean $from_children When true the children the item with given tags are returned as the crumb items else the tags are broken down/exploded with respect to the dots to generate the crumb.
      * @return MenuItem[]
      */
-    public static function getBreadcrumbItems($tags=null){
+    public static function getBreadcrumbItems($tags=null,$from_children=false){
+        if($tags and $from_children){// 
+            $item=static::getMenuByTags($tags);
+            if($item){
+                return $item->getChildren();
+            }
+        }
+
+        // Break down the tag to build a crumb
         $item_tags=static::getBreadcrumbTags($tags);
 
         $menuitems=[];
@@ -213,16 +256,48 @@ class Navigation{
         return true;
      }
      
-
      /**
-      * Removes a menu. TODO: has never ben tested
+      * Removes an item given by tag. The last tag is the one to be removed.
+      * TODO: Not working. perhaps issue with unseting a static variable in a function.
       *
-      * @param Menu $menu
+      * @param string $tags Dot separated tags 
       * @return void
       */
-     public static function removeMenu(Menu $menu){
-        unset(self::$menus[$menu->tag]);
+      public static function removeByTags($tags){
+        $tags_s=explode('.',$tags);
+        if(count($tags_s)==1){
+            if(isset(self::$menus[$tags_s[0]])){
+                unset(self::$menus[$tags_s[0]]);
+            }
+            
+        }else{
+            // $tag=array_pop($tags_s);
+            // $item=self::getMenuByTags(implode('.',$tags_s));
+            // if($item){
+            //     $item->removeChildByTags($tag);
+            // }
+
+            //OR
+
+            $tag=array_shift($tags_s);
+            $menu=self::getMenuByTag($tag);
+            if($menu){
+                $menu->removeChildByTags(implode('.',$tags_s));
+            }
+
+        }
+        
      }
+
+    //  /**
+    //   * Removes a menu. TODO: has never ben tested
+    //   *
+    //   * @param Menu $menu
+    //   * @return void
+    //   */
+    //  public static function removeMenu(Menu $menu){
+    //     unset(self::$menus[$menu->tag]);
+    //  }
 
      /**
       * Returns all menus
@@ -240,6 +315,7 @@ class Navigation{
      * @return Menu
      */
     public static function getMenuByTag($tag){
+
         $menus=self::getMenus();
         if(isset($menus[$tag])){
             return $menus[$tag];
@@ -254,8 +330,10 @@ class Navigation{
      * @return NavigationItem or null
      */
     public static function getMenuByTags($tags){
+        
+
         $tags=explode('.',$tags);
-        $menu=self::getMenuByTag($tags[0]);
+        $menu=self::getMenuByTag($tags[0],false);
         if(!$menu or count($tags)==1){
             return $menu;
         }
@@ -271,16 +349,16 @@ class Navigation{
     // }
     
     /**
-     * Checks if a tag refers to a navigation item is empty
+     * Checks if a tag refers to an empty navigation item
      *
      * @param string $tags Each tag must be suitable for array indexing.
      * @return boolean
      */
     public static function isEmptyTags($tags){
         if(self::getMenuByTags($tags)){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -293,7 +371,7 @@ class Navigation{
         $tags=explode('.',$tags);
         $menu=self::getMenuByTag($tags[0]);
         if(!$menu)return null;
-        return $menu->hasChildren();
+        return !$menu->hasChildren();
     }
 
     /**

@@ -62,15 +62,17 @@ class PluginServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-         //Create admin menu
-         //if(!strcmp($router->current()->getPrefix(),'cp')){//TODO:It will be nice to chck here if we are on cp b4 creating the admin menuitem; but it seems like the current route is always null here
-            $this->app->make('laradmin')->navigation->create('Plugins','plugins','admin.general',[
+        //Create admin menu if we are in console or admin
+        $laradmin=$this->app->make('laradmin');
+        if ($this->app->runningInConsole() or $laradmin->isCp()) {
+            $laradmin->navigation
+            ->create('Plugins', 'plugins', 'admin.general', [
                 'namedRoute'=>'cp-plugins',
                 'iconClass'=>'fas fa-plug',
                 'activateStartWith'=>true,
             ]);
-        //}
-    
+        }
+
     }
 
     

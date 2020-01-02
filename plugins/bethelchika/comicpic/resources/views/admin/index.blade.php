@@ -14,7 +14,7 @@
 
 
         <!-- list controls-->
-        @component('laradmin::blade_components.table_nav',[
+        @component('laradmin::components.table_nav',[
                                                         'tableName'=>'comicpics',
                                                         'actions'=>[
                                                             'delete'=>['formAction'=>route('comicpic.admin-deletes',0),'label'=>'Delete selected item'],
@@ -35,13 +35,13 @@
                 <thead>
                     <tr>
                         <th>
-                            @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'comicpics'])
+                            @component('laradmin::components.table_row_checkbox',['tableName'=>'comicpics'])
                             @endcomponent
                         </th>
                         <th> 
                         </th>
                         <th>
-                            @component('laradmin::blade_components.sort_links',['orderBy'=>'title','currentOrder'=>$currentOrder])
+                            @component('laradmin::components.sort_links',['orderBy'=>'title','currentOrder'=>$currentOrder])
                             @endcomponent
                         </th>
                         
@@ -52,7 +52,7 @@
                     @foreach($comicpics as $comicpic)
                     <tr>
                         <td>
-                        @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'comicpics','value'=>$comicpic->id,'isHeadCheckbox'=>false])
+                        @component('laradmin::components.table_row_checkbox',['tableName'=>'comicpics','value'=>$comicpic->id,'isHeadCheckbox'=>false])
                         @endcomponent
                         </td>
                         
@@ -60,7 +60,7 @@
                         <td><a href="{{route('comicpic.admin-show',$comicpic->id)}}">{{$comicpic->title}}</a></td>
                         <td>
                             
-                            @component('laradmin::blade_components.table_row_delete',['formAction'=>route('comicpic.admin-delete',$comicpic->id)])
+                            @component('laradmin::components.table_row_delete',['formAction'=>route('comicpic.admin-delete',$comicpic->id)])
                             @endcomponent
                             
                             

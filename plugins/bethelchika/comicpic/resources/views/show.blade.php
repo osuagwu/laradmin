@@ -19,7 +19,7 @@
                     <div class="show-box sub-content" >
                         {{--
                         <div class="content-top">
-                                @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'sublegend'=>$comicpic->created_at])
+                                @component('laradmin::components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'sublegend'=>$comicpic->created_at])
                                 @endcomponent
                         </div>
                         --}}
@@ -52,7 +52,7 @@
                                 @endif
                             </div>
                             <div>
-                                @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'sublegend'=>$comicpic->published_at,'class'=>'avatar-danger'])
+                                @component('laradmin::components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'sublegend'=>$comicpic->published_at,'class'=>'avatar-danger'])
                                 @endcomponent
                             </div>
                             <div class="description">{{$comicpic->description}}</div>
@@ -92,7 +92,7 @@
                                     <div class="col-xs-8">
                                             <a href="{{route('comicpic.show',$comicpic->id)}}" class="title"><span >{{$comicpic->title}}</span></a>
                                             <div class="">
-                                                @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'class'=>'avatar-info'])
+                                                @component('laradmin::components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'class'=>'avatar-info'])
                                                 @endcomponent
                                             </div>
                                             <div>

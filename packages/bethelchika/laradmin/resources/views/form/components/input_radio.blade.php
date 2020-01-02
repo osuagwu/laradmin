@@ -14,7 +14,7 @@
         @foreach($options as $option_key=>$option){{--Note, if options is not assoc, then the value of the <option> is integer starting from zero --}}
             <div class="radio">
                 <label>
-                    <input type="radio" name="{{$name}}"  value="{{$option_key}}" {{!strcmp(old($old_name??$name,$value),$option_key)? 'checked':''}} {{$style??''}}>
+                    <input type="radio" class="{{$control_class??''}}" name="{{$name}}"  value="{{$option_key}}" {{!strcmp(old($old_name??$name,$value),$option_key)? 'checked':''}} {{$style??''}}>
                     {{$option}}
                 </label>
             </div>

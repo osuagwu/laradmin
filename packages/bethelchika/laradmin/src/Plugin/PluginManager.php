@@ -5,6 +5,8 @@ use Illuminate\View\View;
 use App\Plugin\Contract\Plugable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use stdClass;
+
 //use function GuzzleHttp\json_decode;
 
 
@@ -654,8 +656,14 @@ class PluginManager{
        if($js){
             file_put_contents($ins,json_encode($js));
        }else{
+           if(file_exists($ins)){
+               return json_decode(file_get_contents($ins));//TODO: instead of accessing the disk all the time, it might be better to do this onece and return the content from a quick access memory at subsequent calls
+           }else{
+               $js=new stdClass;
+               $js->installed=[];
+               return $js;
+           }
            
-           return json_decode(file_get_contents($ins));//TODO: instead of accessing the disk all the time, it might be better to do this onece and return the content from a quick access memory at subsequent calls
        }
        
    }

@@ -11,7 +11,7 @@
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="sidebar-mainbar">
             
-            @if(!str_contains(strtolower($post->meta->sidebar),'off') and ($post->meta->sidebars or str_contains(strtolower($post->meta->blog_listing),'left')))
+            @if($post_settings['has_sidebar'])
                 {{-- sidebar control --}}
                 @include('laradmin::user.partials.sidebar.init')
 
@@ -81,7 +81,7 @@
 
 
                 <div class="row">
-                    <div class="@if(str_contains(strtolower($post->meta->rightbar),'on') or str_contains(strtolower($post->meta->blog_listing),'right')) col-md-9  @else col-md-8 col-md-offset-2 @endif">
+                    <div class="@if($post_settings['has_rightbar']) col-md-9  @else col-md-8 col-md-offset-2 @endif">
                         <div class="left">
                             <article class="page" role="presentation">
                                 <header>
@@ -89,6 +89,7 @@
                                     
                                    
                                 </header>
+                                @stack('mainbar-top')
                                 
                                 <div class="article-body">
                                     @include ('laradmin::inc.msg_board')
@@ -135,8 +136,12 @@
                                     </div>
                                     
                                 </div>
+                                @if(str_is($post->comment_status,'open'))
+                                    @include($laradmin->theme->defaultFrom().'wp.partials.comments',['post_id'=>$post->ID])
+                                @endif
                                 
-                                @include($laradmin->theme->defaultFrom().'wp.partials.comments',['post_id'=>$post->ID])
+                                @stack('mainbar-bottom')
+                                
                             {{-- <form action="{{route('post-comments')}}" method="POST">
                                 @csrf
                                 <input type="hidden" name="post_id" value="53">
@@ -149,7 +154,7 @@
                         </div>
                     </div>
                     
-                    @if(str_contains(strtolower($post->meta->rightbar),'on') or str_contains(strtolower($post->meta->blog_listing),'right'))
+                    @if($post_settings['has_rightbar'])
                     <aside class="col-md-3 ">
                         
 
@@ -188,7 +193,7 @@
 
     </div>
 </section>
-@if(str_contains(strtolower($post->meta->blog_listing),'bottom'))
+@if($post_settings['has_bottom_blog_listing'])
 <section class="section section-danger  @include($laradmin->theme->defaultFrom().'wp.inc.section_gradient',['page'=>null,'scheme'=>'danger','brand2'=>'success','fainted'=>96])  ">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="blog-listing">

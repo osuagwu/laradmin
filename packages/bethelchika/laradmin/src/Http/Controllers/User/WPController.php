@@ -44,9 +44,7 @@ class WPController extends Controller
      * @return \Illuminate\Http\Response|null
      */
     private function checkBefore(Post $post){
-        if(!$post){
-            abort(404,'The page you are looking for was not found');
-        }
+        
 
         if($post->needsAuth()){
             if(Auth::guest()){
@@ -103,7 +101,7 @@ class WPController extends Controller
         $metas['title'] = $post->title;
         $metas['description'] = $post->post_excerpt ? $post->post_excerpt : strip_tags(str_limit($post->content, 280,'...'));
         $metas['image'] = $post->image;//TODO: check that this is right
-        $metas['tweet'] = str_finish($post->post_excerpt, 277,'...') . '#' . config('app.name');
+        $metas['tweet'] = str_finish($post->post_excerpt, 277,'...') . ' #' . config('app.name');
 
         return $metas;
         
@@ -132,7 +130,7 @@ class WPController extends Controller
      * rightbar                     | on|off                                | Enable or disable the right bar
      * wide_screen                  | on|off(default)                       | When 'on' bootstraps 'container' is replaced with 'container-fluid'
      * hero_fullscreen              | on|off(default)                       | Makes the hero image full screen     
-     * hero_headline_align          | top|middle|bottom                     | Used to verticaly position the headline inside the hero NOTE: you may need to use numeric hero_height to create the enough vertical height for this setting to have effect
+     * hero_headline_align          | top|middle|bottom                     | Used to vertically position the headline inside the hero NOTE: you may need to use numeric hero_height to create the enough vertical height for this setting to have effect
      * hero_type                    | super|hero(default)                   | Determines the type of hero. Super hero extends to the top nav. For a Larus post, setting this field is enough for the post to be considered a hero.
      * social_share_top             | on|off                                | Turn on or off social share at page top
      * social_share_bottom          | on|off                                | Turn on or off social share at page bottom
@@ -154,6 +152,10 @@ class WPController extends Controller
     {   
         // Get page
         $post = Page::published()->where('post_name', $slug)->first();
+
+        if(!$post){
+            abort(404,'The page you are looking for was not found');
+        }
         
         // First check if post needs authentication/authorisation
         if(config('laradmin.wp_page_auth') ){
@@ -163,8 +165,15 @@ class WPController extends Controller
             }
         }
 
-         // Lets make sidebar white
+
+        // Make settings
+        $post_settings=$this->makeSettings($post);
+
+        // Lets make sidebar white
         $this->laradmin->assetManager->registerBodyClass('sidebar-white');
+        
+
+         
         
         $this->presets($post);
 
@@ -184,9 +193,9 @@ class WPController extends Controller
         // Define metas;
         $metas=$this->makeMeta($post,route('page', $slug));
 
-        //Make page family/related menu
-        $this->makePageFamilyMenu($post);
-        $has_page_family = $this->laradmin->navigation->isEmpty('page_family');
+        
+
+        
 
         // Make hero if applicable. 
         $tpl_filename=array_reverse(explode('.',$tpl))[0];
@@ -204,9 +213,9 @@ class WPController extends Controller
         //$is_bs_container_fluid = $this->laradmin->assetManager->isContainerFluid();
          
 
-        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts', 'has_page_family'));
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts','post_settings'));
 
-    }
+    } 
 
         /**
      * Shows a Larus post
@@ -220,6 +229,10 @@ class WPController extends Controller
         // Get Larus post
         $post = LarusPost::published()->where('post_name', $slug)->first();
 
+        if(!$post){
+            abort(404,'The page you are looking for was not found');
+        }
+
         // First check if post needs authentication/authorisation
         if(config('laradmin.wp_larus_post_auth')){
             $res=$this->checkBefore($post);
@@ -232,8 +245,12 @@ class WPController extends Controller
         // Lets remove the main menu bottom
         $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
         
+        // Make settings
+        $post_settings=$this->makeSettings($post);
+
         // Lets make sidebar white
         $this->laradmin->assetManager->registerBodyClass('sidebar-white');
+        
 
         $this->presets($post);
 
@@ -258,7 +275,7 @@ class WPController extends Controller
         $posts = Post::where('post_type', 'laradmin_larus_post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
         
 
-        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts'));
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts','post_settings'));
 
     }
 
@@ -326,13 +343,44 @@ class WPController extends Controller
     }
 
     /**
-     * Add menu for page family
+     * Creates a menu under the name breadcrumb. This menu can later be rendered as breadcrumb. 
+     * The tag for the menu 
      *
-     * @param Page $page
+     * @param Post $post
+     * @return string
+     */
+    private function makeBreadcrumb(Post $post){
+        $parent = $post->parent;
+        
+        $tag='breadcrumb';
+
+        $this->laradmin->navigation->create('Home', 'home', $tag, [
+            'url' => '/',
+        ]);
+        while($parent){
+            $this->laradmin->navigation->create(str_limit($parent->title,10,'...'), $parent->post_name, $tag, [
+                'namedRoute' => 'page',
+                'namedRouteParams' => $parent->post_name,
+            ]);
+            $parent = $parent->parent;
+        }
+        $this->laradmin->navigation->create(str_limit($post->title,10,'...'), 'current_page', $tag);
+        
+        return $tag;
+
+
+    }
+
+  
+
+    /**
+     * Add menu for post family
+     *
+     * @param Post $page
      * @param boolean $levels When true full parent and child menu structure will be created
      * @return void
      */
-    private function makePageFamilyMenu(Page $page, $levels = false)
+    private function makePageFamilyMenu(Post $page, $levels = false)
     {
         // Get children
         $children = $page->children()->where('post_type', 'page')->get();
@@ -378,6 +426,41 @@ class WPController extends Controller
     }
 
     /**
+     * Helps to create settings based on custom fields etc
+     *
+     * @param Post $post
+     * @return array
+     */
+    public function makeSettings(Post $post){
+        // Is sidebar enabled
+        $post_settings['has_sidebar']=false;
+        if(!str_contains(strtolower($post->meta->sidebar),'off') and ($post->meta->sidebars or str_contains(strtolower($post->meta->blog_listing),'left'))){
+            $post_settings['has_sidebar']=true;
+        }
+
+        // Is blog listing bottom enabled
+        $post_settings['has_bottom_blog_listing']=false;
+        if(str_contains(strtolower($post->meta->blog_listing),'bottom')){
+            $post_settings['has_bottom_blog_listing']=true;
+        }
+
+        // Is the right bar on?
+        $post_settings['has_rightbar']=false;
+        if(str_contains(strtolower($post->meta->rightbar),'on') or str_contains(strtolower($post->meta->blog_listing),'right')) {
+            $post_settings['has_rightbar']=true;
+        }
+
+        //Make page family/related menu
+        $this->makePageFamilyMenu($post);
+        $post_settings['has_page_family'] = !$this->laradmin->navigation->isEmpty('page_family');
+    
+        // Make breadcrumb
+        $post_settings['breadcrumb_tag']=$this->makeBreadcrumb($post);
+
+        return $post_settings;
+    }
+
+    /**
      * Retreives inner html of a node
      * 
      * TODO: This Method should be move out of this class into a more general class.
@@ -411,9 +494,17 @@ class WPController extends Controller
         // Get post
         $post = Post::published()->where('post_name', $slug)->first();
 
+        if(!$post){
+            abort(404,'The page you are looking for was not found');
+        }
+
 
         // Lets remove the main menu bottom
         $this->laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
+
+        // Make settings
+        $post_settings=$this->makeSettings($post);
+
         
         // Lets make sidebar white
         $this->laradmin->assetManager->registerBodyClass('sidebar-white');
@@ -441,7 +532,7 @@ class WPController extends Controller
         $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
         
 
-        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts'));
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts','post_settings'));
     }
 
 

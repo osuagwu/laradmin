@@ -18,7 +18,7 @@ $laradmin Laradmin
                             }
                         </style>
                         @endpush
-                        @component('laradmin::blade_components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
+                        @component('laradmin::components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
                         @endcomponent
                         <div class="text-right fainted-07">
                             <small ><a href="{{route('user-settings')}}" title="Profile picture"><i class="fas fa-camera"> </i> </a></small>

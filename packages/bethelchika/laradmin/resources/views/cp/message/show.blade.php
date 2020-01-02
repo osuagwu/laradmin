@@ -62,7 +62,7 @@
                                     
                                 </div>
 
-                                <div>{{$message->message}}</div>
+                                <div>{!!$message->theContent()!!}</div>
                                 <div class="text-right text-muted ">
                                     @if($user->is($message->sender)==false or ($user->is($message->sender) and $message->user->is($message->sender)) )
                                     <small class="read_at label label-info">
@@ -110,7 +110,7 @@
             <input type="hidden" name="parent_id" value="{{$parentMessage->id}}"/> 
             <input type="hidden" name="subject" value="{{$parentMessage->subject}}" /> 
             <input type="hidden" name="channels" value="{{implode(',',$parentMessage->channels)}}" /> 
-            @component('laradmin::blade_components.textarea',['name'=>'message','value'=>''])
+            @component('laradmin::components.textarea',['name'=>'message','value'=>''])
             @endcomponent 
             <div class="form-group">
                 <div class="col-md-6 col-md-offset-4">

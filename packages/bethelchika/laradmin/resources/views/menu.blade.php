@@ -13,7 +13,7 @@
   if(!isset($activate)){
     $activate=true;
   }
-  
+  $nav->applyTagsToRemove();// Remove any item marked for removal
   $menu=$nav->getMenuByTags($tag);//Note that menu can be also a menu item.
   if(!$menu ) {return;}
   if($activate){$nav->activates($tag);}

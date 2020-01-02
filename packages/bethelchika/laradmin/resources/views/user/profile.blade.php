@@ -43,18 +43,20 @@
                         --}}
                         @include ('laradmin::inc.msg_board')
                         @include('laradmin::inc.email_confirmation_prompt')
-                        <nav class="nav nav-tabs nav-flat">
-                            @include('laradmin::menu',['tag'=>$forms_nav_tag])
+                        <nav>
+                            <ul class="nav nav-tabs nav-flat">
+                                @include('laradmin::menu',['tag'=>$forms_nav_tag])
+                            </ul>
                         </nav>
 
                         
                         @if(str_is($form->getTag(),'personal'))
                             <div class="row row-c no-elevation">
-                                <div class="col-md-2 hidden-xs">
+                                <div class="col-md-2">
                                     {{-- <img class="img-circle" src="{{Auth::user()->avatar}}" /> --}}
-                                    @component('laradmin::blade_components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
+                                    @component('laradmin::components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
                                     @endcomponent
-                                    <a class="fainted-04  text-danger" href="#" ><i class="fas fa-camera"></i></a>
+                                    <a class="fainted-04  text-danger" href="{{route('user-avatar')}}" ><i class="fas fa-camera"></i></a>
                                 </div>
                                 <div class="col-md-10">
                                         @include('laradmin::form.index_form',['form'=>$form])

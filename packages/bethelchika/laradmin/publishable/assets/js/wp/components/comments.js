@@ -271,11 +271,11 @@ Vue.component('laradmin-wp-comments', {
                     </laradmin-wp-comment>\
                   \
                 \
-                <p class='text-center padding-top-x2 padding-bottom-x5'>\
+                <div class='text-center padding-top-x2 padding-bottom-x5 btn-more-comments'>\
                   <span v-show='isLoading' class='is-loading btn btn-primary text-center'>Loading...</span>\
                   <button class='btn btn-primary' v-show='!isLoading && hasMorePages' v-on:click='fetchMoreComments'>More comments <i class='fas fa-angle-double-down'> </i></button>\
                   <button disabled='disabled' class='btn btn-primary' v-show='!isLoading && !hasMorePages' >More comments <i class='fas fa-angle-double-down'> </i></button>\
-                </p>\
+                </div>\
                 <p class='alert alert-danger' v-show='error.length'>\
                   <i class='fas fa-exclamation-triangle'> </i> \
                   {{error}}\

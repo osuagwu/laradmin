@@ -15,15 +15,14 @@ use BethelChika\Laradmin\Http\Controllers\User\Traits\ReAuthController;
 use BethelChika\Laradmin\Laradmin;
 use BethelChika\Laradmin\WP\Models\Post;
 use BethelChika\Laradmin\Form\Form;
-use BethelChika\Laradmin\Form\Field;
-use BethelChika\Laradmin\Form\Group;
 use BethelChika\Laradmin\WP\Models\Page;
 use BethelChika\Laradmin\SecurityQuestion;
 use Illuminate\Support\Facades\Validator;
+use  BethelChika\Laradmin\Http\Controllers\User\Traits\UserAvatar;
 
 class UserProfileController extends Controller
 {
-    use EmailConfirmationEmail, ReAuthController;
+    use EmailConfirmationEmail, ReAuthController,UserAvatar;
 
     private $laradmin;
     /**
@@ -36,8 +35,9 @@ class UserProfileController extends Controller
         parent::__construct();
         $this->middleware('auth', ['except' => ['emailConfirmation','privacy']]);
         
-        $this->middleware('re-auth:10')->only(['edit']);
+        $this->middleware('re-auth:30')->only(['edit','avatar']);
         $this->middleware('re-auth:5')->only(['editPassword' ,'updatePassword','securityQuestionsUpdate','securityQuestionsEdit', 'initiateSelfDelete', 'selfDeactivate']); //Set a much more strict rerauth params for changing password.
+        
 
         $this->laradmin = $laradmin;
         // Load menu items for user settings
@@ -45,7 +45,7 @@ class UserProfileController extends Controller
 
         //Register classes
         $laradmin->assetManager->registerBodyClass('sidebar-white');
-        //Remove main nane border-bottom
+        //Remove main nav border-bottom
         $laradmin->assetManager->registerBodyClass('main-nav-no-border-bottom');
     }
 

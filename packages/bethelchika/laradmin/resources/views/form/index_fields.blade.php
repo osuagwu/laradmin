@@ -22,13 +22,13 @@ $fields Collection of fields object
         @case($field::TEXTAREA)
         @case($field::CHECKBOX)
             <div class="row {{$field->class}}">
-                <div class="col-xs-6 col-md-3 "><div class="field">{{$field->label}} @if($field->unit) <em>{{$field->unit}}</em> @endif </div></div>
+                <div class="col-xs-6 col-md-3 "><div class="field">{{$field->label??ucfirst(str_replace('_',' ',$field->name))}} @if($field->unit) <em>{{$field->unit}}</em> @endif </div></div>
                 <div class="col-xs-6 col-md-9 ">
                     @if($field->indexDescription)<div class="description">{{$field->indexDescription}}</div>@endif
                     <div class="value">
                     @if(str_is($field::PASSWORD,$field->type))
                         ********** 
-                    @elseif(str_is($field::HTML,$field->type))
+                    @elseif(str_is($field::HTML,$field->type) or (str_is($field::TEXTAREA,$field->type) and $field->indexAllowHTML))
                         {!!$field->value!!}
                     @elseif(str_is($field::SELECT,$field->type) or str_is($field::RADIO,$field->type))
                         @foreach($field->options as $opt_fv=>$label)

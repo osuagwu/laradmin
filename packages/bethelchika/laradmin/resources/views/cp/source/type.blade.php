@@ -47,7 +47,7 @@
                             <td>
                                 <a href="{{route('cp-source-edit',[$source->type,$source->id])}}"><i class="fas fa-edit"></i></a>
                                 
-                                @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-source-edit',[$source->type,$source->id])])
+                                @component('laradmin::components.table_row_delete',['formAction'=>route('cp-source-edit',[$source->type,$source->id])])
                                 @endcomponent
                             </td>
                         </tr>

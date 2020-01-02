@@ -10,7 +10,7 @@ use BethelChika\Laradmin\Feed\FeedManager;
 use Illuminate\View\Factory as ViewFactory;
 use BethelChika\Laradmin\Asset\AssetManager;
 use BethelChika\Laradmin\Media\MediaManager;
-use Intervention\Image\ImageServiceProvider;
+//use Intervention\Image\ImageServiceProvider;
 use BethelChika\Laradmin\Notifications\Notice;
 use BethelChika\Laradmin\WP\WPServiceProvider;
 use BethelChika\Laradmin\Permission\Permission;
@@ -59,13 +59,14 @@ class LaradminServiceProvider extends ServiceProvider
         $this->app->register(PluginServiceProvider::class);
 
         // Register service providers from other packages 
-        $this->app->register(ImageServiceProvider::class); //TODO: this can also be simply be put in the laravel's main config/app instead expecially if the main app is going to use this package already
+        //$this->app->register(ImageServiceProvider::class); //TODO: this can also be simply be put in the laravel's main config/app instead expecially if the main app is going to use this package already
 
         // Register wordpress bridge which will used for pages menus etc
         $this->app->register(WPServiceProvider::class);
 
         // Register form service provider
         $this->app->register(FormServiceProvider::class);
+        
         
 
         
@@ -75,6 +76,8 @@ class LaradminServiceProvider extends ServiceProvider
      * Bootstrap the application services.
      * 
      * @param \Illuminate\Routing\Router $router
+    *  @param \BethelChika\Laradmin\Laradmin $laradmin
+     * @param ViewFactory $view
      * @return void
      */
     public function boot(Router $router,Laradmin $laradmin,ViewFactory $view)
@@ -104,9 +107,7 @@ class LaradminServiceProvider extends ServiceProvider
         
 
         
-        //Share a view of list of plugins
-        //$this->sharePluginsList($laradmin,$view);
-
+        
 
         // Share laradmin to all views
         $view->share('laradmin', $laradmin);
@@ -146,11 +147,10 @@ class LaradminServiceProvider extends ServiceProvider
         
         // Load route
         $this->loadRoutesFrom($laradminPath.'/routes/web.php');
-
-        //dd($_SERVER);
-        // Detect when we are in admin and load the cp routes
+        
+        // Check if we are in admin and load the cp routes
         // NOTE: If this gives problem just merge the cp_wep.php into web.php or just load cp_web.php all the time
-        if($this->app->runningInConsole() or strpos($_SERVER['REQUEST_URI'],'/cp/')===0 ){// NOTE: this prohibits the use of 'domain/cp' i.e with the trailing slash '/'
+        if($this->app->runningInConsole() or $laradmin->isCp()){
             $this->loadRoutesFrom($laradminPath.'/routes/cp_web.php');
         }
         
@@ -168,7 +168,7 @@ class LaradminServiceProvider extends ServiceProvider
         
 
         if ($this->app->runningInConsole()) {
-            // Publish confi
+            // Publish config
             $this->publishes(
                 [$laradminPath.'/config/laradmin.php'=>config_path('laradmin.php')], 'laradmin-config'
             );
@@ -190,22 +190,21 @@ class LaradminServiceProvider extends ServiceProvider
             $this->publishes([
                 $laradminPath.'/publishable/assets' => public_path('vendor/laradmin'),
             ], 'laradmin-asset');
+
+
+            // Raw assets
+            $this->publishes([
+                $laradminPath.'/resources/user' => resource_path('/laradmin/user/'),
+            ], 'laradmin-raw-asset');
+ 
+            
         }
 
 
         
     }
 
-    // /**
-    //  * Share plugins list to the views
-    //  *
-    //  * @return void
-    //  */
-    // private function sharePluginsList(Laradmin $laradmin,ViewFactory $view ){
-    //     $pluginsList=$laradmin->pluginManager->getAllInfo();
-    //     $view->share('plugins', $pluginsList);
-        
-    // }
+   
 
    
 

@@ -8,12 +8,12 @@
             <li class="breadcrumb-item active">me</li>
         </ol>
 
-        <!----------------------------------------->
+        <!-- -->
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-xs-3">
-                        @component('laradmin::blade_components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
+                        @component('laradmin::components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
                         @endcomponent
                     </div>
                     <div class="col-xs-9">
@@ -25,7 +25,7 @@
                 <h1 class="heading-big content-title text-right  fainted-07  "> My {{$appname}} <small class="text-white"> - your very own creation!</small></h1>
             </div>
         </div>
-        <!---------------------------------------------------->
+        <!-- -->
 
         <nav>
             <ul class="nav nav-tabs nav-justified nav-flat">
@@ -109,7 +109,7 @@
                     </div>
                     <div class="content-bottom">
                         <div class="">
-                            @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'class'=>'avatar-subtle'])
+                            @component('laradmin::components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name,'class'=>'avatar-subtle'])
                             @endcomponent
                         </div>
                         

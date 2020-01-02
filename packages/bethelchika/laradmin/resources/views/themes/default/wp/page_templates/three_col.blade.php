@@ -86,6 +86,7 @@
                                     
                                     
                                 </header>
+                                @stack('mainbar-top')
                                 
                                 <div class="article-body">
                                     @include ('laradmin::inc.msg_board')
@@ -128,6 +129,10 @@
                                     </div>
                                     
                                 </div>
+                                @if(str_is($post->comment_status,'open'))
+                                    @include($laradmin->theme->defaultFrom().'wp.partials.comments',['post_id'=>$post->ID])
+                                @endif
+                                @stack('mainbar-bottom')
                             </article>
                         </div>
                     </div>

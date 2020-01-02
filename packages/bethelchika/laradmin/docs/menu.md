@@ -4,7 +4,7 @@ Menu (class=Menu):  A navigation item whos children are menu items.
 Munu item (class=MenuItem): Displayable nagigation item who is a child of menu; it can have a link.
 Nanigation (class=Navigation): A list of menus.
 ## Initialisation
-All the properties of the `Navigation` class are all static and one of them stores the menus and menu items. To initialise the navigation simply make a call the `Navigation` class thus:
+All the members of the `Navigation` class are static and one of them stores the menus and menu items. To initialise the navigation simply make a call to the `Navigation` class thus:
 ```php
 Navigation::init('navigation.nav');
 ```
@@ -13,11 +13,11 @@ Or
 $nav=new Navigation('navigation.nav');
 $nav->init();
 ```
-where 'navigation.nav' (default) is the navigation file where you want navigations to be stores. 
+where 'navigation.nav' (default) is the navigation file where you want navigation items to be stored. 
 
 ## Creating a menu item
 ### Using navigation object
-The easist way to create a menu is to use the `Navigation` class' `create` method.
+The easiest way to create a menu is to use the `Navigation` class' `create` method.
 ```php
 Navigation::create('Contact','contact','primary'); //
 ```
@@ -25,9 +25,9 @@ The above will create a menu item named 'Contact' with a tag 'contact' in the me
 
 ```php
 $item =Navigation::create('Test 2','test2','primary.test1',['url'=>'http://www.bbc.co.uk']);
-$item->cssClass='btn lg';
+$item->cssClass='btn btn-primary';
 ```
-The above will create a menu item with a lable 'Test 2' with tag 'test2' as a child item of 'test1' which is in the 'primary' menu. Notice that the Navigation actually returns the menu item allowing it to be further customised.
+The above will create a menu item with a label 'Test 2' with tag 'test2' as a child item of 'test1' which is in the 'primary' menu. Notice that the Navigation actually returns the menu item allowing it to be further customised.
 
 You can also pass a forth parameter to set some public properties of the item 
 ```php
@@ -37,7 +37,7 @@ Navigation::create('Test 4','test4','sidebar.test1.test2.test3',[
     ...
     ]);
 ```
-Note that if any oof the 'test1' - 'test3' does not exist, it will be created; that is the advantage of using the `Navigation` class.
+Note that if any of the 'test1' - 'test3' does not exist, it will be created; that is the advantage of using the `Navigation` class.
 
 ### Manually
 Let us manually create two menu items and add both to primary menu.
@@ -66,7 +66,21 @@ Navigation::clearAll();
 ```
 
 ### Remove specific items
-The `Menu` and `MenuItem` methods for removing selected items exists but are not tested.
+The `Menu` and `MenuItem` methods for removing selected items exists but are not documented.
+
+### Tags to remove
+You can avoid printing an already added menu item by registering the corresponding tags as items for removal.
+
+```php
+ //Remove unwanted menu
+ $navigation->registerTagsToRemove('user_settings.billing');
+```
+If you are using the default menus rendering blade file, then corresponding menu will not be displayed. If not you cn remove all items specified for removal yourself:
+
+```php
+$navigation->applyTagsToRemove();// Remove any item marked for removal
+```
+
 
 ## Storing
 You can store the current menu to disk so that it can be loaded again on start up thus:
@@ -79,6 +93,7 @@ Names of pre-defined menus include
 'primary'| Main menu
 'user_apps' | applications that users can interact with
 'user_settings'| User settings
+'logged_in'|The menu that usually appears to the rightmost side of page for logged in users
 'app_settings'| Application settings menus
 'sidebar' | Side bar menus
 'footer'| Footer menus
@@ -125,9 +140,9 @@ You can create a dummy menu item that will make Feeds menu item active when any 
 ```php
 Navigation::create('somename','sometag','primary.feeds',['namedRoute'=>'feeds.show','namedRouteParams'=[0],'isDummy'=>true]);
 ```
-Note the the namedRouteParams property has to be provided if the route needs parameter but the values can be any thing here since only the route name is relevant here.
+Note the the namedRouteParams property has to be provided if the route needs parameter but the values can be any thing here since only the route name is relevant.
 
-A more efficient way to add dummy-like behaviour with creating new items is to add dummy route names to an item uisng addDummyNamedRoutes method:
+A more efficient way to add dummy-like behaviour when creating new items is to add dummy route names to an item using addDummyNamedRoutes method:
 
 ```php
 $admin_nav=$laradmin->navigation->create('Comicpic','comicpic','admin.apps',[
@@ -143,4 +158,4 @@ $admin_nav->addDummyNamedRoutes([
 The argument is the named routes which can be an array or comma separated list.
 
 ### activateStartWith
-If your menu item links builds on each other, then their is a simpler way to activate parent menu item without getting dirty with dummies. You can do this by setting the activateStartWith menu item property to true. For example say the parent menu link is 'http://webferendum.com/posts' and the children links follow 'http://webferendum.com/posts/{posts_slug}'. There can be potentially hundreds of children here and you would not want to add them as children to the parent. By using the activateStartWith property of the parent to true, the parent will be active for all the various posts independent of the post's slug, because the post's url starts with http://webferendum.com/posts. 
+If your menu item links builds on each other, then their is a simpler way to activate parent menu item without getting dirty with dummies. You can do this by setting the activateStartWith menu item property to true. For example say the parent menu link is 'http://webferendum.com/posts' and the children links follow 'http://webferendum.com/posts/{posts_slug}'. There can be potentially hundreds of children here and you would not want to add them as children to the parent. By setting the activateStartWith property of the parent to true, the parent will be active for all the various posts independent of the post's slug, because the post's url starts with http://webferendum.com/posts. 

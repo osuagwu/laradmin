@@ -27,7 +27,7 @@
     </section>
 
 
-@component('laradmin::blade_components.section',['type'=>'subtle','class'=>'extra-padding-bottom','role'=>'main'])
+@component('laradmin::components.section',['type'=>'subtle','class'=>'extra-padding-bottom','role'=>'main'])
     
     
     <div class="row">

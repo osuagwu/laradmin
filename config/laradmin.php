@@ -12,6 +12,13 @@ return [
     'guest_id' => env('LARADMIN_GUEST_ID', 5),
 
     /**
+     * These settings will be used when creating and managing avatar
+     */
+    'avatar'=>[
+        'width'=>360,//px
+        'height'=>360,//px
+    ],
+    /**
      * General Laravel validation rule for general fields. Primarily used for user password
      * See Laravel docs for how to define validation  rules. THE RULES HERE HOWEVER SHOULD BE
      * SPECIFIED USING ARRAY.
@@ -93,6 +100,15 @@ return [
                 'subtle' => '#f4f4f4',
                 'secondary'=>'#D17A22'
      ],
+
+     /**
+      * Names of different variants of logo.
+      */
+     'logos'=>[
+        'default'=>'/img/logo.svg',
+        'reverse'=>'/img/logo-reverse.svg',
+     ],
+
 
      /**
       * Set the cookie consent params
@@ -234,7 +250,7 @@ return [
     */
 
     'geoip'=>[
-        'db_city_filename'=>'/geoip2/GeoLite2-City',//The City filename of the geo location ip db relative to laravel root. 
+        'db_city_filename'=>'/geoip2/GeoLite2-City.mmdb',//The City filename of the geo location ip db relative to laravel root. 
     ],
 
 

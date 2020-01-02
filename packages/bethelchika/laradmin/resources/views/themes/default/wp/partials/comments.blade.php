@@ -6,7 +6,7 @@ COmments Vue components loader --}}
 
 
 <laradmin-wp-comments  
-    v-bind:post-id={{$post_id}}
+    v-bind:post-id='{{$post_id}}'{{-- added added missing single quotes 20/10/2019--}}
     source-url='{{route("post-comments")}}' 
     box-class='{{$box_class??''}}' 
     v-bind:allow-fetch-on-scroll='{{$allow_fetch_on_scroll??'true'}}' 

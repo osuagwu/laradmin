@@ -22,6 +22,14 @@ class Laradmin
 
     public $theme;
 
+    /**
+     * This is set to true when we are in admin pages
+     *
+     * @var boolean
+     */
+    private $isCp=false;
+
+
     public function __construct(
         MediaManager $mediaManager,
         FeedManager $feedManager,
@@ -38,8 +46,22 @@ class Laradmin
 
         $this->theme=$theme;
 
+        // Detect when we are in admin and make note
+        if(isset($_SERVER['REQUEST_URI']) and strpos($_SERVER['REQUEST_URI'],'/cp/')===0){ // NOTE: this prohibits the use of 'domain/cp' i.e with the trailing slash '/'
+            $this->isCp=true;
+        }
 
     }
+
+    /**
+     * Checks if we are in admin pages
+     *
+     * @return boolean
+     */
+    public function isCp(){
+        return $this->isCp;
+    }
+
     public function resetMenus()
     {
         // Clear all menu

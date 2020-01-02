@@ -1,0 +1,836 @@
+/************************************************************
+* Section 
+* Section rules
+**************************************************************/
+section{
+
+}
+.section{
+    
+    
+    
+}
+
+
+@mixin section-diffuse($brand-name,$brand){
+    /**
+    * Helper for creating section diffuse
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage: @include section-diffuse(primary,$brand-primary)
+    */
+    .section-#{$brand-name}.section-light-bg.section-diffuse{
+        background: linear-gradient(to bottom,lighten($brand,20%) 0%,lighten($brand,25%));
+    }
+    .section-#{$brand-name}.section-diffuse {
+        position: relative;
+        background: linear-gradient(to bottom,$brand 0%,lighten($brand,10%));
+        box-shadow: 0 12px 45px -8px rgba($brand,.35);
+    }
+    .section-#{$brand-name}.section-diffuse.section-diffuse-no-shadow{
+        box-shadow:none;
+    }
+}
+
+
+
+.section-overlay{
+    //NOTE: You can offset the any padding set in the .section  class here  and tranfer them inside the overlay here if you want the overlay edges to start with the section edges.
+     
+}
+    /**
+    * Helper for creating section overlay
+    * @param $brand-name Brand name (e.g primary)
+    * @param $brand Brand color (e.g $brand-primary)
+    * Useage : @include section-overlay(primary,$brand-primary);
+    */
+@mixin section-overlay($brand-name,$brand){
+
+    .section-#{$brand-name} .section-overlay{
+        background-color:rgba($brand-primary,0.2); 
+        @media (min-width: 768px){
+            &.section-overlay-gradient-flat{
+                background: linear-gradient(180deg, rgba(0,0,0,0.208) 38%, rgba(0,0,0,0.001) 38%);
+            }
+            
+            &.section-overlay-gradient-angle{
+                background: linear-gradient(176deg, rgba(0,0,0,0.208) 42%, rgba(0,0,0,0.001) 42%);
+            }
+            
+            &.section-overlay-gradient-smooth{
+                background: linear-gradient(176deg, rgba(0,0,0,0.8071603641456583) 0%, rgba(0,0,0,0.020045518207282953) 47%);
+            }
+
+            // Brand gradient
+            &.section-overlay-brand-gradient-flat{
+                background: linear-gradient(180deg, rgba($brand,0.408) 38%, rgba(0,0,0,0.001) 38%);
+            }
+            
+            &.section-overlay-brand-gradient-angle{
+                background: linear-gradient(176deg, rgba($brand,0.408) 42%, rgba(0,0,0,0.001) 42%);
+            }
+            
+            &.section-overlay-brand-gradient-smooth{
+                background: linear-gradient(176deg, rgba($brand,0.9071603641456583) 0%, rgba(0,0,0,0.020045518207282953) 45%);
+            }
+        }
+        
+    }
+    
+}
+
+//   /** 
+//     * Helper for creating section linear gradient
+//     * @param $brand-name Brand name (e.g primary)
+//     * @param $brand Brand/start color (e.g $brand-primary)
+//     * @param $secondary-name The name of the end color for the gradient  (e.g $danger)
+//     * @param $secondary end color for the gradient  (e.g $brand-danger)
+//     * Useage : @include section-linear-gradient(primary,$brand-primary,danger,$brand-danger);
+//     * Output of usage: 
+//     * .section-linear-gradient-danger-top{Gradient rule...}
+//     * .section-linear-gradient-danger-bottom{gradient rule...}
+//     * .section-linear-gradient-danger-left-bottom{gradient rule...}
+//     * ....
+//     * Apply any of these long css class name to a .section to apply the the associated gradient.
+//     * To modify the opacity of the gradient, add the calss:
+//     * .section-linear-gradient-fainted-$level
+//     * where $level = {01,02,03 ...N}. where N depends on the defined number of levels in the @mixin
+//     * TODO: [URGENT] This mixin is generating far too much rules that makes the css file size so huge. 
+//     * TODO: This mixin is no more in use as the required styles are now generated through php.
+//     */
+@mixin section-linear-gradient($brand-name,$brand,$secondary-name,$secondary){
+    // Define the gradint directions
+    $directions: ("top": "top",
+                  "bottom": "bottom", 
+                  "left-bottom": "left bottom",
+                  //"bottom-left": "left bottom", //It allows for both bottom-left and left-bottom to mean the same.
+                  "right-bottom": "right bottom",
+                  //"bottom-right": "right bottom",//,,
+                  "left": "left",
+                  "left-top": "left top",
+                  //"top-left": "left top",//,,
+                  "right": "right",
+                  //"top-right": "right top"//,,
+    );
+    
+
+    // define colors and generate between colors
+    $color-start:$brand;
+    $color-end:$secondary;
+    $b:mix($color-end, $color-start, 25%);
+    $c:mix($color-end, $color-start, 50%);
+    $d:mix($color-end, $color-start, 75%);
+
+    $n-opacity-levels:9; // Number of integer opacity levels starting from 01,02,03...
+                        // The correspoding opacity levels will be accessed using .section-linear-gradient-fainted-01/02/03...
+
+    // generate the css
+    @each $direction, $direction-css in $directions {
+        .section-#{$brand-name} {
+            &.section-linear-gradient-#{$secondary-name}-#{$direction}{
+                background-image: linear-gradient(to #{$direction-css}, $color-start 0%,$b 36%, $c 67%, $d 93%, $color-end 100%);
+                // generate opacified versions
+                @for $i from 1 through $n-opacity-levels {
+                    $lighten-by:100 - ( 100/$n-opacity-levels * $i );
+                    &.section-linear-gradient-fainted-0#{$i}{
+                        $color-start2:lighten($color-start,$lighten-by);
+                        $b2:lighten($b,$lighten-by);
+                        $c2 :lighten($c,$lighten-by);
+                        $d2 :lighten($d,$lighten-by);
+                        $color-end2:lighten($color-end,$lighten-by);
+                        background-image: linear-gradient(to #{$direction-css}, $color-start2 0%,$b2 36%, $c2 67%, $d2 93%, $color-end2 100%);
+
+                    }
+                }
+            }
+        }
+    }
+   
+}
+
+
+
+
+.section-default{
+    
+}
+.section-primary{
+    background-color:$brand-primary; 
+    //@extend .bg-blured;
+    color:#fff;
+}
+.section-primary.section-light-bg{
+    background-color:lighten($brand-primary,20%);
+}
+
+@include section-diffuse(primary,$brand-primary);
+@include section-overlay(primary,$brand-primary);
+
+//Add gradients 
+
+     // CAUTION: Uncomment the gradients you would like to use. Note that it makes 
+    // the CSS file quite size huge; so only uncomment the once you surely need. 
+
+    // @include section-linear-gradient(primary,$brand-primary,info,$brand-info);
+    // @include section-linear-gradient(primary,$brand-primary,success,$brand-success);
+    // @include section-linear-gradient(primary,$brand-primary,warning,$brand-warning);
+    // @include section-linear-gradient(primary,$brand-primary,danger,$brand-danger);
+    // @include section-linear-gradient(primary,$brand-primary,secondary,$brand-secondary);
+    // @include section-linear-gradient(primary,$brand-primary,subtle,$brand-subtle);
+
+
+
+
+
+
+
+
+
+.section-info{
+    
+    background-color:$brand-info; 
+    color:#fff;
+}
+.section-info.section-light-bg{
+    background-color:lighten($brand-info,20%);
+}
+
+@include section-diffuse(info,$brand-info);
+@include section-overlay(info,$brand-info);
+
+//Add gradients 
+
+     // CAUTION: Uncomment the gradients you would like to use. Note that it makes 
+    // the CSS file quite size huge; so only uncomment the once you surely need. 
+    // @include section-linear-gradient(info,$brand-info,primary,$brand-primary);
+    // @include section-linear-gradient(info,$brand-info,success,$brand-success);
+    // @include section-linear-gradient(info,$brand-info,warning,$brand-warning);
+    // @include section-linear-gradient(info,$brand-info,danger,$brand-danger);
+    // @include section-linear-gradient(info,$brand-info,secondary,$brand-secondary);
+    // @include section-linear-gradient(info,$brand-info,subtle,$brand-subtle);
+
+
+
+
+
+.section-success{
+    
+    background-color:$brand-success; 
+    color:#fff;
+}
+.section-success.section-light-bg{
+    background-color:lighten($brand-success,20%);
+}
+
+@include section-diffuse(success,$brand-success);
+@include section-overlay(success,$brand-success);
+
+//Add gradients 
+     // CAUTION: Uncomment the gradients you would like to use. Note that it makes 
+    // the CSS file quite size huge; so only uncomment the once you surely need. 
+
+    // @include section-linear-gradient(success,$brand-success,primary,$brand-primary);
+    // @include section-linear-gradient(success,$brand-success,info,$brand-info);
+    // @include section-linear-gradient(success,$brand-success,warning,$brand-warning);
+    // @include section-linear-gradient(success,$brand-success,danger,$brand-danger);
+    // @include section-linear-gradient(success,$brand-success,secondary,$brand-secondary);
+    // @include section-linear-gradient(success,$brand-success,subtle,$brand-subtle);
+
+
+
+
+.section-warning{
+    
+    background-color:$brand-warning; 
+    color:#fff;
+}
+.section-warning.section-light-bg{
+    background-color:lighten($brand-warning,20%);
+}
+@include section-diffuse(warning,$brand-warning);
+@include section-overlay(warning,$brand-warning);
+
+//Add gradients
+     // CAUTION: Uncomment the gradients you would like to use. Note that it makes 
+    // the CSS file quite size huge; so only uncomment the once you surely need. 
+
+    // @include section-linear-gradient(warning,$brand-warning,primary,$brand-primary);
+    // @include section-linear-gradient(warning,$brand-warning,info,$brand-info);
+    // @include section-linear-gradient(warning,$brand-warning,success,$brand-success);
+    // @include section-linear-gradient(warning,$brand-warning,danger,$brand-danger);
+    // @include section-linear-gradient(warning,$brand-warning,secondary,$brand-secondary);
+    // @include section-linear-gradient(warning,$brand-warning,subtle,$brand-subtle);
+
+
+
+
+
+.section-danger{
+    
+    background-color:$brand-danger; 
+    color:#fff; 
+}
+.section-danger.section-light-bg{
+    background-color:lighten($brand-danger,20%);
+}
+@include section-diffuse(danger,$brand-danger);
+@include section-overlay(danger,$brand-danger);
+
+//Add gradients 
+
+    // CAUTION: Uncomment the gradients you would like to use. Note that it makes 
+    // the CSS file quite size huge; so only uncomment the once you surely need. 
+
+    // @include section-linear-gradient(danger,$brand-danger,primary,$brand-primary);
+    // @include section-linear-gradient(danger,$brand-danger,info,$brand-info);
+    // @include section-linear-gradient(danger,$brand-danger,success,$brand-success);
+    // @include section-linear-gradient(danger,$brand-danger,warning,$brand-warning);
+    // @include section-linear-gradient(danger,$brand-danger,secondary,$brand-secondary);
+    // @include section-linear-gradient(danger,$brand-danger,subtle,$brand-subtle);
+
+
+
+.section-subtle{
+    
+    background-color:$brand-subtle;
+    
+}
+@include section-diffuse(subtle,darken($brand-subtle,20));
+
+.section-subtle .section-overlay{
+    background-color:rgba($brand-subtle,0.4); 
+}
+
+//Add gradients 
+    // CAUTION: Uncomment the gradients you would like to use. Note that it makes 
+    // the CSS file quite size huge; so only uncomment the once you surely need. 
+
+    // @include section-linear-gradient(subtle,$brand-subtle,primary,$brand-primary);
+    // @include section-linear-gradient(subtle,$brand-subtle,info,$brand-info);
+    // @include section-linear-gradient(subtle,$brand-subtle,success,$brand-success);
+    // @include section-linear-gradient(subtle,$brand-subtle,warning,$brand-warning);
+    // @include section-linear-gradient(subtle,$brand-subtle,danger,$brand-danger);
+    // @include section-linear-gradient(subtle,$brand-subtle,secondary,$brand-secondary);
+
+
+
+
+
+
+// Section color correction and other corrections_________________________________________
+.section-primary .breadcrumb,
+.section-info .breadcrumb,
+.section-success .breadcrumb,
+.section-danger .breadcrumb,
+.section-warning .breadcrumb{
+    margin-bottom: 0;
+    a{
+        color:#fff;
+        opacity: 0.8;
+    }
+    &.bg-transparent:before,.active{
+        color:#fff;
+        opacity:0.6;
+    }
+    
+} 
+
+// .section-primary .heading-giant,
+// .section-danger  .heading-giant,
+// .section-warning .heading-giant,
+// .section-success .heading-giant,
+// .section-info .heading-giant,
+
+// .section-primary .heading-huge,
+// .section-danger  .heading-huge,
+// .section-warning .heading-huge,
+// .section-success .heading-huge,
+// .section-info .heading-huge,
+
+// .section-primary .heading-big, 
+// .section-danger  .heading-big,
+// .section-warning .heading-big,
+// .section-success .heading-big,
+// .section-info .heading-big,
+
+// .section-primary .heading-0,
+// .section-danger  .heading-0,
+// .section-warning .heading-0,
+// .section-success .heading-0,
+// .section-info .heading-0,
+
+// .section-primary .heading-1,
+// .section-danger  .heading-1,
+// .section-warning .heading-1,
+// .section-success .heading-1,
+// .section-info .heading-1,
+
+// .section-primary .heading-2,
+// .section-danger  .heading-2,
+// .section-warning .heading-2,
+// .section-success .heading-2,
+// .section-info .heading-2,
+
+// .section-primary .heading-3,
+// .section-danger  .heading-3,
+// .section-warning .heading-3,
+// .section-success .heading-3,
+// .section-info .heading-3,
+
+// .section-primary .heading-4,
+// .section-danger  .heading-4,
+// .section-warning .heading-4,
+// .section-success .heading-4,
+// .section-info .heading-4,
+
+// .section-primary .heading-5,
+// .section-danger  .heading-5,
+// .section-warning .heading-5,
+// .section-success .heading-5,
+// .section-info .heading-5,
+
+// .section-primary .heading-6,
+// .section-danger  .heading-6,
+// .section-warning .heading-6,
+// .section-success .heading-6,
+// .section-info .heading-6
+// {
+//     color:#fff;
+// }
+
+
+
+.section-primary .table,
+.section-info .table,
+.section-success .table,
+.section-danger .table,
+.section-warning .table
+{
+    background-color:#fff; 
+    color:$text-color;
+} 
+// .section-primary a,
+// .section-info a,
+// .section-success a,
+// .section-danger a,
+// .section-warning a
+// {
+//     color:#fff;
+// } 
+
+// .section-primary,
+// .section-info,
+// .section-success,
+// .section-danger,
+// .section-warning { 
+//     .text-reset{ 
+//     color:$text-color ;
+//         a{
+//             color:$brand-primary ;
+//         }
+//     }
+// }
+
+// Correction for bootstrap navs on on section****************
+
+
+
+
+.section-subtle .nav-tabs {
+    //border-left: 1px solid #ddd;
+    //border-right: 1px solid #ddd;
+    border-radius: 4px*$ubr 4px*$ubr 0 0;
+}
+
+
+
+
+.section-subtle .nav .open > a, 
+.section-subtle .nav .open > a:hover, 
+.section-subtle .nav .open > a:focus {
+    border-color:#ddd;
+}
+
+
+
+
+// Section stripe
+.section-title{// useful for ribbon title in a page
+    
+    
+    padding-top:0px;
+    padding-bottom: 0px;
+}
+
+.section-title.with-padding{// 
+    padding-top:15px;
+    padding-bottom: 15px;
+}
+.section-title .title-box{
+    display: flex;
+    align-items: center;
+    width:100%;
+    height:50px;
+}
+.section-title .title-box > div,
+.section-title .title-box > [class*="heading-"],
+.section-title .title-box > .content-title{
+    flex-grow: 1
+}
+.section-title h1,
+.section-title h2,
+.section-title h3,
+.section-title h4,
+.section-title h5,
+.section-title .heading-1,
+.section-title .heading-2,
+.section-title .heading-3,
+.section-title .heading-4,
+.section-title .heading-5,
+//.section-first.section-title  .content-title,
+.section-title .content-title{
+    margin: 0;
+    padding-top:12px;
+    padding-bottom:12px;
+}
+
+
+.section-title .title-legend{
+ font-size: 0.9rem;
+ display: block;
+ margin: 0;
+ padding: 0;
+}
+
+.section-title .title-box h1,
+.section-title .title-box h2,
+.section-title .title-box h3,
+.section-title .title-box h4,
+.section-title .title-box h5,
+.section-title .title-box .heading-1,
+.section-title .title-box .heading-2,
+.section-title .title-box .heading-3,
+.section-title .title-box .heading-4,
+.section-title .title-box .heading-5,
+//.section-first.section-title .title-box .content-title,
+.section-title .title-box .content-title{
+    margin: 0;
+    padding-top:0px;
+    padding-bottom:0px;
+}
+
+
+
+
+
+
+/**
+* Allows us to among others put a bigger padding at the bottom of page to separate border
+*/
+.section-last{
+    margin-bottom:50px;
+    
+}
+.section-last .sidebar{
+    margin-bottom: -50px;
+}
+
+/**
+* Makes a section have a minimun full height of page including header and footer. This class will work as '.section-full-height' unless javascript is enabled
+*/.section-full-page{
+    @extend .section-full-height;
+}
+
+
+/* Full height section excluding header
+*/.section-full-height{ 
+    min-height:calc(100vh - 50px );//minus ESTIMATED height of main nav(or top of site)
+    
+}
+
+/**
+* Section extra bottom padding
+*/.section-extra-padding-bottom{
+    padding-bottom:60px !important;
+}
+
+/**
+* Section extra top padding
+*/.section-extra-padding-top{
+    padding-top:60px !important;
+}
+
+// Btn
+//Btn skeleton
+.section-btn-skeleton{
+    @extend .btn;//TODO[not urgent]: get this rules and paste here to avoid reliance of bootstrap
+   @extend .btn-default;//TODO[not urgent]: get this rules and paste here to avoid reliance of bootstrap
+   font-size: 16px;
+   padding-top:13px;
+   padding-bottom:13px;
+   padding-left:60px;
+   padding-right:60px;
+   font-weight: 900;
+   transition: all 0.4s;
+
+}
+
+// Hero___________________________________________________________
+//______________________________________________________________________
+.section.hero{
+    //background-image: url(https://www.paypalobjects.com/digitalassets/c/website/marketing/emea/pl/pl/personal/Personal_Hero.jpg);
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+}
+@media (min-width: 768px){
+    .section.hero.hero-super,
+    .section.hero.hero-super .section-overlay
+    {
+        margin-top:-210px;
+        margin-top: calc(-80px + -130px);//The extra negative margin top helps to keep the hero image on the site roof even when the main menu split in two line. It should even be higher if the menu can split in 3 lines
+        padding-top:200px;
+        
+    }
+
+    .section.hero.hero-super .section-overlay.no-offset{//TODO: need to test this class. Is it even useful any more???
+        margin-top:0px;
+        padding-top:0px;
+    }
+
+    body.hero.hero-super .logo-normal{// do not show normal logo on big screens when in super hero mode
+        display: none;
+    }
+}
+@media (max-width: 767px){// (NOTE: that 767px correct and not 768px, SEE REF:LOGO-V12DG7)  .Do not show hero-logo on smaller screen
+    body.hero.hero-super .logo-hero-super{
+        display: none;
+    }
+}
+
+.hero-content-box{
+    padding: 15px;
+    width:100%;
+}
+
+// Hero content box shading with background color
+.hero-content-box.shade{//default shade
+    background-color: rgba(0,0,0,0.2);
+}
+.section-primary .hero-content-box.shade{//primary
+    background-color: rgba($brand-primary,0.39);
+}
+.section-success .hero-content-box.shade{//success
+    background-color: rgba($brand-success,0.39);
+}
+.section-info .hero-content-box.shade{
+    background-color: rgba($brand-info,0.39);
+}
+.section-warning .hero-content-box.shade{
+    background-color: rgba($brand-warning,0.39);
+}
+.section-danger .hero-content-box.shade{
+    background-color: rgba($brand-danger,0.39);
+}
+.section-subtle .hero-content-box.shade{
+    background-color: rgba($brand-subtle,0.12);
+}
+
+
+//hero headline positioning
+@media(min-width:768px){ // REF: LOGO-V12DG7
+    .hero-content-box{
+        padding: 30px;
+        display: flex;
+        flex-direction: row;
+
+    // Justification
+    &.left{
+        justify-content: flex-start;
+    }
+    &.center{
+        justify-content:center;
+    }
+    &.right{
+        justify-content: flex-end;
+    }
+
+    //Alignment
+    &.top{
+        align-items: flex-start;
+    }
+    &.middle{
+        align-items: center;
+    }
+    &.bottom{
+        align-items: flex-end;
+    }
+    
+    .hero-content{
+        flex: initial;
+        
+    }
+
+    
+    }
+  
+}
+
+.section.hero .hero-headline{
+    max-width:70%;
+    //background-color: rgba(0,0,0,0.2);
+    //padding: 0px 15px;
+    
+}
+
+.section.hero .hero-headline.hero-headline-shade {// Add faint background shade to make content of here easy to see
+    
+    background-color: rgba(0,0,0,0.2);
+    padding: 0px 15px;
+    
+}
+
+.section.hero.hero-super .hero-headline{
+    margin-top: 120px;
+    @media (min-width: 768px){
+        margin-top: 80px;
+    }
+}
+
+.section.hero .hero-headline-text{
+    line-height: 1.1;//1.6
+    font-weight: 100;
+    font-size:60px;
+    margin-bottom: 24px;
+    margin-top: 24px;
+
+}
+
+.section.hero .hero-headline-md .hero-headline-text {
+    font-size: 24px;
+    line-height: 28px;
+    padding: 36px 0 4px;
+    font-weight: 600;
+
+    font-weight: 600;
+}
+.section.hero .hero-headline-text small,
+.section.hero .hero-headline-summary {
+    display:block;
+    padding:20px 0 20px 0;
+}
+.section.hero .hero-headline-md .hero-headline-text small,
+.section.hero .hero-headline-md .hero-headline-summary{
+    font-size: 15px;
+}
+@media (max-width: 767px){
+    
+    .section.hero .hero-headline{
+        
+        width:100%;
+        max-width:100%;
+    }
+    .section.hero.hero-super .hero-headline{
+        margin-top: 0px;
+    }
+    .section.hero .hero-headline-text{
+
+        line-height: 1.4;
+        font-size:40px;
+        
+    }
+        
+}
+.section.hero .btn-hero{
+    @extend .section-btn-skeleton;
+    border:none;
+    color:$text-color;
+    background-color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    font-size: 15px;
+    margin-bottom: 5px;
+    transition: background-color 0.4s, border-color 0.4s;
+    border:1px solid transparent;
+}
+.section.hero .btn-hero.btn-hero-clean{
+    text-transform: unset;
+    border:1px solid rgba(255, 255, 255, 0.555);
+    color:#fff;
+    background-color: transparent;
+}
+
+.section.hero .btn-hero:hover{
+    background-color: rgb(0,0,0);
+    color:#fff;
+    border:1px solid rgba(255, 255, 255, 0.3);
+}
+
+
+// Banner _____________________________________________________________
+//________________________________________________________________
+.section.banner{
+    //background-image:url('https://www.wealthyaffiliate.com/assets/img/nichemarketing/home/wa-homepage-intro-image-v2-0@2x.jpg');
+    //background-image: url(https://www.paypalobjects.com/digitalassets/c/website/marketing/emea/pl/pl/personal/Personal_Hero.jpg);
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+}
+.section.banner .banner-headline{
+    
+}
+
+.section.banner .banner-headline-text{
+    line-height: 1.6;
+    font-weight: 500;
+    font-size:60px;
+}
+@media (max-width: 768px){
+    .section.banner .banner-headline-text{
+        line-height: 1.4;
+        font-size:40px;
+    }
+        
+}
+
+.section.banner .btn-banner{
+    @extend .section-btn-skeleton;
+    border:1px solid #fff;
+    color:#fff;
+    background-color: transparent;
+}
+
+
+
+
+
+
+
+// /* Colored section contaning content class .
+// */.section-primary .content-primary,
+// .section-primary .content-info,
+// .section-primary .content-success,
+// .section-primary .content-warning,
+// .section-primary .content-danger,
+// .section-info .content-primary,
+// .section-info .content-info,
+// .section-info .content-success,
+// .section-info .content-warning,
+// .section-info .content-danger,
+// .section-success .content-primary,
+// .section-success .content-info,
+// .section-success .content-success,
+// .section-success .content-warning,
+// .section-success .content-danger,
+// .section-warning .content-primary,
+// .section-warning .content-info,
+// .section-warning .content-success,
+// .section-warning .content-warning,
+// .section-warning .content-danger,
+// .section-danger .content-primary,
+// .section-danger .content-info,
+// .section-danger .content-success,
+// .section-danger .content-warning,
+// .section-danger .content-danger{
+//     padding: 15px;
+//     color:$text-color;
+// }

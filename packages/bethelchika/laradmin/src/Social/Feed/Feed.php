@@ -31,17 +31,23 @@ class Feed{
             $twitter_access_token=config('services.twitter.access_token');
             $twitter_access_token_secret=config('services.twitter.access_token_secret');
             
-            $providers[]= new TwitterFeed(
-            $twitter_user_id,
-            $twitter_consumer_key,
-            $twitter_consumer_secret,
-            $twitter_access_token,
-            $twitter_access_token_secret,
-            null,  // you can add a doctrine cache provider
-                    true,  // exclude replies true/false
-                    false, // include retweets true/false
-                    true  // extended mode true/false
-            );
+            if($twitter_user_id 
+            and $twitter_consumer_key
+            and $twitter_consumer_secret
+            and $twitter_access_token
+            and $twitter_access_token_secret){
+                $providers[]= new TwitterFeed(
+                    $twitter_user_id,
+                    $twitter_consumer_key,
+                    $twitter_consumer_secret,
+                    $twitter_access_token,
+                    $twitter_access_token_secret,
+                    null,  // you can add a doctrine cache provider
+                        true,  // exclude replies true/false
+                        false, // include retweets true/false
+                        true  // extended mode true/false
+                );
+            }
        }
         
             

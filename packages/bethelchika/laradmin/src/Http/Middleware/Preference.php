@@ -19,8 +19,7 @@ class Preference
      */
     public function handle($request, Closure $next)
     {
-        // Set the global default timezone. Is is likely the default but no harm in making sure it is UTC.
-        date_default_timezone_set('UTC');
+        
 
 
         if($user=$request->user()){

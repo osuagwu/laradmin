@@ -1,5 +1,8 @@
 <?php
 namespace BethelChika\Laradmin\WP\Traits;
+
+use Illuminate\Support\Facades\Log;
+
 trait Formatting{
     public function getContentFilteredAttribute()
     {
@@ -28,12 +31,15 @@ trait Formatting{
      */
     private function theContent($content){
         $formatting_file=public_path().config('laradmin.wp_rpath').'/wp-includes/formatting.php';//NOTE: were assuming that the includes path for wordpress is not chnaged
+        $XSS_file=public_path().config('laradmin.wp_rpath').'/wp-includes/kses.php';// html excape against XSS:: Note that this is really not require as people who will write posts already have access files to 
        
         if (file_exists($formatting_file) and !function_exists('wptexturize')){
 
            include dirname(__DIR__).'/wp_helpers.php';
 
             include $formatting_file;
+
+            include $XSS_file; 
 
             /*the_content {Processing pipeline}
             8   (object) WP_Embed -> run_shortcode (1) 
@@ -52,10 +58,10 @@ trait Formatting{
             //$content=convert_smilies($content);
             $content=convert_chars($content);
             $content=wpautop($content);
+            $content=wp_kses_post($content);
+        }else{
+            Log::warning(__TRAIT__.''.__METHOD__.','.__LINE__.': msg=> Wordpress function for formatting post contents; you should make sure that contents are well processed and stripped of dangerous tags.');
         }
-
-       
-
 
         return $content;
         

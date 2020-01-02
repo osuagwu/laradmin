@@ -124,7 +124,7 @@ class Shortcodes{
      * bar : {sidebar-top/bottom,mainbar-top/bottom,rightbar-top/bottom 
      *                  (But essentially all stacks defined in ContentManager are eligible)}. 
      *                  The content will be placed on the specified bar of the page. If not 
-     *                  given the content will b place where it id defined. NOTE that the 'bar'
+     *                  given the content will be place where it is defined. NOTE that the 'bar'
      *                  parameter will not currently work properly if the  shortcode is defined
      *                  in a rightbar or footer; because the shortcode won't be processed early 
      *                  enough. TODO: To make it work everywhere we will need to retrieve the content

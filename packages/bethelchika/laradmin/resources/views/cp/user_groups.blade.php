@@ -12,7 +12,7 @@
            
                 
                 <!-- list controls-->
-                @component('laradmin::blade_components.table_nav',[
+                @component('laradmin::components.table_nav',[
                                                             'tableName'=>'user_groups',
                                                             'actions'=>[
                                                                 'delete'=>['formAction'=>route('cp-user-groups-delete'),'label'=>'Delete selected user groups'],
@@ -32,15 +32,15 @@
                                 
                                 <th>
                                     
-                                    @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'user_groups'])
+                                    @component('laradmin::components.table_row_checkbox',['tableName'=>'user_groups'])
                                     @endcomponent 
                                 </th>
                                 <th>ID 
-                                    @component('laradmin::blade_components.sort_links',['orderBy'=>'id','currentOrder'=>$currentOrder])
+                                    @component('laradmin::components.sort_links',['orderBy'=>'id','currentOrder'=>$currentOrder])
                                     @endcomponent                                    
                                 </th>
                                 <th>Name
-                                    @component('laradmin::blade_components.sort_links',['orderBy'=>'name','currentOrder'=>$currentOrder])
+                                    @component('laradmin::components.sort_links',['orderBy'=>'name','currentOrder'=>$currentOrder])
                                     @endcomponent                                    
                                 </th>
                                 <th>Description</th>                                
@@ -51,7 +51,7 @@
                             @foreach($userGroups as $userGroup)
                             <tr>
                                 <td>
-                                    @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'user_groups','value'=>$userGroup->id,'isHeadCheckbox'=>false])
+                                    @component('laradmin::components.table_row_checkbox',['tableName'=>'user_groups','value'=>$userGroup->id,'isHeadCheckbox'=>false])
                                     @endcomponent 
                                     
                                 </td>
@@ -61,7 +61,7 @@
                                 
                                 <td>
                                     <a href="{{route('cp-user-group-edit',$userGroup->id)}}" title="Edit" > <span class="glyphicon glyphicon-edit"></span></a>
-                                    @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-user-group-delete',$userGroup->id)])
+                                    @component('laradmin::components.table_row_delete',['formAction'=>route('cp-user-group-delete',$userGroup->id)])
                                     @endcomponent
                                 </td>
                             </tr>

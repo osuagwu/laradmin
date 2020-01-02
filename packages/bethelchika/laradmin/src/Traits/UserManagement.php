@@ -2,9 +2,6 @@
 namespace BethelChika\Laradmin\Traits;
 
 use BethelChika\Laradmin\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Session;
-
 
 
 trait UserManagement
@@ -131,7 +128,6 @@ trait UserManagement
     } 
 
 
-    
 
    
 }

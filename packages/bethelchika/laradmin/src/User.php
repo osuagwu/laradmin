@@ -10,12 +10,16 @@ use Illuminate\Auth\Events\Registered;
 use BethelChika\Laradmin\Events\UserHardDelete;
 use BethelChika\Laradmin\Traits\AuthManagement;
 use BethelChika\Laradmin\Traits\UserManagement;
-
+use BethelChika\Laradmin\Traits\AuthorizationManagement;
+use BethelChika\Laradmin\Media\Traits\Mediable;
 
 class User extends \App\User
 {
     
-    use UserManagement, AuthManagement;
+    use UserManagement, 
+    AuthManagement,
+    AuthorizationManagement,
+    Mediable;
 
     /**
      * The attributes that are mass assignable.
@@ -43,9 +47,14 @@ class User extends \App\User
     ];
 
 
-    //Relationship to UserGroupMap
+    //Relationship to UserGroupMap. TODO: This may be a huge change but we need to delete this method and use User::userGroups()
     function userGroupMap(){
         return $this->hasMany('BethelChika\Laradmin\UserGroupMap');
+    }
+
+    //Relationship to UserGroup
+    function userGroups(){
+        return $this->belongsToMany('BethelChika\Laradmin\UserGroup','user_group_maps')->withTimestamps();
     }
 
     //Relationship to COnfirmation
@@ -90,14 +99,21 @@ class User extends \App\User
         return $this->hasMany('BethelChika\Laradmin\Social\Models\SocialUser');
     }
     
-
     /**
-     * Relationshipt to linked meta
+     * Checks if this user is super
      *
-     * @return void
+     * @return boolean
      */
-    public function metas(){
-        return $this->hasMany('BethelChika\Laradmin\Meta');
+    public function isSuper(){
+        return $this->is(self::getSuperUser());
+    }
+
+    public function getAvatarAttribute($value){
+        if(!$value){
+            return 'https://via.placeholder.com/150x150?text='.urlencode($this->name[0]);
+        }
+        return $value;
+        
     }
     
     /**
@@ -270,15 +286,7 @@ class User extends \App\User
         return true;
     }
 
-    /**
-     * Destroy metas for this user
-     * @return boolean
-     */
-    public function destroyMetas(){
-        $this->metas()->delete();
-        return true;
-    }
-
+    
     /**
      * Limits the number of notifications by deleteing the oldest notifications by this user
      * @return boolean

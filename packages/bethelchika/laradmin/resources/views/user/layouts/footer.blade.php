@@ -32,10 +32,10 @@
             <div class="col-xs-12 col-md-4 " >
                 <nav class="social-links">
                     <ul class="nav nav-pills ">
-                        @if(config('services.facebook.page_url'))
+                        @if(config('services.facebook.url'))
                         <li role="presentation">
 
-                            <a href="{{config('services.facebook.page_url')}}"><i class="fab fa-facebook-f"></i></a>
+                            <a href="{{config('services.facebook.url')}}"><i class="fab fa-facebook-f"></i></a>
                         </li>
                         @endif
                         @if(config('services.twitter.handle'))

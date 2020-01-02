@@ -9,20 +9,28 @@ use Illuminate\Support\Facades\DB;
 class Media extends Model
 {
     /**
-     * Retrieve all associated models of given class.
+     * Relationship with other models. Retrieve all associated models of given class.
      * @param  string $class 
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function models($class)
     {
-        return $this->morphedByMany($class, 'mediable')->withPivot('title', 'description', 'tag');
+        return $this->morphedByMany($class, 'mediable')->withPivot('title', 'description', 'tag','order_number');
+    }
+
+    /**
+     * Alias of @see Media::storage()
+     */
+    public function fileSystem()
+    {
+        return $this->storage();
     }
 
     /**
      * Get the filesystem object for this media.
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    protected function storage()
+    public function storage()
     {
         return app('filesystem')->disk($this->disk);
     }
@@ -37,18 +45,23 @@ class Media extends Model
     }
 
     /**
-     * Properly delete a media object The media is only actually deleted if there is not model associated with it.
+     * Properly delete a media object The media is only actually deleted if 
+     * there is not model associated with it.
      *
-     * @return void
+     *  @return bool|null
      */
     public function delete()
     { 
-        if ($this->countModels()==1) {
+        if ($this->countModels()<=1) {
             $this->deleteFiles();
             return parent::delete();
         }
         return true;
     }
+
+    
+
+    
 
     /**
      * Delete associated files
@@ -59,8 +72,51 @@ class Media extends Model
     {
         $this->storage()->delete($this->getFullName());
         $this->storage()->delete($this->getThumbFullName());
+
+        // Delete the rest of the sizes
+        foreach($this->manager()->imageSizes() as $tag=>$size){
+            
+            $fullname=$this->getFullName($tag);
+            
+            if($this->storage()->exists($fullname)){
+                $this->storage()->delete($fullname);
+
+                //remove parent directory if it is empty
+                $parent=dirname($fullname);
+                if(empty($this->storage()->files($parent)) and empty($this->storage()->directories($parent))){
+                    $this->storage()->deleteDirectory($parent);
+                }
+
+            }
+        }
+
+        //remove parent directory of thumbs if it is empty
+        $parent=dirname($this->getThumbFullName() );
+        if(empty($this->storage()->files($parent)) and empty($this->storage()->directories($parent))){
+            $this->storage()->deleteDirectory($parent);
+
+            // Then the main folder
+            $parent=dirname($this->getFullName());
+            if(empty($this->storage()->files($parent)) and empty($this->storage()->directories($parent))){
+                $this->storage()->deleteDirectory($parent);
+            }
+
+        }
+
+       
         
         return true;
+    }
+
+    /**
+     * Get the size on disk of the media file by reading the actual file.
+     * CAUTION: This method should be used for updating the Media::size. Read 
+     * the property Media::size when serving requests as this method may be slower.
+     *
+     * @return int
+     */
+    public function readSize(){
+        return $this->fileSystem()->size($this->getFullName());
     }
 
     /**
@@ -78,7 +134,16 @@ class Media extends Model
      * @return void
      */
     public function getWidth(){
-        return $this->manager()->getWidth($this);
+        if($this->width){
+            return $this->width;
+        }else{
+            $width=$this->manager()->imageWidth($this);
+            $this->width=$width;
+            if($this->exists){
+                $this->save();
+            }
+        }
+        return $width;
     }
 
      /**
@@ -87,7 +152,18 @@ class Media extends Model
      * @return void
      */
     public function getHeight(){
-        return $this->manager()->getHeight($this);
+        if($this->height){
+            return $this->height;
+        }else{
+            $height=$this->manager()->imageHeight($this);
+            $this->height=$height;
+            if($this->exists){
+                $this->save();
+            }
+            
+            return $height;
+        }
+        
     }
 
     /**
@@ -158,15 +234,91 @@ class Media extends Model
     }
 
     /**
-     * Returns the file full resource names [folder/../name.ext]
-     *
+     * Returns the file full resource names [folder/../name.ext]. The name of this method has nothing to with the size_tag=>full
+     *  @param $size_tag The image size tag 
      * @return string
      */
-    public function getFullName()
+    public function getFullName($size_tag='full')
     {
-        return rtrim(trim($this->getFolderName(),'/').'/'.$this->getFileName().'.'.$this->getExtension(),'.');//i.e we also strip the dot at the end incase  the file does not have extension
         
+        $subfolder=$this->manager()->sizeFolderName($this,$size_tag);
+        if($subfolder){
+            $subfolder='/'.$subfolder;
+        }
+        
+        return rtrim(trim($this->getFolderName(),'/').$subfolder.'/'.$this->getFileName().'.'.$this->getExtension(),'.');//i.e we also strip the dot at the end incase  the file does not have extension
+        
+    }
+
+    /**
+     * The absolute uri of the file
+     *
+     * @param string $size_tag @see $this->getFileName
+     * @return string
+     */
+    public function getAbsoluteFullName($size_tag='full'){
+        return $this->storage()->path($this->getFullName($size_tag));
+    }
+
+  
+
+    // TOCHECK: I comment this out because I cannot see the point of it.
+    // public function getUrlAttribute(){
+    //     return $this->url();
+    // }
+
+    /**
+     * Undocumented function
+     *
+     * @param string|string[] $size_tags
+     * @param boolean $type @see MediaManager::makeImageSize()
+     * @return void
+     */
+    public function makeImageSizes($size_tags,$type='force'){
+        if(!is_array($size_tags)){
+            $size_tags=[$size_tags];
+        }
+        foreach($size_tags as $tag){
+            $this->manager()->makeImageSize($this,$tag,$type);
+        }
 
     }
 
+    /**
+     * Returns the media's url
+     * @param string|array $size_tags The size tag. If it is array the first one that has an  existing image is used to compute the url.
+     * @param boolean $relative Returns a relative link when true 
+     * @return string|null
+     */
+    public function url($size_tags=['full'],$relative=true){
+        if(!is_array($size_tags)){
+            $size_tags=[$size_tags];
+        }
+        foreach ($size_tags as $tag) {
+            $fullname=$this->getFullName($tag);
+            if($this->storage()->exists($fullname)) {
+                if ($relative) {
+                    return \Illuminate\Support\Facades\Storage::url($fullname);
+                }
+                return $this->storage()->url($fullname);
+            }
+            
+        }
+        return null;
+    }
+
+     /**
+     * Returns the media's url for thumb
+     *
+     * @param boolean $relative Returns a relative link when true 
+     * @return string
+     */
+    public function thumbUrl($relative=true){
+        
+        if($relative){
+            return \Illuminate\Support\Facades\Storage::url($this->getThumbFullName());
+        }
+        return $this->storage()->url($this->getThumbFullName());
+    }
+    
 }

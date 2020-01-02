@@ -12,7 +12,7 @@
 @section('content')
 
             <!-- list controls-->
-            @component('laradmin::blade_components.table_nav',[
+            @component('laradmin::components.table_nav',[
                                                             'tableName'=>'users',
                                                             'actions'=>[
                                                                 'delete'=>['formAction'=>route('cp-users-delete'),'label'=>'Delete selected user'],
@@ -31,23 +31,23 @@
                     <thead>
                         <tr>
                             <th>
-                                @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'users'])
+                                @component('laradmin::components.table_row_checkbox',['tableName'=>'users'])
                                 @endcomponent
                             </th>
                             <th>Screen name
-                                @component('laradmin::blade_components.sort_links',['orderBy'=>'name','currentOrder'=>$currentOrder])
+                                @component('laradmin::components.sort_links',['orderBy'=>'name','currentOrder'=>$currentOrder])
                                 @endcomponent  
                             </th>
                             <th>Firstname
-                                @component('laradmin::blade_components.sort_links',['orderBy'=>'first_name','currentOrder'=>$currentOrder])
+                                @component('laradmin::components.sort_links',['orderBy'=>'first_name','currentOrder'=>$currentOrder])
                                 @endcomponent
                             </th>
                             <th>Lastname
-                                @component('laradmin::blade_components.sort_links',['orderBy'=>'last_name','currentOrder'=>$currentOrder])
+                                @component('laradmin::components.sort_links',['orderBy'=>'last_name','currentOrder'=>$currentOrder])
                                 @endcomponent
                             </th>
                             <th>Email
-                                @component('laradmin::blade_components.sort_links',['orderBy'=>'email','currentOrder'=>$currentOrder])
+                                @component('laradmin::components.sort_links',['orderBy'=>'email','currentOrder'=>$currentOrder])
                                 @endcomponent
                             </th>
                             <th></th>
@@ -57,7 +57,7 @@
                         @foreach($users as $user)
                         <tr>
                             <td>
-                            @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'users','value'=>$user->id,'isHeadCheckbox'=>false])
+                            @component('laradmin::components.table_row_checkbox',['tableName'=>'users','value'=>$user->id,'isHeadCheckbox'=>false])
                             @endcomponent
                             </td>
                             <td><a href="{{route('cp-user',$user->id)}}">{{$user->name}}</a></td>
@@ -66,7 +66,7 @@
                             <td>{{$user->email}}</td>
                             <td>
                                 <a href="{{route('cp-user-edit',$user->id)}}" title="Edit" > <span class="glyphicon glyphicon-edit"></span></a>
-                                @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-user-delete',$user->id)])
+                                @component('laradmin::components.table_row_delete',['formAction'=>route('cp-user-delete',$user->id)])
                                 @endcomponent
                                 
                                 <a title="Message user" href="{{route('cp-user-message-create')}}?user={{$user->id}}"> <span class="glyphicon glyphicon-envelope"> </span> </a>

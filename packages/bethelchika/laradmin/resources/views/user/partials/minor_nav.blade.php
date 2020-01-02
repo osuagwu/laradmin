@@ -4,12 +4,12 @@
 
     INPUTS
     $root_tag string The root tag of minor nav. (e.g $root_tag=false disables root tag behaviour; $root_tag='primary' for minor menus under a Menu with tag 'primary'; $root_tag='primary.services' for minor nav under a menu with tag 'primary' and under menu item with tag 'services' ).
-    $left_menu_tag=page_family string  Tag or dot separated manu tag that goes to the left
-    $right_menu_tag string Tag or dot separated manu tag that goes to the right
-    $title= string The title of the bar . 
-    $with_container boolean Set to false to remove bootstrap container inside the minor nav (Use when you already have container wrapping the output of this file).
-    $scheme string The scheme to used for nav tag. e.g 'primary' which makes the minor nav a a primary look and feel
-    $class string The class added to the nav tag
+    $left_menu_tag string  [optional]  Tag or dot separated manu tag that goes to the left
+    $right_menu_tag string [optional]  Tag or dot separated manu tag that goes to the right
+    $title= string [optional]  The title of the bar . 
+    $with_container boolean [optional]  Set to false to remove bootstrap container inside the minor nav (Use when you already have container wrapping the output of this file).
+    $scheme string [optional]  The scheme to used for nav tag. e.g 'primary' which makes the minor nav a a primary look and feel
+    $class string [optional] The class added to the nav tag
 --}}
 @php
 
@@ -20,15 +20,15 @@ if(!isset($root_tag)){
     $root_tag=$laradmin->navigation->getMinorNavTag();//
 }
 
-//Do not display menu is empty
-$is_empty=$laradmin->navigation->isEmptyTags($root_tag);
-if(!$is_empty and isset($left_menu_tag)){
+//Do not display if menu is empty
+$is_empty=$root_tag?$laradmin->navigation->isEmptyTags($root_tag) : true;
+if($is_empty and isset($left_menu_tag)){
     $is_empty=$laradmin->navigation->isEmptyTags($left_menu_tag);
 }
-if(!$is_empty and isset($right_menu_tag)){
+if($is_empty and isset($right_menu_tag)){
     $is_empty=$laradmin->navigation->isEmptyTags($right_menu_tag);
 }
-if(!$is_empty){
+if($is_empty){
     return;
 }
             

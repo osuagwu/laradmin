@@ -53,8 +53,8 @@ class ProfileFieldable implements Fieldable{
                         'label' => 'Screen name',
                         'group' => 'names',
                         'order' => 0,
-                        'rules' => 'required:min:2',
-                        'editDescription'=>'Choose your screen name. Be sure to make it nice and  and also very shiny.'
+                        'rules' => 'required|min:2',
+                        'editDescription'=>'Choose your screen name.'
                     ])
                 );
                 if(str_is($mode,'index')){
@@ -67,7 +67,7 @@ class ProfileFieldable implements Fieldable{
                             'label' => 'Primary email',
                             'group' => 'emails',
                             'order' => 0,
-                            'rules' => 'required:min:2',
+                            'rules' => 'required|min:2',
                         ])
                     );
                     $fields->push(

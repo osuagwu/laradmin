@@ -10,7 +10,7 @@
     <div class="container-fluid" >
         <div class="sidebar-mainbar">
                 
-            @component('laradmin::blade_components.sidebar')
+            @component('laradmin::components.sidebar')
                 @slot('content')
                 <nav>
                     <ul class=" list-unstyled padding-top-x3">
@@ -28,7 +28,7 @@
                 <ol class="breadcrumb bg-transparent">
                     <li class="breadcrumb-item"><a href="{{route('user-profile')}}">me</a></li>
                     <li class="breadcrumb-item "><a href="{{route('user-message-index')}}"><i class="fas fa-envelope"></i>  uMessage</a></li>
-                    <li class="breadcrumb-item active"></span> <i class="fas fa-plus-circle"></i>  New uMessage</li>
+                    <li class="breadcrumb-item active"> <i class="fas fa-plus-circle"></i>  New uMessage</li>
                 </ol>
                 <div class="row row-content-wrapper-default"> 
                     <div class="col-md-8  col-md-offset-2">
@@ -65,7 +65,7 @@
                                         
                                         {{ csrf_field() }}
                                 @if($showChannels)
-                                    @component('laradmin::blade_components.input_select',['name'=>'channels','value'=>"database",'options'=>['email'=>'Email','email,database'=>'Email and internal','database'=>'Internal'],'required'=>'required'])
+                                    @component('laradmin::components.input_select',['name'=>'channels','value'=>"database",'options'=>['email'=>'Email','email,database'=>'Email and internal','database'=>'Internal'],'required'=>'required'])
                                     @endcomponent
                                 @endif
 
@@ -74,18 +74,18 @@
                                 @elseif($isSupport)
                                     <input type="hidden" name="support" value="support" />
                                 @else
-                                    @component('laradmin::blade_components.input_text',['name'=>'user','value'=>''])
+                                    @component('laradmin::components.input_text',['name'=>'user','value'=>''])
                                     @endcomponent
                                     <div class="text-center"><h4>OR</h4></div>
-                                    @component('laradmin::blade_components.input_text',['name'=>'email','value'=>'','label'=>'Email (recipient\'s)'])
+                                    @component('laradmin::components.input_text',['name'=>'email','value'=>'','label'=>'Email (recipient\'s)'])
                                     @endcomponent
                                     <hr class="hr" />
                                 @endif
                                 
-                                @component('laradmin::blade_components.input_text',['name'=>'subject','value'=>'','required'=>'required'])
+                                @component('laradmin::components.input_text',['name'=>'subject','value'=>'','required'=>'required'])
                                 @endcomponent 
 
-                                @component('laradmin::blade_components.textarea',['name'=>'message','value'=>''])
+                                @component('laradmin::components.textarea',['name'=>'message','value'=>''])
                                 @endcomponent 
                                 
                                 <input type="hidden" name="parent_id" value="{{$parent_id}}" />

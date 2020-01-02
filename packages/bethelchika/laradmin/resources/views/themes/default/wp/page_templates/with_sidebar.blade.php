@@ -80,7 +80,7 @@
 
 
                 <div class="row">
-                    <div class="@if(str_contains(strtolower($post->meta->rightbar),'on') or str_contains(strtolower($post->meta->blog_listing),'right')) col-md-9  @else col-md-9 @endif">
+                    <div class="@if($post_settings['has_rightbar']) col-md-9  @else col-md-9 @endif">
                         <div class="left">
                             <article class="page" role="presentation">
                                 <header>
@@ -132,12 +132,16 @@
                                     </div>
                                     
                                 </div>
+                                @if(str_is($post->comment_status,'open'))
+                                    @include($laradmin->theme->defaultFrom().'wp.partials.comments',['post_id'=>$post->ID])
+                                @endif
                                 @stack('mainbar-bottom')
                             </article>
+
                         </div>
                     </div>
                     
-                    @if(str_contains(strtolower($post->meta->rightbar),'on') or str_contains(strtolower($post->meta->blog_listing),'right'))
+                    @if($post_settings['has_rightbar'])
                     <aside class="col-md-3">
                         <div class="right">
                             {{--  Start top stack  --}}
@@ -185,7 +189,7 @@
 
     </div>
 </section>
-@if(str_contains(strtolower($post->meta->blog_listing),'bottom'))
+@if($post_settings['has_bottom_blog_listing'])
 <section class="section section-primary section-diffuse section-light-bg section-diffuse-no-shadow">
     <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}">
         <div class="blog-listing">

@@ -5,23 +5,23 @@ $parent_id Integer The parent message id for message that will be created from t
 --}}
 <form class="form-horizontal" role="form" method="post" action="{{route('contact-us-store')}}">   
         {{ csrf_field() }}
-@component('laradmin::blade_components.input_text',['name'=>'first_name','value'=>'','required'=>'required','label'=>'First name'])
+@component('laradmin::components.input_text',['name'=>'first_name','value'=>'','required'=>'required','label'=>'First name'])
 @endcomponent
 
-@component('laradmin::blade_components.input_text',['name'=>'last_name','value'=>'','label'=>'Last name'])
+@component('laradmin::components.input_text',['name'=>'last_name','value'=>'','label'=>'Last name'])
 @endcomponent
 
-@component('laradmin::blade_components.input_text',['name'=>'title','value'=>''])
+@component('laradmin::components.input_text',['name'=>'title','value'=>''])
 @endcomponent
 
-@component('laradmin::blade_components.input_text',['name'=>'your_email','value'=>'','required'=>'required','label'=>'Your email'])
+@component('laradmin::components.input_text',['name'=>'your_email','value'=>'','required'=>'required','label'=>'Your email'])
 @endcomponent
 
 
-@component('laradmin::blade_components.input_text',['name'=>'subject','value'=>'','required'=>'required'])
+@component('laradmin::components.input_text',['name'=>'subject','value'=>'','required'=>'required'])
 @endcomponent 
 
-@component('laradmin::blade_components.textarea',['name'=>'message','value'=>''])
+@component('laradmin::components.textarea',['name'=>'message','value'=>''])
 @endcomponent 
 
 <input type="hidden" name="parent_id" value="{{$parent_id}}" />

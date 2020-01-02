@@ -8,7 +8,7 @@
                 
                 @include ('laradmin::inc.msg_board')
                 @include('laradmin::inc.email_confirmation_prompt')
-                @component('laradmin::blade_components.panel')
+                @component('laradmin::components.panel')
                     @slot('title')
                         {{$pageTitle??'Notifications'}}
                     @endslot

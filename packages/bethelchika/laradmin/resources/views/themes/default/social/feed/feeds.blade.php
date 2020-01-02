@@ -5,7 +5,7 @@
     $feeds Array[stdObj] [optional]:  An array of feed objects. If not provided template will try to load general feeds.
     $title string [optional] Title of the feeds.
     $box_class string [optional] The css class for the html box of the feeds
-    $limit int [optional] The max numer of feeds, only for when $feeds is not provided.
+    $limit int [optional] The max number of feeds, only for when $feeds is not provided.
 --}}
 @if(config('laradmin.social_feeds.limit'))
     <div class="social-feeds {{$box_class??''}}">

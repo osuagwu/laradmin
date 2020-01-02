@@ -15,34 +15,40 @@ class TablesSeeder extends Seeder {
         $userGroups=[];
         
                 // #1 Banned group
-                $userGroups['banned']=UserGroup::create(['name' => 'Banned',
+                $userGroups['banned']=UserGroup::create(['name' => 'banned',
                     'description'=>'Restricted group'
                     
                 ]);
         
                // #2 Admin group
-               $userGroups['admin_users']=UserGroup::create(['name' => 'Admin users',
+               $userGroups['admin_users']=UserGroup::create(['name' => 'administrators',
                     'description'=>'Administrators group'
                
                 ]);
         
                 // #3 Power users group
-                $userGroups['power_users']=UserGroup::create(['name' => 'Power users',
+                $userGroups['power_users']=UserGroup::create(['name' => 'power',
                     'description'=>'Should be set to have most powers but not permission changing'
                 
                 ]);
         
                 // #4 Editors group
-                $userGroups['editors']=UserGroup::create(['name' => 'Editors',
+                $userGroups['editors']=UserGroup::create(['name' => 'editors',
                     'description'=>'Powers to CP messages, pages, posts and all other front end contents'
         
                 ]);
         
                 // #5 Normal user group
-                $userGroups['users']=UserGroup::create(['name' => 'Users',
+                $userGroups['users']=UserGroup::create(['name' => 'users',
                     'description'=>'Normal user group'
             
                 ]);
+
+                 // #6 Agent user group
+                 $userGroups['agents']=UserGroup::create(['name' => 'agents',
+                 'description'=>'Agents user group'
+         
+             ]);
 
                 $this->command->info('User_groups table seeded!');
 

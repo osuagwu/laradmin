@@ -22,7 +22,7 @@
             <label for="{{$id??$name}}" class="col-md-4 control-label">{{$label??ucfirst(str_replace('_',' ',$name))}} @if(isset($unit) and $unit) <em>{{$unit}}</em> @endif</label>
             <div class="col-md-6">
                 @if(isset($description) and $description)<div class="description">{{$description}}</div>@endif
-                <input id="{{$id??$name}}" type="password" class="form-control" name="{{$name}}" value="{{old($old_name??$name,$value)}}"   {{ $required??''}} autofocus="" placeholder="{{$placeholder??'...'}}"  
+                <input id="{{$id??$name}}" type="password" class="form-control {{$control_class??''}}" name="{{$name}}" value="{{old($old_name??$name,$value)}}"   {{ $required??''}} autofocus="" placeholder="{{$placeholder??'...'}}"  
                  style="{{$style??''}}">
                 @if ($errors->has($old_name??$name) or isset($help)) 
                     <p class="help-block">

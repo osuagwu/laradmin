@@ -13,7 +13,7 @@
 
 
     <!-- list controls-->
-    @component('laradmin::blade_components.table_nav',[
+    @component('laradmin::components.table_nav',[
                                                 'tableName'=>'user_messages',
                                                 'actions'=>[
                                                     'delete'=>['formAction'=>route('cp-user-message-deletes'),'label'=>'Delete selected messages'],
@@ -33,18 +33,18 @@
                 <tr>
                 <th >
                     @if(count($messages))
-                        @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'user_messages'])
+                        @component('laradmin::components.table_row_checkbox',['tableName'=>'user_messages'])
                         @endcomponent
                     @endif 
                 </th>
                 <th></th>
                 <th>
-                    @component('laradmin::blade_components.sort_links',['orderBy'=>'subject','currentOrder'=>$currentOrder])
+                    @component('laradmin::components.sort_links',['orderBy'=>'subject','currentOrder'=>$currentOrder])
                     @endcomponent  
                 </th>
                 <th>
                     <span class="glyphicon glyphicon-time"></span>
-                    @component('laradmin::blade_components.sort_links',['orderBy'=>'created_at','currentOrder'=>$currentOrder])
+                    @component('laradmin::components.sort_links',['orderBy'=>'created_at','currentOrder'=>$currentOrder])
                     @endcomponent  
                 </th>
 
@@ -59,7 +59,7 @@
             @foreach($converses as $converse)
                 <tr class="message @if($converse['unread_count']) unread @else read @endif ">
                     <td>
-                        @component('laradmin::blade_components.table_row_checkbox',['tableName'=>'user_messages','value'=>$converse['message']->id,'isHeadCheckbox'=>false])
+                        @component('laradmin::components.table_row_checkbox',['tableName'=>'user_messages','value'=>$converse['message']->id,'isHeadCheckbox'=>false])
                         @endcomponent
                     </td>
                     <td>
@@ -85,7 +85,7 @@
                     </td>
                     <td>
                         
-                        @component('laradmin::blade_components.table_row_delete',['formAction'=>route('cp-user-message-delete',$converse['message']->id)])
+                        @component('laradmin::components.table_row_delete',['formAction'=>route('cp-user-message-delete',$converse['message']->id)])
                         @endcomponent
                         
                     </td>

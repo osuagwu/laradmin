@@ -1,4 +1,4 @@
-#Feeds
+# Feeds
 ## Social feeds
 To display all feeds from different sources, include the following in a blade template:
 ```
@@ -26,8 +26,8 @@ Set your feed provider credentials in your laravel config/services:
 > Note that for feeds to work for a particicular provider, it must be enabled in the Laradmin config file, in the `social_feeds.providers` array.
 
 
-## Feed (Internal feed)
-Feed is managed by FeedManager which can be obtained thus:
+## Internal feed
+Internal feed is managed by FeedManager which can be obtained thus:
 ```php
 $feedmanager=app('laradmin')->feedManager;
 ```
@@ -45,11 +45,11 @@ $feedmanager->post($title,$description,$poster_name,$param);
 The parameter set through $param are optional.
 
 ### Posting Dynamic feeds
-It is possible to post a dynamic feed which are feeds that are not save in database by the feed manager. To post a dynamic feed you need to implement the `BethelChika/Laradmin/Feed/DynamicFeedable class`. register it in a service provider. 
+It is possible to post a dynamic feed which are feeds that are not saved in database by the feed manager. To post a dynamic feed you need to implement the `BethelChika/Laradmin/Feed/DynamicFeedable class`. register it in a service provider. 
 ```php
 $feedmanager->registerFeedable(ComicpicDynamicFeedable::class);
 ```
-The implemented class has getFeeds() which should return an array of instance/s of `BethelChika/Laradmin/Feed/DynamicFeed` class
+The implemented class has getFeeds() which should return an array of instances of `BethelChika/Laradmin/Feed/DynamicFeed` class
 ```php
 class ComicpicDynamicFeedable implements BethelChika/Laradmin/Feed/Contracts/DynamicFeedable {
     /**
@@ -71,11 +71,13 @@ class ComicpicDynamicFeedable implements BethelChika/Laradmin/Feed/Contracts/Dyn
 You can use the getFeeds() method of the $feedmanager to return array of feeds.
 ```php
 $feeds=$feedmanager->getFeeds();//
+
 $feeds=$feedmanager->getFeeds($latest_timestamp);// Get only feeds posted after the given timestamp
+
 $feeds=$feedmanager->getFeeds(null,$limit);// Set a limit to the number of feeds returned
 ```
 #### Blade include
-The blade renderer requires Vue. It also require that two stacks are defined  and named 'head-styles' and 'footer-scripts-after-library' within the mother template. These are already present in Laradmin default template.  The 'head-styles' is placed at the head section of HTML while the 'footer-scripts-after-library' is placed so that it is loaded after Vue but before Vue is initialised. The Laradmin default template has already set this correctly.
+The blade renderer requires Vue. It also require that two stacks are defined  and named 'head-styles' and 'footer-scripts-after-library' within the mother template. These are already present in Laradmin default templates.  The 'head-styles' is placed at the head section of HTML while the 'footer-scripts-after-library' is placed so that it is loaded after Vue but before Vue is initialised. The Laradmin default templates have already set this correctly.
 To render in blade just include the partial thus: 
 ```php
 @include('laradmin::partials.feed.feeds',['allow_fetch_on_scroll'=>'false'])

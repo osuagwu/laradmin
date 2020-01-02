@@ -56,7 +56,7 @@ class ProfilePreferenceFieldable implements Fieldable{
             'label'=>'Local/Language',
             'order'=>1,
             'group'=>'general',
-            'rules'=>'nullable:min:2',
+            'rules'=>'nullable|min:2',
             'options'=>__( 'laradmin::list_of_locals'),
         ]);
 
@@ -67,7 +67,7 @@ class ProfilePreferenceFieldable implements Fieldable{
             'label'=>'Timezone',
             'order'=>1,
             'group'=>'general',
-            'rules'=>'nullable:min:2',
+            'rules'=>'nullable|min:2',
             'options'=>Tools::getTimezones(),
         ]);
 

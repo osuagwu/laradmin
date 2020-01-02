@@ -27,25 +27,25 @@
                     
                     
 
-                    @component('laradmin::blade_components.input_text',['name'=>'name','value'=>$user->name,'label'=>'Name (Screen name)','required'=>'required'])
+                    @component('laradmin::components.input_text',['name'=>'name','value'=>$user->name,'label'=>'Name (Screen name)','required'=>'required'])
                     @endcomponent 
 
-                    @component('laradmin::blade_components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
+                    @component('laradmin::components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
                     @endcomponent 
 
-                    @component('laradmin::blade_components.input_text',['name'=>'last_name','value'=>$user->last_name,'label'=>'Last name'])
+                    @component('laradmin::components.input_text',['name'=>'last_name','value'=>$user->last_name,'label'=>'Last name'])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_text',['name'=>'year_of_birth','value'=>$user->year_of_birth,'required'=>'required','label'=>'Year of birth'])
+                    @component('laradmin::components.input_text',['name'=>'year_of_birth','value'=>$user->year_of_birth,'required'=>'required','label'=>'Year of birth'])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_select',['name'=>'gender','value'=>$user->gender,'options'=>['female'=>'Female','male'=>'Male'],])
+                    @component('laradmin::components.input_select',['name'=>'gender','value'=>$user->gender,'options'=>['female'=>'Female','male'=>'Male'],])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_select',['name'=>'country','value'=>$user->country,'options'=>$countries,])
+                    @component('laradmin::components.input_select',['name'=>'country','value'=>$user->country,'options'=>$countries,])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_select',['name'=>'faith','value'=>$user->faith,'options'=>$faiths,])
+                    @component('laradmin::components.input_select',['name'=>'faith','value'=>$user->faith,'options'=>$faiths,])
                     @endcomponent
                     
                     @component('laradmin::form.fields',['fields'=>$form->getFields()])

@@ -15,8 +15,8 @@ class CreateMediaTable extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('id');
-            $table->unsignedBigInteger('user_id')->unsigned();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
             $table->string('disk', 32);
             $table->string('dir');//was directory
             $table->string('fn');
@@ -24,6 +24,8 @@ class CreateMediaTable extends Migration
             $table->string('mime_type', 128);
             //$table->string('aggregate_type', 32);
             $table->integer('size')->unsigned();
+            $table->integer('width')->unsigned()->nullable();
+            $table->integer('height')->unsigned()->nullable();
             $table->timestamps();
             
             $table->index(['disk', 'dir']);
@@ -33,22 +35,23 @@ class CreateMediaTable extends Migration
         Schema::create('mediables', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-            $table->integer('media_id')->unsigned();
+            $table->unsignedBigInteger('media_id');
             $table->string('mediable_type');
-            $table->integer('mediable_id')->unsigned();
+            $table->unsignedBigInteger('mediable_id');
             $table->string('title')->nullable();
             $table->text('description')->nullable();
-            $table->string('tag')->defaullt('image');//'thumbnail', 'featured image', 'gallery' or 'download','hero','image'
+            $table->string('tag')->default('image');//'thumbnail', 'featured image', 'gallery' or 'download','hero','image' etc etc
+            $table->integer('order_number')->default(0);//can be used to for ordering. Eg. a model could order all of its medias that have a particular tag. 
             $table->string('index_tags')->nullable();//used to insert search keywords
             $table->timestamps();
-            //$table->integer('order')->unsigned();
+            
             
             $table->primary(['media_id', 'mediable_type', 'mediable_id', 'tag']);
             $table->index(['mediable_id', 'mediable_type']);
             $table->index('tag');
-            //$table->index('order');
+            
 
-            //TODO:This prevents the a media beign used by the a mediable for the a particular tag more than once. But we need to check that there is a use case
+            //TODO:This prevents a media being used by the a mediable for the a particular tag more than once. But we need to check that there is a use case
             //$table->unique(['media_id', 'mediable_type', 'mediable_id', 'tag']); 
 
             $table->foreign('media_id')->references('id')->on('media')

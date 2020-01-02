@@ -14,7 +14,7 @@
             
             
 
-            @component('laradmin::blade_components.panel')
+            @component('laradmin::components.panel')
                 @slot('title')
                     Edit source form
                 @endslot 

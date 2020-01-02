@@ -47,7 +47,7 @@ class ProfileContactsFieldable implements Fieldable{
             'value'=>Auth::user()->country,
             'label'=>'Country',
             'order'=>5,
-            'rules'=>'required:min:2',
+            'rules'=>'required|min:2',
             'options'=>__( 'laradmin::list_of_countries'),
         ]);
         

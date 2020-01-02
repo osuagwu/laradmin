@@ -4,8 +4,8 @@ The content manager is very under construction with many implementation still to
 ```php
 $contentmanager=app('laradmin')->contentManager;
 ```
-## Sub app Name
-You can set the sub app name which appears in fron pf the logo to indicate which app is currently running.
+## Sub app name
+You can set the sub app name which appears in front of the logo to indicate which app is currently running.
 Set the sub app name by calling the following method.
 ```php
 $contentmanager->registerSubAppName('Comicpic',$url);

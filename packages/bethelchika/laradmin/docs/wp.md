@@ -26,10 +26,12 @@ After installation of Wordpress, you should configure a connection for the Wordp
 ```
 The connection name should be 'corcel' as shown above.
 
-in your environmental file tell Laradmin that you are ready with Wordpress by setting the following variables:
+In your environmental file tell Laradmin that you are ready with Wordpress by setting the following variables:
 LARADMIN_WP_ENABLE=true
 LARADMIN_WP_RPATH=/wp
 LARADMIN_PAGE_URL_PREFIX=page
+
+> Note that you will get missing table error etc if you enable Wordpress using this env variable before installing Wordpress or configuring the connection.
 
 The first variable tells Laradmin to begin using Wordpress, the seconds defines the folder relative to the Laravel app's public folder, where Worpress is installed. And the third variable tells Laradmin the prefix to use when viewing pages from Wordpress.
 

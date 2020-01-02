@@ -1,0 +1,34 @@
+/** The Sass Entry file.
+* Please use Bootstrap ^3.7. 
+* You could install using: npm install bootstrap-sass 
+* See https://github.com/twbs/bootstrap-sass
+*/
+
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
+// Variables
+@import "variables";
+ 
+/** Bootstrap
+* Please set the correct path here. 
+* eg: Install bootstrap-sass on your Laravel root node_modules  
+*    npm install bootstrap-sass 
+*    and the set the path hrer to: '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap'
+*/
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+//import navbars sass
+@import "navbars.scss";
+
+//import section sass
+@import "sections.scss";
+
+//import main sass
+@import "main.scss";
+
+//import footer sass
+@import "footer.scss";
+
+

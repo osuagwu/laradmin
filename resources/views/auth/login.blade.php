@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('laradmin::user.layouts.app')
 
 @section('content')
-@component('laradmin::blade_components.section',['type'=>'subtle','isFirst'=>true,'isFullHeight'=>true])
+@component('laradmin::components.section',['type'=>'subtle','isFirst'=>true,'isFullHeight'=>true])
     <div class="row first-content-padding">
         <div class="col-md-8 col-md-offset-2">
             @include ('laradmin::inc.msg_board')

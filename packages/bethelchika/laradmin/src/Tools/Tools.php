@@ -1,9 +1,20 @@
 <?php
 namespace BethelChika\Laradmin\Tools;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Money\Money;
+use Money\Currency;
+
+// NOTE either depend on Cashier for the following of install:: composer require moneyphp/money
+use NumberFormatter;
 use Corcel\Model\Option;
+use Illuminate\Support\Facades\Log;
+use Money\Currencies\ISOCurrencies;
+
+
+use Money\Formatter\IntlMoneyFormatter;
+
+use Money\Formatter\DecimalMoneyFormatter;
+use Money\Parser\IntlLocalizedDecimalParser;
 
 class Tools
 {
@@ -16,7 +27,7 @@ class Tools
 
 
     /**
-     * Internaly stires recently address trasnlated from ips. The ips are keys to the address.
+     * Internally stores recently address translated from ips. The ips are keys to the address.
      *
      * @var array
      */
@@ -217,7 +228,7 @@ class Tools
     //$address['country_iso_code']=$record->country->isoCode; NOTE: OPEN THIS IF NEEDED
 
 
-    // Save some recent address: TODO: Change this to catching so that it can be used across sessions.
+    // Save some recent address: TODO: Change this to proper catching so that it can be used across sessions.
     self::$RECENT_IP2ADDRESSES[$ip]=$address;
     if(count(self::$RECENT_IP2ADDRESSES)>3){
         array_shift(self::$RECENT_IP2ADDRESSES);
@@ -258,5 +269,87 @@ class Tools
         return $tzs;
     }
  
+    /**
+     * Format the given amount into a displayable currency.
+     *
+     * @param  int  $amount
+     * @param  string|null  $currency
+     * @param string|null $currency_local The local of the currency.
+     * @return string
+     */
+    public static function formatAmount($amount, $currency = null,$currency_local=null)
+    {
+        if (!$currency_local) {
+            $currency_local=config('app.currency_locale', 'en');
+        }
+
+        if(!$currency){
+            $currency=config('app.currency','GBP');
+        }
+        $currency=strtoupper($currency);
+
+        $money = new Money($amount, new Currency($currency));
+
+        $numberFormatter = new NumberFormatter($currency_local, NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());//CAUTION: The 'intl' that this depends on could lead to different results in different environments (http://moneyphp.org/en/stable/features/parsing.html)
+
+        return $moneyFormatter->format($money);
+    }
+
+
+    /**
+     * Parse a human friendly decimal money to the lowest subdivision.
+     * Useful when trying to make calculation with amount entered by user.
+     * Also useful for saving an amount entered by user to a database in an integer column.
+     *
+    * @param  int  $amount
+     * @param  string|null  $currency
+     * @param string|null $currency_local The local of the currency.
+     * @return string
+     */
+    public static function parseDecimalAmount($amount,$currency=null,$currency_local=null){
+
+        if (!$currency_local) {
+            $currency_local=config('app.currency_locale', 'en');
+        }
+
+        if(!$currency){
+            $currency=config('app.currency','GBP');
+        }
+        $currency=strtoupper($currency);
+
+
+        $currencies = new ISOCurrencies();
+
+        $numberFormatter = new \NumberFormatter($currency_local, \NumberFormatter::DECIMAL);
+        $moneyParser = new IntlLocalizedDecimalParser($numberFormatter, $currencies);//CAUTION: The 'intl' that this depends on could lead to different results in different environments (http://moneyphp.org/en/stable/features/parsing.html)
+
+        $money = $moneyParser->parse($amount, new Currency($currency));
+
+        return $money->getAmount(); 
+    }
+
+      /**
+     * Format the lowest subdivision into a human friendly decimal. The output is not localised.
+     * Useful whe displaying an amount for a user to edit
+     *
+    * @param  int  $amount Amount in lowest subdivision of currency
+     * @param  string|null  $currency
+     * @return string
+     */
+    public static function decimalAmountForHumans($amount,$currency=null){
+
+        if(!$currency){
+            $currency=config('app.currency','GBP');
+        }
+        $currency=strtoupper($currency);
+
+        $money = new Money($amount, new Currency($currency));
+        $currencies = new ISOCurrencies();
+
+        $moneyFormatter = new DecimalMoneyFormatter($currencies);
+
+        return $moneyFormatter->format($money); 
+    }
     
 }

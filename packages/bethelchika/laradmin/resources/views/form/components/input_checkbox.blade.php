@@ -9,7 +9,7 @@
         @foreach($options as $option_key=>$option){{--Note, if options is not assoc, then the value of the <option> is integer starting from zero --}}
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="{{$name}}@if(count($options)>1)[]@endif"  value="{{$option_key}}" @if(is_array(old($old_name??$name,$value))) @foreach(old($old_name??$name,$value) as $opt) @if(!strcmp($opt,$option_key)) {{'checked'}} @break @endif @endforeach @else @if(!strcmp(old($old_name??$name,$value),$option_key)) {{'checked'}}@endif @endif {{$style??''}}>
+                    <input type="checkbox" class="{{$control_class??''}}" name="{{$name}}@if(count($options)>1)[]@endif"  value="{{$option_key}}" @if(is_array(old($old_name??$name,$value))) @foreach(old($old_name??$name,$value) as $opt) @if(!strcmp($opt,$option_key)) {{'checked'}} @break @endif @endforeach @else @if(!strcmp(old($old_name??$name,$value),$option_key)) {{'checked'}}@endif @endif {{$style??''}}>
                     @if(count($options)>1){{$option}}@endif
                 </label>
             </div>

@@ -1,7 +1,7 @@
 @extends('laradmin::user.layouts.app')
 @include('laradmin::user.partials.content_manager.stacks')
 @section('content')
-@component('laradmin::blade_components.section',['type'=>'default','isFirst'=>true,'class'=>'first-content-padding','role'=>'main'])
+@component('laradmin::components.section',['type'=>'default','isFirst'=>true,'class'=>'first-content-padding','role'=>'main'])
         <div class="row">
             @include ('laradmin::inc.msg_board')
         

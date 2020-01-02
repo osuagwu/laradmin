@@ -24,10 +24,10 @@
 
             
 
-                @component('laradmin::blade_components.input_text',['name'=>'name','value'=>'','required'=>'required'])
+                @component('laradmin::components.input_text',['name'=>'name','value'=>'','required'=>'required'])
                 @endcomponent 
 
-                @component('laradmin::blade_components.textarea',['name'=>'description','value'=>''])
+                @component('laradmin::components.textarea',['name'=>'description','value'=>''])
                 @endcomponent 
                 
                 

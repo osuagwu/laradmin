@@ -91,7 +91,7 @@
                                             @endif 
 
                                             @if(!strcmp($socialUser->social_email,Auth::user()->email) )
-                                            <small class="label label-info"> </span>  Primary</small> 
+                                            <small class="label label-info">   Primary</small> 
                                             @else 
                                                 <form method="post" style="display:inline" action="{{route('social-user-link-email-set-primary',$socialUser->id)}}">
                                                     {{ method_field('PUT') }}
@@ -131,7 +131,7 @@
                             <p>Attach new emails to your account. You willl be required to confirm each email otherwise the email will be automatically removed</p>
                             <form class="form-horizontal"  method="post" role="form"  action="{{route('social-user-link-email-create')}}" >
                                 {{csrf_field()}}
-                                @component('laradmin::blade_components.input_text',['name'=>'email','required'=>'required', 'value'=>'','placeholder'=>"Add new email"])
+                                @component('laradmin::components.input_text',['name'=>'email','required'=>'required', 'value'=>'','placeholder'=>"Add new email"])
                                 @endcomponent 
                                 <div class="form-group">
                                     <div class="col-md-6 col-md-offset-4">

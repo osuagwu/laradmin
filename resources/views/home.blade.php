@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('laradmin::user.layouts.app')
 @push('head-styles')
 <style>
 .section.banner{

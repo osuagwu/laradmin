@@ -42,3 +42,14 @@ function _x($text,$context){
 // function get_option($name){
 //     return null;
 // }
+
+
+/**
+ * Retrieve a list of protocols to allow in HTML attributes.
+ *
+ * @return array 
+ */
+function wp_allowed_protocols() {
+    return array( 'http', 'https', 'ftp', 'ftps' );
+    
+}

@@ -1,6 +1,6 @@
 {{----}}
 @include('comicpic::scripts')
-<section class="section section-primary section-offset-mainbar-sides section-offeset-mainbar-top  section-title section-diffuse section-light-bg ">
+<section class="section section-primary section-offset-mainbar-sides section-offset-mainbar-top  section-title section-diffuse section-light-bg ">
     <div class=" content-padding-left content-padding-right">
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item active">{{$appname}}</li>

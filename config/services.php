@@ -41,7 +41,7 @@ return [
     ],
 
     'facebook' => [
-        'page_url'=>env('FACEBOOK_PAGE_URL','https://www.facebook.com/Webferendum-104239010935473/'),// Page url
+        'url'=>env('FACEBOOK_URL','https://www.facebook.com/Webferendum-104239010935473/'),// Page url
         //Login
         'client_id' => env('FACEBOOK_CLIENT_ID'),         // Your facebook Client/App ID
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'), // Your facebook Client Secret

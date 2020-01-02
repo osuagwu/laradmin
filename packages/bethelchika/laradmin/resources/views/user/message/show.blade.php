@@ -5,7 +5,7 @@
     <div class="container-fluid" >
         <div class="sidebar-mainbar">
                 
-            @component('laradmin::blade_components.sidebar')
+            @component('laradmin::components.sidebar')
                 @slot('content')
                 <nav>
                     <ul class="padding-top-x3 list-unstyled">
@@ -98,7 +98,7 @@
                                                                 
                                                             </div>
 
-                                                            <div class="message-body">{{$message->message}}</div>
+                                                            <div class="message-body">{!! $message->theContent() !!}</div>
                                                             <div class="message-footer text-right text-muted ">
                                                                     @if(Auth::user()->is($message->sender)==false or (Auth::user()->is($message->sender) and $message->user->is($message->sender)) )
                                                                 <small class="read_at label label-info">
@@ -147,7 +147,7 @@
                                         <input type="hidden" name="parent_id" value="{{$parentMessage->id}}"/> 
                                         <input type="hidden" name="subject" value="{{$parentMessage->subject}}" /> 
                                         <input type="hidden" name="channels" value="{{implode(',',$parentMessage->channels)}}" /> 
-                                        @component('laradmin::blade_components.textarea',['name'=>'message','value'=>''])
+                                        @component('laradmin::components.textarea',['name'=>'message','value'=>''])
                                         @endcomponent 
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-4">

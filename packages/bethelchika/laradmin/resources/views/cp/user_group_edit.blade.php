@@ -21,10 +21,10 @@
 
                 
 
-                    @component('laradmin::blade_components.input_text',['name'=>'name','value'=>$userGroup->name,'required'=>'required'])
+                    @component('laradmin::components.input_text',['name'=>'name','value'=>$userGroup->name,'required'=>'required'])
                     @endcomponent 
 
-                    @component('laradmin::blade_components.textarea',['name'=>'description','value'=>$userGroup->description])
+                    @component('laradmin::components.textarea',['name'=>'description','value'=>$userGroup->description])
                     @endcomponent 
                     
                     

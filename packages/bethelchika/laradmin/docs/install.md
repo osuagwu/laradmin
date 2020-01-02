@@ -1,10 +1,14 @@
 # Installation
 ## Install Laravel
-It is better to try with a fresh Laravel install first. So install Laravel.
+It is better to try with a fresh Laravel install first. So install Laravel. Please configure your mail driver as well. You could simply set the env variable to log:
+```
+MAIL_DRIVER=log
+```
 ### Auth
 Make Authentication.
 ```
-php artisan make:auth
+composer require laravel/ui --dev
+php artisan ui vue --auth
 ```
 Then go to *.../app/Http/Controllers/Auth/RegisterController.php* and change the import statement,
 
@@ -14,7 +18,7 @@ use App\User;
 
 to
 ```php
-`use BethelChika\Laradmin\User;`.
+use BethelChika\Laradmin\User;
 ```
 
 ## Install Laradmin files
@@ -43,13 +47,14 @@ Edit your Laravel //config/app.php to add the Laradmin service provider thus:
 ```php
 'providers' => [
     ...
-    BethelChika\Laradmin\Providers\LaradminServiceProvider::class
+    BethelChika\Laradmin\LaradminServiceProvider::class
 ];
 ```
 
 ## Dependencies
 You can install the dependencies using composer thus
 ```
+composer require laravel/helpers
 composer require intervention/image
 composer require doctrine/dbal
 composer require laravel/socialite
@@ -57,31 +62,42 @@ composer require rezozero/mixedfeed
 composer require jenssegers/agent
 composer require geoip2/geoip2
 ```
+
+If you want to format money with Laradmin and Laravel Cashier is not installed, just install the money package yourself:
+```
+composer require moneyphp/money
+``` 
  
 
 ### Wordpress
-If you plan to  use Wordpress the you should also require:
+If you plan to  use Wordpress then you should also require:
 ```
 composer require jgrossi/corcel
 ```
 
 
 ### Notification
-You should create the notification table and migrate it thus.
+You should create the notification table
 ```
 php artisan notifications:table
-php artisan migrate
 ```
 
 
 
 ## Publishing
 To publish config and assets use the following commands:
+
+```
 php artisan vendor:publish --tag=laradmin-config
+```
+```
 php artisan vendor:publish --tag=laradmin-asset
+```
 
 If you also want to publish the views use:
+```
 php artisan vendor:publish --tag=laradmin-view
+```
 
 ## Migration and seeding
 If you are using MYSQL and havent done so, you should change your Laravel database config so that it uses  `InnoDB` engine. Open config/database and look for a connection named database and make thus:
@@ -95,16 +111,20 @@ If you are using MYSQL and havent done so, you should change your Laravel databa
         'engine' => 'InnoDB',
 ```
 
-
+```
 php artisan migrate
-
+```
+```
 php artisan db:seed --class="BethelChika\Laradmin\Seeds\LaradminDatabaseSeeder"
+```
 
 > If you do not seed the users table you may get 404 errors from the pre-authorise middleware as it tries to load a guest user which may be empty.
 
-> Warnings: Configure laravel mail, else you might get mail errors/warnings during seeding etc. These errors however will not affect the installation process.
+> Note: If the `users` is not empty when you run the Laradmin seeder, the seeder will print out variables you need to set. Make sure you read and follow the guide. This is not such a bad thing as it can help make you own Laradmin installation a bit unique b/c your ids of important users may be different from that of other installations. To avoid setting the variables, run the seeder on a fresh `users`table.
 
-> Tip: The command `php artisan migrate:refresh`  leads to error because some fields of `users` table has been set to nullable contrary to Laravel, to allow social registration. You should use `php artisan migrate:fresh` instead
+> Warnings: Configure Laravel mail, else you might get mail errors/warnings during seeding etc. These errors however will not affect the installation process.
+
+> Note: To allow social registration where a user may not have email or password, Laradmin makes the `email` and `password` columns of the users table *nullable*. This may not be reversed if there are users and with null values in any of these columns, when removing Laradmin.  
 
 ## Users model provider
 Edit your Laravel's config/auth.php and replace user model in the provider as `BethelChika\Laradmin\User::class`
@@ -157,13 +177,7 @@ Below is a html for your login and register templates to enable login with faceb
 User login and registration are handled normally by Laravel controllers and views, unless when using social login which is handled by Laradmin.  
 
 #### Password policy
-Laradmin config include `rules.password` which allows you to set password rules what can conviniently be used sitewide. The rules set in this config will automatically be used by laradmin when setting/resetting a password. To make sure that the same password rule is used sitewide, make sure that this rule is used in the Laravel's App\Http\Controllers\Auth\RegisterController and App\Http\Controllers\Auth\ResetPasswordController. For the former you can just modify the `validation()` method and for the latter you should override the  `rules()` method provided through a trait.
+Laradmin config include `rules.password` which allows you to set password rules what can conveniently be used site-wide. The rules set in this config will automatically be used by laradmin when setting/resetting a password. To make sure that the same password rule is used site-wide, make sure that this rule is used in the Laravel's App\Http\Controllers\Auth\RegisterController and App\Http\Controllers\Auth\ResetPasswordController. For the former you can just modify the `validation()` method and for the latter you should override the  `rules()` method provided through a trait.
 
 ## Modifications of Controllers
-ONLY IF YOU WANT TO MAKE CHANGES TO A LARADMIN CONTROLLER, you can make copies of the Controllers from Laradmin and place them in Laravel app's default controller folder.
-To do this make a folder named *Laradmin* in your controller folder; Then create further folder *User* and *CP* inside 'Laradmin'.
-Now you can E.g copy  'BethelChika\Laradmin\Http\Controllers\User\UserProfileController.php' into your '...app\Http\Controllers\Laradmin\User\' to modify it.
-
->Don't forget to change namespace after moving the controller. In the example above you will need to change the namespace from `BethelChika\Laradmin\Http\Controllers\User` to `App\Http\Controllers\Laradmin\User`
-
->However you could simply override a route of interest by redeclearing the route yourself, then provide your own controller which could be a modified copy of the original from Laradmin
+You could override a route of interest by redeclaring the route yourself in your main application, then provide your own controller which could be a modified copy of the original from Laradmin. You can of course modify or replace the views.

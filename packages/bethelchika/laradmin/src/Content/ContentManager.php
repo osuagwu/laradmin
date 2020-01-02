@@ -38,11 +38,11 @@ class ContentManager
     ];
 
     /**
-     * A two elemment array where [0] is for the name for a current sub application and [1] is for the curresponding url
+     * A two element array where [0] is for the name for a current sub application and [1] is for the corresponding url
      *
      * @var string
      */
-    private static $subAppName = ['Laradmin', '/'];
+    private static $subAppName = ['User manager', '/u/profile'];
 
     /**
      * Predefined admin stacks.TODO: to be used to implement admin stuff
@@ -66,7 +66,7 @@ class ContentManager
     /**
      * Adds an stack
      *
-     * @param string $string The assest eg. <script ...>, <link ...>, <style ...>
+     * @param string $string The asset eg. <script ...>, <link ...>, <style ...>
      * @param string $stack The stacks (from predefined ones) on the page where the content should be placed
      * @return string
      */
@@ -329,7 +329,7 @@ class ContentManager
                 $navigation->create('Control','account_control','user_settings',[
                     'namedRoute'=>'user-account-control' ,'iconClass'=>'fas fa-gamepad','order'=>4.1,'comment'=>'Temporarily or permanently disable your account']);
                 break;
-
+ 
             case 'primary':
             default:
                 die('Loading menu '. $name .' with ContentManager is not implemented yet');

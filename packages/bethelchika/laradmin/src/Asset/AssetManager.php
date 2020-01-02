@@ -10,11 +10,11 @@ class AssetManager
      */
 
     /**
-     * The name appended to logo to change its type. e.g logo-{{$logoType}}.svg
+     * The the current type of logo
      *
      * @var string
      */
-    private static $logoType = '';
+    private static $logoType = null;
 
     /**
      * The navbar class the defines the look and feel of the main navigation.
@@ -39,6 +39,8 @@ class AssetManager
      */
     public static $stacks = [
         'head-styles',
+        'head-styles-library',
+        'footer-scripts-library',
         'footer-scripts-after-library',
         'footer-scripts',
         'meta',
@@ -60,6 +62,8 @@ class AssetManager
      */
     public static $adminStacks = [
         'admin-head-styles',
+        'admin-head-styles-library',
+        'admin-footer-scripts-library',
         'admin-footer-scripts-after-library',
         'admin-footer-scripts',
     ];
@@ -82,7 +86,7 @@ class AssetManager
      * Adds an asset
      *
      * @param string $tag A site wise unique id for this asset
-     * @param string $string The assest eg. <script ...>, <link ...>, <style ...>. Note: It is up to the programmer to keep this small in size (should consider resgistering only <link> and <script src="..."> for large assests).
+     * @param string $string The asset eg. <script ...>, <link ...>, <style ...>. Note: It is up to the programmer to keep this small in size (should consider resgistering only <link> and <script src="..."> for large assets).
      * @param string $stack The stacks (from predefined ones) on the page where the assest should be placed
      * @return string
      */
@@ -217,9 +221,9 @@ class AssetManager
     /**
      * Checks if bootstrap container type is fluid
      * 
-     * @param mixed $ontrue Variable to return on true
-     * @param mixed $onfalse Variable to return on false
-     * @return boolean|$ontrue|$onfalse
+     * @param mixed $ontrue Value to return on true
+     * @param mixed $onfalse Value to return on false
+     * @return boolean|mixed
      */
     public static function isContainerFluid($ontrue = null, $onfalse = null)
     {
@@ -280,23 +284,36 @@ class AssetManager
     }
     /**
       * Gets the logo type
-      * @param $append string Optional string to be appended to the begining of the output
+      * @param string $default The type that should be returned if logo type is not set.
       * @return string
       */
-    public static function getLogoType($append = '')
+    public static function getLogoType($default='default')
     {
-        if (self::hasLogoType()) {
-            return $append . self::$logoType;
-        } else {
-            return self::$logoType;
-        }
+        return self::$logoType??$default;
     }
 
 
+    /**
+     * Retrieves the URI of the logo specified by $type or the current set logo.
+     *
+     * @param string $type
+     * @return string
+     */
+    public function getLogo($type=null){
+        $type=$type??self::getLogoType();
+        return config('laradmin.logos')[$type]??'';
+    }
+
 
     /**
-     * Register navbar class on the body thus <body class="navbar-{{$class}}"> and then registeres a suitable logo. The current implementation is that logo.ext is normal ($class= default,subtle) or logo-white.ext for {$class=primary,danger,info,success,warning}. 
-     *  TODO: Implement such that the corresponding logo is 'logo-{{$class}}.ext'
+     * Register navbar class on the body thus <body class="navbar-{{$class}}"> and  
+     * then registers a suitable logo type. The current implementation is: 
+     * for $class= {default,subtle} =>logotype='default',
+     * for any other $class={primary,danger,info,success,warning etc} =>logotype=>'reverse'. 
+     * 
+     * TODO:Implement such that the corresponding logo is 
+     * 'logo-{{$class}}.ext'
+     * 
      * @param string $class
      * @return void
      */
@@ -308,10 +325,10 @@ class AssetManager
         switch (strtolower($class)) {
             case 'default':
             case 'subtle':
-                self::registerLogoType('');
+                self::registerLogoType('default');
                 break;
             default:
-                self::registerLogoType('white');
+                self::registerLogoType('reverse');
         }
     }
     /**
@@ -321,7 +338,7 @@ class AssetManager
       */
     public static function hasMainNavClass()
     {
-        return self::$logoType ? true : false;
+        return self::$mainNavClass ? true : false;
     }
     /**
       * Gets the navbar class
@@ -350,7 +367,7 @@ class AssetManager
             $type = 'hero';
         }
         self::$heroType = $type;
-        //self::registerLogoType('white');
+        
 
         self::registerBodyClass('main-nav-no-border-bottom');
         if (str_contains($type, 'super')) {

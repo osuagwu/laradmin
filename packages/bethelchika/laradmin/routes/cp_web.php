@@ -8,12 +8,12 @@
 | Here is where you can register web routes for your application.
 |
 */
-
-
-Route::group(['middleware' => ['web']], function () {
-
-    $LCR="\\BethelChika\\Laradmin\\Http\\Controllers\\";//Laradmin Controller Roots
+// 
+$LCR="\\BethelChika\\Laradmin\\Http\\Controllers\\";//Laradmin Controller Roots
    
+Route::group(['middleware' => ['web']], function () use ($LCR){
+
+    
     //Admin pages ****************************************************************
     //****************************************************************************
     Route::prefix('cp')->group(function () use( $LCR){
@@ -54,7 +54,7 @@ Route::group(['middleware' => ['web']], function () {
 
         // Sources
         Route::get('/source/types/create',$LCR.'CP\SourceController@create')->name('cp-source-create');
-        Route::post('/source/create',$LCR.'CP\SourceController@store');
+        Route::post('/source/types/create',$LCR.'CP\SourceController@store');
 
         ////Types of sources
         Route::get('/source/types/',$LCR.'CP\SourceController@types')->name('cp-source-types');

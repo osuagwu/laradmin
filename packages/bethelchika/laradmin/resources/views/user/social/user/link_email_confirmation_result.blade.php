@@ -1,7 +1,7 @@
 @extends('laradmin::user.layouts.app')
 @include('laradmin::user.partials.content_manager.stacks')
 @section('content')
-@component('laradmin::blade_components.section',['type'=>'subtle','isFirst'=>true,'isFullHeight'=>true, 'role'=>'main'])
+@component('laradmin::components.section',['type'=>'subtle','isFirst'=>true,'isFullHeight'=>true, 'role'=>'main'])
 
         @slot('title')
             {{$pageTitle??'Contact us'}}

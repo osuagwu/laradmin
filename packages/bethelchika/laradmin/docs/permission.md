@@ -50,12 +50,12 @@ A source is essentially a resource in laradmin on which we can add permission. L
 'page'=>'Page',
 'model'=>'Model'.
 
-The 'file', 'url', and 'model' can be linked and stored in the sources table to form \BethelChika\Laradmin\Source models.
+The 'file', 'url', and 'model' can be linked and stored in the *sources* table to form \BethelChika\Laradmin\Source models.
 
-The 'table', 'route', 'route_prefix' and 'page' are read from Laravel and not linked to the sources table.
+The 'table', 'route', 'route_prefix' and 'page' are read from Laravel and not linked on the *sources* table.
 
 ### Checking source permission
-To check for access to source you will need the 'type' and 'id' of the source as was shown earlier in route access check example. The  'type' and 'id' are straightforward for source linked and stored in the sources table. The 'type' for these sources is the class, \BethelChika\Laradmin\Source, and the 'id' is the corresponding model key (ie. id)
+To check for access to source you will need the 'type' and 'id' of the source as was shown earlier in route access check example. The  'type' and 'id' are straightforward for source linked and stored in the *sources* table. The 'type' for these sources is the class, \BethelChika\Laradmin\Source, and the 'id' is the corresponding model key (ie. id)
 
 ```php
 use BethelChika\Laradmin\Source;

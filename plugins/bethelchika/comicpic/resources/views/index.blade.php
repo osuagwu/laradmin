@@ -54,7 +54,7 @@
                     </div>
                     <div class="content-bottom">
                         <div class="">
-                            @component('laradmin::blade_components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name, 'class'=>'avatar-subtle'])
+                            @component('laradmin::components.user_avatar',['user'=>$comicpic->user,'legend'=>$comicpic->user->name, 'class'=>'avatar-subtle'])
                             @endcomponent
                         </div>
                         

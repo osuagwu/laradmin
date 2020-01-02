@@ -2,7 +2,7 @@
 
 namespace BethelChika\Laradmin\WP;
 
-use Corcel\Laravel\CorcelServiceProvider;
+//use Corcel\Laravel\CorcelServiceProvider;
 use Corcel\Model\Post;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -18,12 +18,12 @@ class WPServiceProvider extends ServiceProvider
     public function register()
     {
         // Do not do anything if wp is not enabled
-        if(!config('laradmin.wp_enable',true)){
+        if(!config('laradmin.wp_enable',false)){
             return;
         }
 
         //Register providers
-        $this->app->register(CorcelServiceProvider::class);
+        //$this->app->register(CorcelServiceProvider::class);
 
 
     }
@@ -37,7 +37,7 @@ class WPServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         // Do not do anything if wp is not enabled
-        if(!config('laradmin.wp_enable',true)){
+        if(!config('laradmin.wp_enable',false)){
             return;
         }
 

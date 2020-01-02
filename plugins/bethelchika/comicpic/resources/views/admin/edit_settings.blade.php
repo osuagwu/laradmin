@@ -14,7 +14,7 @@
    
     {{ csrf_field() }}{{ method_field('put') }}
 
-    @component('laradmin::blade_components.input_text',['name'=>'appname','value'=>$appname,'required'=>'required'])
+    @component('laradmin::components.input_text',['name'=>'appname','value'=>$appname,'required'=>'required'])
     @endcomponent                    
 
     <div class="form-group">

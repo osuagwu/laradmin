@@ -22,21 +22,21 @@
                                 
                                 {{ csrf_field() }}
                         @if($showChannels)
-                            @component('laradmin::blade_components.input_select',['name'=>'channels','value'=>"database",'options'=>['email'=>'Email','email,database'=>'Email and internal','database'=>'Internal'],'required'=>'required'])
+                            @component('laradmin::components.input_select',['name'=>'channels','value'=>"database",'options'=>['email'=>'Email','email,database'=>'Email and internal','database'=>'Internal'],'required'=>'required'])
                             @endcomponent
                         @endif
 
                         @if($userTo)
                             <input type="hidden" name="user" value="{{$userTo->id}}" />
                         @else
-                            @component('laradmin::blade_components.input_text',['name'=>'email','value'=>''])
+                            @component('laradmin::components.input_text',['name'=>'email','value'=>''])
                             @endcomponent
                         @endif
 
-                        @component('laradmin::blade_components.input_text',['name'=>'subject','value'=>'','required'=>'required'])
+                        @component('laradmin::components.input_text',['name'=>'subject','value'=>'','required'=>'required'])
                         @endcomponent 
 
-                        @component('laradmin::blade_components.textarea',['name'=>'message','value'=>''])
+                        @component('laradmin::components.textarea',['name'=>'message','value'=>''])
                         @endcomponent 
                         
                         <input type="hidden" name="parent_id" value="{{$parent_id}}" />

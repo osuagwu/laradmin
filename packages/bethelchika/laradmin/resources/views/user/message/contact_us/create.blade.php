@@ -9,7 +9,7 @@
 @endpush
 @section('content')
 
-@component('laradmin::blade_components.section',['type'=>'primary','isFullHeight'=>true, 'class'=>'banner','role'=>'main'])
+@component('laradmin::components.section',['type'=>'primary','isFullHeight'=>true, 'class'=>'banner','role'=>'main'])
     @slot('title')
         {{$pageTitle??'Contact us'}}
     @endslot

@@ -39,14 +39,14 @@
 
 
 
-                    {{--@component('laradmin::blade_components.input_password',['name'=>'password','label'=>'Confirm current password','required'=>'required'])
+                    {{--@component('laradmin::components.input_password',['name'=>'password','label'=>'Confirm current password','required'=>'required'])
 
                     @endcomponent
                     --}}
-                    @component('laradmin::blade_components.input_password',['name'=>'new_password','label'=>'New password','required'=>'required'])
+                    @component('laradmin::components.input_password',['name'=>'new_password','label'=>'New password','required'=>'required'])
                     @endcomponent
 
-                    @component('laradmin::blade_components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation','required'=>'required'])
+                    @component('laradmin::components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation','required'=>'required'])
                     @endcomponent
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

@@ -327,19 +327,20 @@ abstract class NavigationItem
     }
 
     /**
-     * Remove an item  with a given tag or dot separated tag
+     * Remove an item  with a given tag or dot separated tags.
+     * 
      *
      * @param string $tags One or dot saparated tag identifier. Dot separated tag should be relative to the tag of the parent i.e. this object 
      * @return boolean true on success or false if menu does not exist , otherwise false
      */
-    public function removeChildByTag($tags){
+    public function removeChildByTags($tags){
         
         $tags=explode('.',$tags);
         $tag=array_shift($tags);
         $child=$this->getChildByTag($tag);
         if(count($tags)){
             if($child){
-                return $child->removeChildByTag($tags);
+                return $child->removeChildByTags($tags);
             }else{
                 return false;
             }
@@ -355,6 +356,7 @@ abstract class NavigationItem
 
     /**
      * Remove a given child
+     * 
      *
      * @param string $tag
      * @return boolean, true on success or if the menu item could not be found

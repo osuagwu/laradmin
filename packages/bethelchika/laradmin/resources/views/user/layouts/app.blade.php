@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="timezone" content="{{session('timezone')}}">{{-- print prefered timezone for javascript --}}
+    <meta name="timezone" content="{{session('timezone')}}">{{-- print prefered timezone that can be used for javascript --}}
    
     <meta name="description" content="{{$metas['description']?? env('APP_DESCRIPTION','Laradmin')}}" >
     <meta name="robots" content="{{$metas['robots'] ?? 'all'}}">
@@ -25,8 +25,7 @@
         @endisset
     </title>
 
-    <!-- Styles -->
-    <link href="{{ asset('vendor/laradmin/user/css/user.css') }}" rel="stylesheet">
+    
 
     <!-- External styles-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">    
@@ -34,6 +33,11 @@
     <!--mCustomScrollbar-->
     <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css" />
     {{--TODO: include the image for mCustomScrollbar --}}
+    <!-- More lib -->
+    @stack('head-styles-library')
+
+    <!-- Styles -->
+    <link href="{{ asset('vendor/laradmin/user/css/user.css') }}" rel="stylesheet">
     
     <!--Head Styles-->
     @stack('head-styles')
@@ -65,19 +69,19 @@
                                 <span class="icon-bar"></span>
                             </button>
 
-                            <!---Sidebar control------->                            
+                            <!-- Sidebar control -->                            
                             {{--@stack('sidebar-control') Disabling for now b/c it seem it doesn't make site look good may be--}}
 
                             <!-- Branding Image -->
                             <a class=" navbar-brand " href="{{ url('/') }}">
                                 @if(str_contains($laradmin->assetManager->getHeroType(),'super'))  {{--print the special logo for hero --}}
                                 <div class="logo-hero-super ">{{-- The visibility class here is not required as this has already been done in the css file--}}
-                                    <img class="logo " src="/img/logo-hero-super.svg" alt="{{ config('app.name', 'Laradmin')}}" />
+                                    <img class="logo " src="{{$laradmin->assetManager->getLogo('reverse')}}" alt="{{ config('app.name', 'Laradmin')}}" />
                                 </div>
                                 @endif
                                 
-                                <div class="logo-default @if(str_contains($laradmin->assetManager->getHeroType(),'super')) {{''}} @endif">{{-- if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero in the super mode--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file --}}
-                                    <img class="logo " src="/img/logo{{$laradmin->assetManager->getLogoType('-')}}.svg" alt="{{ config('app.name', 'Laradmin')}}" />
+                                <div class="logo-normal">{{-- if this is hero page, make the normal logo to appear only for small smaller screens as they do not show the hero in the super mode--}}{{-- NOTE:The visibility class here is not required as this has already been done in the css file --}}
+                                    <img class="logo " src="{{$laradmin->assetManager->getLogo()}}" alt="{{ config('app.name', 'Laradmin')}}" />
                                 </div>
                             </a>
 
@@ -99,7 +103,8 @@
                                 @include('laradmin::menu', ['tag' => 'primary'])
                                 
                             </ul>
-
+                            
+                            
                             <!-- Right Side Of Navbar -->
                             <ul class="nav navbar-nav navbar-right">
                                 
@@ -126,6 +131,7 @@
                                         </a>
 
                                         <ul class="dropdown-menu" role="menu">
+                                            @include('laradmin::menu', ['tag' => 'logged_in'])
                                             <li><a href="{{route('user-home')}}">Dashboard</a></li>
                                             <li><a href="{{route('user-settings')}}">Settings</a></li>
                                             @can('cp') 
@@ -181,6 +187,8 @@
     {{--Vue--}}
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     
+    @stack('footer-scripts-library')
+
     {{--For after loading libraries [good for loading vue components]--}}
     @stack('footer-scripts-after-library')
 

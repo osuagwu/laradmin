@@ -28,6 +28,9 @@ trait Homepage
 
 
         //dd($post->getFeaturedThumbSrcset());
+
+        $tpl=$this->laradmin->theme->from.'wp.page_templates.homepage';
+        $tpl_default = '';
         
 
         // Define metas;
@@ -52,6 +55,6 @@ trait Homepage
 
         $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
         $pageTitle=$post->title;
-        return view($this->laradmin->theme->defaultFrom().'wp.homepage', compact('pageTitle', 'post', 'hpss', 'posts','metas'));
+        return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'hpss', 'posts','metas'));
     }
 }

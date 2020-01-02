@@ -18,18 +18,21 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     
+    <!-- More lib -->
+    @stack('head-styles-library')
     
     <!-- Admin specific Styles--> 
     <link href="{{ asset('vendor/laradmin/cp/css/admin.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/laradmin/cp/css/structure-plain.css') }}" rel="stylesheet">    
     <link href="{{ asset('vendor/laradmin/cp/css/admin-plain.css') }}" rel="stylesheet">
     
-    
+    <!-- More styles -->
+    @stack('head-styles')
 
 </head>
 <body>
     <div id="app">
-        <header role="banner"
+        <header role="banner">
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#sidebar-menu-toggle" id="sidebar-menu-toggle"><span class="glyphicon glyphicon-list text-info" aria-hidden="true"></span></a>
@@ -244,7 +247,13 @@
     
     {{--iconify.design--}}
     <script src="https://code.iconify.design/1/1.0.0-rc7/iconify.min.js"></script>
+    
+    @stack('admin-footer-scripts-library')
+    
+    {{--For after loading libraries [good for loading vue components]--}}
+    @stack('admin-footer-scripts-after-library')
 
+    @stack('admin-footer-scripts')
 
     @stack('footer-scripts')
 </body>

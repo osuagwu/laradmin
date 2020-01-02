@@ -1,1 +1,22 @@
-{"installed":[{"tag":"bethelchika\/isthisfake","enabled":0,"plugable":"\\BethelChika\\IsThisFake\\IsThisFakePlugable","psr4":{"\\BethelChika\\IsThisFake\\":"src\/"},"updating":0}]}
+{
+    "installed": [
+        {
+            "tag": "bethelchika\/isthisfake",
+            "enabled": 0,
+            "plugable": "\\BethelChika\\IsThisFake\\IsThisFakePlugable",
+            "psr4": {
+                "\\BethelChika\\IsThisFake\\": "src\/"
+            },
+            "updating": 0
+        },
+        {
+            "tag": "bethelchika\/ulooma",
+            "enabled": 1,
+            "plugable": "\\BethelChika\\Ulooma\\UloomaPlugable",
+            "psr4": {
+                "\\BethelChika\\Ulooma\\": "src\/"
+            },
+            "updating": 0
+        }
+    ]
+}
