@@ -1,7 +1,9 @@
 # Auth verification
-Laradmin provides verification system that allows to verify a LoginAttempt model. The Login attempt model is save when a user logs in or following a successful verification.
+Laradmin provides verification system that allows you to verify a LoginAttempt model. The Login attempt model is saved when a user logs in or following a successful verification.
 
-Each time an authenticated user makes a request, LoginAttempt information is extracted from the request. The extracted information is checked against the previous LoginAttempt by the user. The user is forced to undergo a verification process if there is no previous verified matching  attempt.
+How often a request is examined for verification depends on the *laradmin.login_attempt_check* config. depending the config, when an authenticated user makes a request, LoginAttempt information is extracted from the request. The extracted information is checked against the previous LoginAttempt by the user. The user is forced to undergo a verification process if there is no previous verified matching  attempt.
+
+It is possible to change how tight the requirements for matching a previous attempt with a current attempt, by changing the columns of the LoginAttempt model table that are used in the comparison. For example removing the *ip* column could reduce the number of times a user is asked to verify their account if the user is using an internet connect that constantly varies the WAN IP. See the config *laradmin.login_attempt_match_columns* for more details.
 
 ## Verification Channels
 Verification process are completed by verification channels. Out of the box, Laradmin provides password, email and security question channels. A channel class should implement the BethelChika\Laradmin\AuthVerification\Contracts\Channel interface.
@@ -18,6 +20,7 @@ where $tag is the channels tag. So channels should create a route and a controll
 
 A typical channel controller method using the Email Channel as an example
 ```php
+use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
 use BethelChika\Laradmin\AuthVerification\Channels\Email;
 use BethelChika\Laradmin\LoginAttempt;
 public function email(Request $request)
@@ -28,8 +31,8 @@ public function email(Request $request)
         //Initialise the channel
         $email_channel=new Email; 
 
-        //It is a good idea to redirect the user if actually to verification is required
-        if(!$attempt->has2Verify()){
+        //It is a good idea to redirect the user if actually no verification is required
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
 

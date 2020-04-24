@@ -93,7 +93,8 @@ Trait ReAuthController
 
     public function reAuthWithSocialUser(SocialUserManager $socialUserManager,SocialUser $authSocialUser){
         $user=Auth::user();
-        $this->authorize('update', $user);
+        //$this->authorize('update', $user);
+        $this->authorize('model.update', $authSocialUser);
         
         $user->logReAuthAttempt();
         
@@ -128,7 +129,8 @@ Trait ReAuthController
 
     public function reAuthWithSocialUsers(SocialUser $authSocialUser,SocialUser $freshSocialUser){
         $user=Auth::user();
-        $this->authorize('update', $user);
+        //$this->authorize('update', $user);
+        $this->authorize('model.update', $authSocialUser);
         
         $user->logReAuthAttempt();
         

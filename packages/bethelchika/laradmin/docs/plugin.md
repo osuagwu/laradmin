@@ -75,10 +75,29 @@ Here is an example json file:
 
 
 ### Admin
-Add menu items for you plugin admin to the menu. The create corresponding routes and view as normal as in Laravel packages. Also the controllers are as normal except that instead of calling return view(..), you should call 
+Add menu items for you plugin admin to the menu. Then create corresponding routes* and view as normal as in Laravel packages. Also the controllers are as normal except that instead of calling return view(..), you should call 
 ```php 
+...
 return $pluginmanager->adminView(....) ;
 ```
+When loading your views in this way, the plugin manager controller responsible for controlling the view will auto authorise for admin/cp access.
+
+If you want more control on how your plugin admin pages looks then you should not return *$pluginmanager->adminView(....)* from your controllers but instead return your views in the normal Laravel ways but have the view extend 'laradmin::cp.layouts.app':
+```php 
+...
+return view(...) ;
+```
+
+    When loading admin views in this way, and without your routes within a define */cp* route prefix, you must authorise for admin/cp access yourself. Look at the documentation on Permission to see how you can easily do this with *cp* gate. Or simply have your admin routes within *cp* route prefix group (see below).
+
+#### Admin routes for your plugin
+Make sure your admin routes have the */cp* prefix. You can simply do this by having them inside a route prefix group thus:
+```php
+Route::prefix('cp')->group(function () {
+    Route::...
+});
+```
+*Your page may fail especially with regards to admin routes not loaded if you do not use the route prefix. Also the PreAuthorise middleware will not specially authorise admin pages if the routes are not within a defined *cp* route prefix group. So to keep things simple just put your admin routes with the *cp* route prefix group and you won't have to worry about authorisation and some routes not loading etc.
 
 ### User settings page
 In addition to creating admin pages for a plugin, you can create also a user settings page.The following are required to create a user settings page:

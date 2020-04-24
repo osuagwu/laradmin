@@ -43,9 +43,9 @@ class UserGroupPolicy
     /**
      * Determine whether the user can view the userGroup.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserGroup  $userGroup
-     * @return mixed
+     * @param  User  $user
+     * @param  UserGroup  $userGroup
+     * @return boolean
      */
     public function view(User $user, UserGroup $userGroup)
     {
@@ -65,8 +65,8 @@ class UserGroupPolicy
     /**
      * Determine whether the user can create userGroups.
      *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param  User  $user
+     * @return boolean
      */
     public function create(User $user)
     {
@@ -86,9 +86,9 @@ class UserGroupPolicy
     /**
      * Determine whether the user can update the userGroup.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserGroup  $userGroup
-     * @return mixed
+     * @param  User  $user
+     * @param  UserGroup  $userGroup
+     * @return boolean
      */
     public function update(User $user, UserGroup $userGroup)
     {
@@ -110,9 +110,9 @@ class UserGroupPolicy
     /**
      * Determine whether the user can delete the userGroup.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserGroup  $userGroup
-     * @return mixed
+     * @param  User  $user
+     * @param  UserGroup  $userGroup
+     * @return boolean
      */
     public function delete(User $user, UserGroup $userGroup)
     {
@@ -134,8 +134,8 @@ class UserGroupPolicy
     /**
      * Determine whether the user can list the userGroup.
      *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param  User  $user
+     * @return boolean
      */
      public function views(User $user)
      {

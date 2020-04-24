@@ -91,7 +91,8 @@ class ComicpicPlugable implements Plugable
         include($migration_file);
         (new \CreateComicpicsTable)->up();
         
-        Cache::forever('comicpic.appname',$this->title);
+        $details=$pluginmanager->getDetails($tag);
+        Cache::forever('comicpic.appname',$details['title']);
 
    
 

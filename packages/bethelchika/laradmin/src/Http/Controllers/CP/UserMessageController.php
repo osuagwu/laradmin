@@ -7,10 +7,8 @@ use Ramsey\Uuid\Uuid;
 use BethelChika\Laradmin\User;
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\UserMessage;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use BethelChika\Laradmin\Permission\Permission;
 use BethelChika\Laradmin\Mail\UserMessageMail;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use BethelChika\Laradmin\Http\Controllers\CP\Controller; //NOTE: This is explicitly imported to avoid wrong use of a controller if this file is coppied elsewhere
@@ -105,12 +103,7 @@ class UserMessageController extends Controller
             })->orWhere(function($query)use ($user,$message){
                             $query->where(['user_id'=>$user->id,'id'=>$message->id,'read_at'=>null]);
             })->count();
-            /*
-             ->where(function($query) use ($user,$message){
-                            $query->orWhere(['creator_user_id'=>$user->id,'deleted_by_sender_at'=>null])
-                            ->where('parent_id',$message->id)
-                            ->where('read_at',null);
-            })->count(); */
+            
 
             $temp['unread_count']=$c;
             $temp['message']=$message;
@@ -122,7 +115,7 @@ class UserMessageController extends Controller
             }
             $converses[]=$temp;
         }
-        //dd($temp);
+        
         return view('laradmin::cp.message.index',compact('messages','converses','currentOrder'));
 
 
@@ -156,7 +149,7 @@ class UserMessageController extends Controller
         }
 
         $returnToUrl=url()->previous();
-        //dd($returnToUrl);
+        
         
         $showChannels=true;
         return view('laradmin::cp.message.create',compact('parent_id','userTo','showChannels','returnToUrl'));
@@ -351,7 +344,7 @@ class UserMessageController extends Controller
 
         $userMessage->message=$request->message;
 
-        // $channels=explode(',',$request->channels);
+        
         
         if(is_array($request->channels)){
             $channels=$request->channels;
@@ -399,10 +392,7 @@ class UserMessageController extends Controller
         }
 
 
-        // if(in_array('database',$channels)){
-        //     //dd($userMessage);
-        //     $userMessage->save(); 
-        // }
+       
 
 
         $returnToUrl=$request->get('return_to_url','');
@@ -430,11 +420,7 @@ class UserMessageController extends Controller
         $this->authorize('cpView',$message);
 
         $user=User::findOrFail($this->cpId);//Auth::user();
-        //$admin=Auth::user();
-
-
-
-        //dd($message->is($message));
+        
         //TODO: if a $message has a parent_id then retrieve the perent and assigne it to $message
 
         /** Check if this message has a parent and show the parent instaed since showing the parent will 
@@ -466,24 +452,7 @@ class UserMessageController extends Controller
 
         
         
-        /* //remove the deleted ones
-        $temp_ums=new Collection;
-        foreach($messages as $um){
-            if($user->id==$um->user_id ){
-                if(!$um->deleted_by_receiver_at){
-                    $temp_ums->push($um);
-                }        
-            }else{
-                if(!$um->deleted_by_sender_at){
-                    $temp_ums->push($um);
-                }  
-            }
-        }
-        $messages=$temp_ums; */
-        
-        //$messages->prepend($message);
-        
-        //dd($parentMessage);
+       
         $parentMessage=$message;
         return view('laradmin::cp.message.show',compact('messages','parentMessage','user'));
     }
@@ -594,20 +563,17 @@ class UserMessageController extends Controller
         $this->cpAuthorize();
         
         $user=User::findOrFail($this->cpId);//Auth::user();
-        //$admin=Auth::user();
-
+        
 
 
         $messageIds=explode(',',$request->user_messages_ids);
 
-        /* if(!is_array($messageIds)){
-            $messageIds=[$messageIds];
-        } */
+       
 
         $parentId=true;//If this ever becomes false then a parent will have been deleted b/c parents has parentId of null
 
         foreach($messageIds as $messageId){
-            //dd($messageId);
+            
             $message=UserMessage::findOrFail($messageId);
 
             $this->authorize('cpDelete',$message);
@@ -646,7 +612,7 @@ class UserMessageController extends Controller
         $this->authorize('cpDelete',$message);
 
         $user=User::findOrFail($this->cpId);//Auth::user();
-        //$admin=Auth::user();
+        
        
 
         $parentId=$message->parent_id;//If this ever becomes false then a parent will have been deleted b/c parents has parentId of null

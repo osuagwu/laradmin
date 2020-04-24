@@ -43,9 +43,9 @@ class UserPolicy
     /**
      * Determine whether the user can view the user.
      *
-     * @param  \App\User  $user
-     * @param  \App\User $userToView
-     * @return mixed
+     * @param  User  $user
+     * @param  User $userToView
+     * @return boolean
      */
     public function view(User $user, User $userToView)
     {
@@ -66,8 +66,8 @@ class UserPolicy
      /**
      * Determine whether the user can view listings of user.
      *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param  User  $user
+     * @return boolean
      */
      public function views(User $user)
      {
@@ -86,8 +86,8 @@ class UserPolicy
     /**
      * Determine whether the user can create users.
      *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param  User  $user
+     * @return boolean
      */
     public function create(User $user)
     {
@@ -107,9 +107,9 @@ class UserPolicy
     /**
      * Determine whether the user can update the user.
      *
-     * @param  \App\User  $user
-     * @param  \App\User  $userToUpdate
-     * @return mixed
+     * @param  User  $user
+     * @param  User  $userToUpdate
+     * @return boolean
      */
     public function update(User $user, User $userToUpdate)
     {
@@ -146,9 +146,9 @@ class UserPolicy
     /**
      * Determine whether the user can delete the user.
      *
-     * @param  \App\User  $user
-     * @param  \App\User $userToDelete
-     * @return mixed
+     * @param  User  $user
+     * @param  User $userToDelete
+     * @return boolean
      */
     public function delete(User $user, User $userToDelete)
     {
@@ -169,12 +169,11 @@ class UserPolicy
         }
     }
 
-
     /*///////////////////////////////////////////////////////////////////////
-    /*////////////Helprs////////////
+    /*////////////Helpers////////////
     /*/////////////////////////////////////////////////////////
      /**
-     * A helper for cheking permission at the model level
+     * A helper for checking permission at the model level
      *
      * @param User $user
      * @param string $action
@@ -193,4 +192,25 @@ class UserPolicy
 
         return true;
    }
+
+    /////////////////////////////////////////////////////////////////////
+    ///////////////////The following are used to build gates///////////////
+    ////////////////////////////////////////////////////////////////////
+    /**
+     * Determine that a user is not disabled or generally restricted
+     *
+     * @param  User  $user
+     * @return boolean
+     */
+    public function userCheck(User $user)
+    {
+        return !$this->perm->isDisallowed($user);
+        //return $this->perm->userCheck($user);
+        
+        
+    }
+
+
+
+    
 }

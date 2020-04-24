@@ -35,6 +35,14 @@ trait AuthManagement
             return false;
         }
     }
+    /**
+     * Logs a Password reset attempt
+     *
+     * @return LoginAttempt
+     */
+    public function logPasswordReset(){
+        return LoginAttempt::extractAndLogPasswordResetAttempt($this,new Agent(),request()->ip());
+    }
 
    /**
      * Logs a registered user attempt

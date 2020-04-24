@@ -39,6 +39,9 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Logout' => [
             'BethelChika\Laradmin\Listeners\OnSuccessfulLogout',
         ],
+        'Illuminate\Auth\Events\PasswordReset' => [
+            'BethelChika\Laradmin\Listeners\OnPasswordReset',
+        ],
         
     ];
 

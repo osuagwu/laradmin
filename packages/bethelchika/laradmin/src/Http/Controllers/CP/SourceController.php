@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use DB;
 use BethelChika\Laradmin\Permission;
 use BethelChika\Laradmin\Source;
-use Illuminate\Support\Facades\Gate;
 use BethelChika\Laradmin\Http\Controllers\CP\Controller; //NOTE: This is explicitly imported to avoid wrong use of a controller if this file is coppied elsewhere
 use Illuminate\Support\Facades\Auth;
 use BethelChika\Laradmin\WP\Models\Page;
@@ -138,11 +137,7 @@ class SourceController extends Controller
        
        $this->cpAuthorize();
        $routes = app('router')->getRoutes();
-    //    foreach($routes as $route){
-    //     //dd($route->getActionMethod());
-    //     //dd($route->prefix());
-    //        dd($route->methods());
-    //    }
+
        
         
        $pageTitle='Routes';
@@ -379,7 +374,7 @@ class SourceController extends Controller
      */
     public function store(Request $request)
     {
-        $this->cpAuthorize();//dd(in_array($request->input('type'),['File','the']));
+        $this->cpAuthorize();//
         if(!in_array($request->input('type'),array_keys(Source::$UNGUARDED_DEFAULT_TYPES))){
             return redirect()->back()->withInput($request->input())->with('danger','You cannot create the type: '. $request->input('type'));
         }
@@ -451,14 +446,14 @@ class SourceController extends Controller
 
     /**
      * Delete a source
-     *
+     *@param string $type This parameter may not be of any use since we can obtain the type from the $source->type; although we could compare the two 'type's to see if they match.
      * @param Source $source
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Source $source){
+    public function destroy($type,Source $source){
         $this->cpAuthorize();
-        $type_key=Source::getTypeKey();
-        if(Permission::unlinkSource($type_key,$source->id)){
+
+        if(Permission::unlinkSource(Source::class,$source->id)){
             $type=$source->type;
             $source->delete();
             return redirect()->route('cp-source-type',$type)->with('success','Done!');

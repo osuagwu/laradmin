@@ -78,8 +78,8 @@ Route::group(['middleware' => ['web']], function () use ($LCR){
         Route::get('/source/types/{type}/edit/{source}',$LCR.'CP\SourceController@edit')->name('cp-source-edit');
         Route::put('/source/types/{type}/edit/{source}',$LCR.'CP\SourceController@update');
         //Delete source
-        Route::delete('/source/edit/{source}',$LCR.'CP\SourceController@destroy');
-
+        Route::delete('/source/types/{type}/delete/{source}',$LCR.'CP\SourceController@destroy')->name('cp-source-delete');
+  
         // Permission ___________
 
         Route::put('/source/permissions',$LCR.'CP\PermissionController@update')->name('cp-source-permission-update');

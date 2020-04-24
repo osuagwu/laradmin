@@ -156,18 +156,7 @@ h6{
     
     font-size: 1.05rem;
 }
-// @media (max-width: 768px){
-//     .heading-giant{font-size:3.00rem;}
-//     .heading-huge{font-size:2.57rem;}
-//     .heading-big{font-size:2.20rem;}
-//     .heading-0{font-size:1.87rem;}
-//     .heading-1{font-size: 1.41rem;}
-//     .heading-2{font-size: 1.34rem;}
-//     .heading-3{font-size: 1.20rem;}
-//     .heading-4{font-size: 1.10rem;}
-//     .heading-5{font-size: 1.01rem;}
-//     .heading-6{font-size: 1.00rem;}
-// }
+
 
 
 
@@ -439,7 +428,7 @@ body.main-nav-no-border-bottom .minor-nav.navbar{//This rule allows you to add '
   //opacity:.7;
   */
 }
-@media only screen  and (max-width : 1440px) {/* Desktops and laptops :: TODO: why is this applied to only screen and max-width:1440px?-----------  */
+@media only screen  and (max-width : 1440px) {// Desktops and laptops :: TODO: why is this applied to only screen and max-width:1440px?-----------  
     .main-nav li a{
         font-size:13px;
         font-weight: 500;
@@ -714,12 +703,17 @@ body.navbar-primary .page-title{
     //padding-bottom: 24px;
     //padding-top: 28px;
     padding-left: 30px;
+    
+    // Flex prevents bootstrap's responsive tables from being responsive. this rule fixes it.
+    // https://github.com/twbs/bootstrap/issues/19609
+    min-width:0px;
 }
+
 // Main bar specifics
 .sidebar-mainbar .mainbar{
     padding-top:20px;
 }
-//When breadcrum is inside mainbar
+//When breadcrumb is inside mainbar
 .sidebar-mainbar .mainbar .breadcrumb{
     margin-top:-20px;
 }
@@ -737,7 +731,7 @@ body.navbar-primary .page-title{
     
 }
     
- //Minor nave inside mainbar
+ //Minor nav inside mainbar
 .mainbar .minor-nav.navbar {
     margin-left: -15px;
     margin-top:-20px;
@@ -846,8 +840,10 @@ body.has-minor-nav .sidebar {
 }
 
 .sidebar ul li a .far,
-.sidebar ul li a .fas{
+.sidebar ul li a .fas,
+.sidebar ul li a .fab{
     color:$gray;//#262626;
+    margin-right: 7px;
 }
 .sidebar ul li a {
     //padding: 5px;
@@ -971,7 +967,7 @@ body.sidebar-white .sidebar ul li a {
 
 /////////////////////MAIN COLLASPSING////////////////////////////////////////
 .sidebar {
-    //leave emty to use margin-left what was defined above
+    //leave empty to use margin-left that was defined above
 }
 @media(max-width:768px){
     //NOTE: Make the sidebar works opposite on small screen
@@ -1919,63 +1915,7 @@ body.has-sidebar.sidebar-collapsed .breadcrumb{
     border-color:$text-color;
 }
 
- //Btn skeleton
- .btn-skeleton{
-     @extend .btn;
-    @extend .btn-default;
-    font-size: 16px;
-    padding-top:13px;
-    padding-bottom:13px;
-    padding-left:60px;
-    padding-right:60px;
-    font-weight: 900;
-    transition: all 0.4s;
-
- }
- .btn-skeleton-default{
-    @extend .btn-skeleton;
-    border:2px solid #fff;
-    color:#fff;
-    background-color: transparent;
-
-   
- }
- .btn-skeleton-default-primary{
-    @extend .btn-skeleton;
-    border:2px solid #fff;
-    color:darken($brand-primary,5%);
-    background-color: #fff;
-    font-weight: 900;    
- }
-  
-  .btn-skeleton-primary{
-    @extend .btn-skeleton;
-    border:2px solid $brand-primary;
-    color:$brand-primary;
-    background-color: transparent;
-
- }
- .btn-skeleton-warning-inverse{
-    @extend .btn-skeleton;
-    border:2px solid $brand-warning;
-    color:#fff;
-    background-color: $brand-warning;
-
- }
- .btn-skeleton-primary-inverse{
-    @extend .btn-skeleton;
-    border:2px solid lighten($brand-primary,5%);
-    color:#fff;
-    background-color:$brand-primary;
-
- }
- .btn-skeleton-inverse{
-    @extend .btn-skeleton;
-    border:2px solid #000;
-    color:#fff;
-    background-color: #000;
- }
-
+ 
 
  //____________________________________________________________________
 // User-icon
@@ -3390,4 +3330,54 @@ $blog-posts-h0-nposts:4;// The number of posts you which to display in a row in 
         }
     }
 }
+
+/***************************************************
+***************************************************
+* Cover image
+*/
+.cover-photo{
+    background-repeat:no-repeat; 
+    background-size:100%;
+
+    /*The following rule which sets the aspect ratio of the cover photo 
+    * will be added dynamically using style attribute. So no issue if 
+    * the aspect ratio of the cover image changes
+    */
+    /*padding-top: 33.33%;*/
+
+}
+
+.mainbar .cover-photo{
+    margin: -20px -15px 0 -30px;
+}
+
+body.has-cover-photo{
+    .mainbar .mainbar-header{
+        .breadcrumb{
+            margin-top: -100px;
+        }
+        margin-top: -50px;
+        color:#fff;
+        margin-right: -15px;
+        padding-bottom: 2px;// Seem to work but I don't know why.
+        margin-left: -30px;
+        padding-left: 30px;
+
+        background:#000;
+        //background: linear-gradient(0deg, rgba(0,0,0,0.377) 14%, rgba(0,0,0,0.48) 100%);
+        background: linear-gradient(0deg, rgba(0,0,0,0.7458824350052521) 7%, rgba(0,0,0,0.24728299522934172) 80%, rgba(255,255,255,0) 100%);
+    }
+    .mainbar .breadcrumb{
+        color:#fff !important;
+    }
+    .breadcrumb a,
+    .page-title{
+        color:#fff !important;
+    }
+
+    .breadcrumb .active{
+        color:#ddd;
+    }
+}
+
     

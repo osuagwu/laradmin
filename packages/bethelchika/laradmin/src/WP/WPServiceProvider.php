@@ -6,7 +6,7 @@ namespace BethelChika\Laradmin\WP;
 use Corcel\Model\Post;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use BethelChika\Laradmin\WP\Shortcodes\ShortCodes;
+use BethelChika\Laradmin\WP\Shortcodes\Shortcodes;
 
 class WPServiceProvider extends ServiceProvider
 {
@@ -43,68 +43,68 @@ class WPServiceProvider extends ServiceProvider
 
         //Shortcodes
         Post::addShortcode('route', function ($shortcode) {
-            return ShortCodes::route($shortcode);
+            return Shortcodes::route($shortcode);
         });
 
         Post::addShortcode('hero_route', function ($shortcode) {
-            return ShortCodes::heroRoute($shortcode);
+            return Shortcodes::heroRoute($shortcode);
         });
 
         Post::addShortcode('hero_url', function ($shortcode) {
-            return ShortCodes::heroUrl($shortcode);
+            return Shortcodes::heroUrl($shortcode);
         });
 
         //Short code for page_part
         Post::addShortcode('page_part', function ($shortcode) {
-            return ShortCodes::pagePart($shortcode);
+            return Shortcodes::pagePart($shortcode);
         });
 
         //Short code for push
         Post::addShortcode('push', function ($shortcode) {
-            return ShortCodes::push($shortcode);
+            return Shortcodes::push($shortcode);
         });
 
         //Short code for menu
         Post::addShortcode('menu', function ($shortcode) {
-            return ShortCodes::menu($shortcode);
+            return Shortcodes::menu($shortcode);
         });
 
         //Short code for feeds
         Post::addShortcode('feeds', function ($shortcode) {
-            return ShortCodes::feeds($shortcode);
+            return Shortcodes::feeds($shortcode);
         });
 
         //Short code for social_feeds
         Post::addShortcode('social_feeds', function ($shortcode) {
-            return ShortCodes::socialFeeds($shortcode);
+            return Shortcodes::socialFeeds($shortcode);
         });
 
         //Short code for facebook_page
         Post::addShortcode('facebook_page', function ($shortcode) {
-            return ShortCodes::facebookPage($shortcode);
+            return Shortcodes::facebookPage($shortcode);
         });
 
 
          //Short code for contact form
          Post::addShortcode('contact_form', function ($shortcode) {
-            return ShortCodes::contactForm($shortcode);
+            return Shortcodes::contactForm($shortcode);
         });
 
         //Short code for posts
         Post::addShortcode('posts', function ($shortcode) {
-            return ShortCodes::posts($shortcode);
+            return Shortcodes::posts($shortcode);
         });
         
 
         //Short code for embed
         Post::addShortcode('embed', function ($shortcode) {
-            return ShortCodes::embed($shortcode);
+            return Shortcodes::embed($shortcode);
         });
 
 
         //Short code for image_responsive
         Post::addShortcode('image_responsive', function ($shortcode) {
-            return ShortCodes::imageResponsive($shortcode);
+            return Shortcodes::imageResponsive($shortcode);
         });
 
 

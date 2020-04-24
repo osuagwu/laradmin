@@ -134,16 +134,12 @@ class Media extends Model
      * @return void
      */
     public function getWidth(){
-        if($this->width){
+        if(!is_null($this->width)){
             return $this->width;
         }else{
-            $width=$this->manager()->imageWidth($this);
-            $this->width=$width;
-            if($this->exists){
-                $this->save();
-            }
+            $this->setDimensionFromSource();
         }
-        return $width;
+        return $this->width;
     }
 
      /**
@@ -152,18 +148,27 @@ class Media extends Model
      * @return void
      */
     public function getHeight(){
-        if($this->height){
+        if(!is_null($this->height)){
             return $this->height;
         }else{
-            $height=$this->manager()->imageHeight($this);
-            $this->height=$height;
-            if($this->exists){
-                $this->save();
-            }
-            
-            return $height;
+            $this->setDimensionFromSource();
         }
+        return $this->height;
         
+    }
+
+    /**
+     * Set the dimension of the media.
+     *
+     * @return void
+     */
+    private function setDimensionFromSource(){
+        $dim=$this->manager()->imageDimensionFromSource($this);
+        $this->width=$dim['w'];
+        $this->height=$dim['h'];
+        if($this->exists){
+            $this->save();
+        }
     }
 
     /**
@@ -242,9 +247,13 @@ class Media extends Model
     {
         
         $subfolder=$this->manager()->sizeFolderName($this,$size_tag);
-        if($subfolder){
+        if(is_null($subfolder)){
+            return null;
+        }
+        elseif($subfolder){//not an empty string
             $subfolder='/'.$subfolder;
         }
+        
         
         return rtrim(trim($this->getFolderName(),'/').$subfolder.'/'.$this->getFileName().'.'.$this->getExtension(),'.');//i.e we also strip the dot at the end incase  the file does not have extension
         
@@ -296,15 +305,41 @@ class Media extends Model
         }
         foreach ($size_tags as $tag) {
             $fullname=$this->getFullName($tag);
-            if($this->storage()->exists($fullname)) {
+            if($this->exists(null,$fullname)) {
                 if ($relative) {
-                    return \Illuminate\Support\Facades\Storage::url($fullname);
+                    return \Illuminate\Support\Facades\Storage::url($fullname);//Why this gives relative url...
                 }
-                return $this->storage()->url($fullname);
+                return $this->storage()->url($fullname); ///... and this gives absolute url?
             }
             
         }
         return null;
+    }
+
+    /**
+     * Checks if image of a given size exists for
+     *
+     * @param string $size_tag
+     * @param string $filename if provided, the $size_tag will be ignored. The filename should be relative to the media's storage disk.
+     * @return boolean
+     */
+    public function exists($size_tag='full',$filename=null){
+        return $this->storage()->exists($filename??$this->getFullName($size_tag));
+    }
+
+    /**
+     * Check if any image exists for the given size(s).
+     *
+     * @param array $size_tags
+     * @return boolean
+     */
+    public function hasAny($size_tags=['full']){
+        foreach ($size_tags as $tag) {
+            if($this->exists($tag)){
+                return true;
+            }
+        }
+        return false;
     }
 
      /**

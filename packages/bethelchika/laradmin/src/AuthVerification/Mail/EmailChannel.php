@@ -32,6 +32,7 @@ class EmailChannel extends Mailable
      */
     public function build()
     {
+        $this->subject(config('app.name'). ' user verification email');
         return $this->markdown('laradmin::user.auth_verification.channels.email.mail');
     }
 }

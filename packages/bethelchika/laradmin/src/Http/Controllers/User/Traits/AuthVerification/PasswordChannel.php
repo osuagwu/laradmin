@@ -4,9 +4,10 @@ namespace BethelChika\Laradmin\Http\Controllers\User\Traits\AuthVerification;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use BethelChika\Laradmin\LoginAttempt;
 use BethelChika\Laradmin\AuthVerification\Channels\Password;
 use BethelChika\Laradmin\AuthVerification\Contracts\Channel;
-use BethelChika\Laradmin\LoginAttempt;
+use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
 
 trait PasswordChannel
 {
@@ -17,7 +18,7 @@ trait PasswordChannel
         
         $password_channel=new Password; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($password_channel)){
@@ -37,7 +38,7 @@ trait PasswordChannel
         
         $password_channel=new Password; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($password_channel)){

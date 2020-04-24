@@ -24,8 +24,8 @@ class Permission
      }
 
      /**
-      * Peform general checks.
-      * @param User $user The user asking for permisiion
+      * Perform general checks.
+      * @param User $user The user asking for permission
       * @return boolean
       */
       private function before(User $user){
@@ -54,85 +54,137 @@ class Permission
     }
 
      /**
-     * For a givn user return permission string
+     * For a given user return permission string
      *
-     * @param BethelChika\Laradmin\User $user
+     * @param \BethelChika\Laradmin\User $user
      * @param string $source_type
      * @param string $source_id
-     * @return mixed
+     * @param array $actions default= ['create','read', 'update', 'delete']
+     * @return string|false False when permission is not found. The string matches the length 
+     *                      of actions unless there is an invalid action then string='0'.
      */
-     private function getUserPermissions(User $user,$source_type,$source_id){
-        $select=['create','read','update','delete'];
+     private function getUserPermissions(User $user,$source_type,$source_id,array $actions=[]){
+        $all_actions=['create','read','update','delete'];
+        if(!count($actions)){
+            $actions=$all_actions;
+        }else{
+            //validate actions
+            foreach($actions as $action){
+                if(!in_array($action,$all_actions)){
+                    return '0';// If we get an invalid action we claim that no access in given.
+                }
+            }
+        }
+
+
+
         $perm=PermissionModel::where('user_id',$user->id)
         ->where('source_type',$source_type)
         ->where('source_id',$source_id)
-        ->select($select)->first();
+        ->select($actions)->first();
         
-        if($perm)
-            return $perm->create.$perm->read.$perm->update.$perm->delete;
-        else return false;
+        if ($perm) {
+            $perm_str='';
+            foreach($actions as $action){
+                $perm_str=$perm_str.$perm->$action;
+            }
+            return $perm_str;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
      * For a given userGroup return permission string
      *
-     * @param BethelChika\Laradmin\UserGroup $userGroup
+     * @param \BethelChika\Laradmin\UserGroup $userGroup
      * @param string $source_type
      * @param string $source_id
-     * @return mixed
+     * @param array $actions Default= ['create','read', 'update', 'delete']
+     * @return string|false False when permission is not found. The string matches the length 
+     *                      of actions unless there is an invalid action then string='0'.
      */
-     private function getUserGroupPermissions(User $user,$source_type,$source_id){
-        $select=['create','read','update','delete'];
-        $perm=PermissionModel::where('user_group_id',$user->id)
-        ->where('source_type',$source_type)
-        ->where('source_id',$source_id)
-        ->select($select)->first();
-        if($perm)
-            return $perm->create.$perm->read.$perm->update.$perm->delete;
-        else return false;
-    }
+     private function getUserGroupPermissions(UserGroup $userGroup,$source_type,$source_id,array $actions=[]){
+        $all_actions=['create','read','update','delete'];
+        if(!count($actions)){
+            $actions=$all_actions;
+        }else{
+            //validate actions
+            foreach($actions as $action){
+                if(!in_array($action,$all_actions)){
+                    return '0';// If we get an invalid action we claim that no access in given.
+                }
+            }
+        }
 
-
-
-     /**
-     * For a givn user return permission string for a perticular action
-     *
-     * @param BethelChika\Laradmin\User $user
-     * @param string $source_type
-     * @param string $source_id
-     * @param string $action Example Any of 'create','read', 'update' and 'delete'
-     * @return mixed
-     */
-     private function getUserPermission(User $user,$source_type,$source_id,$action){
-        $perm=PermissionModel::where('user_id',$user->id)
-        ->where('source_type',$source_type)
-        ->where('source_id',$source_id)
-        ->select($action)->first();
-        //dd($resource);
-        if ($perm)
-            return $perm->$action;
-        else return false;
-    }
-    /**
-     * For a given userGroup return permission string for a perticular action
-     *
-     * @param BethelChika\Laradmin\UserGroup $userGroup
-     * @param string $source_type
-     * @param string $source_id
-     * @param string $action Example Any of 'create','read', 'update' and 'delete'
-     * @return string
-     */
-     private function getUserGroupPermission(UserGroup $userGroup,$source_type,$source_id,$action){
-        $userGroups=[];
         $perm=PermissionModel::where('user_group_id',$userGroup->id)
         ->where('source_type',$source_type)
         ->where('source_id',$source_id)
-        ->select($action)->first();
-        //dd($perm);
-        if ($perm)
-            return $perm->$action;
-        else return false;
+        ->select($actions)->first();
+        
+        if ($perm) {
+            $perm_str='';
+            foreach($actions as $action){
+                $perm_str=$perm_str.$perm->$action;
+            }
+            return $perm_str;
+        }
+        else {
+            return false;
+        }
     }
+
+
+
+    //  /**
+    //  * For a givn user return permission string for a perticular action
+    //  *
+    //  * @param BethelChika\Laradmin\User $user
+    //  * @param string $source_type
+    //  * @param string $source_id
+    //  * @param string $action Example Any of 'create','read', 'update' and 'delete'
+    //  * @return mixed
+    //  */
+    //  private function getUserPermission(User $user,$source_type,$source_id,$action){
+
+    //     return $this->getUserPermissions($user,$source_type,$source_id,[$action]);
+
+    //     // $perm=PermissionModel::where('user_id',$user->id)
+    //     // ->where('source_type',$source_type)
+    //     // ->where('source_id',$source_id)
+    //     // ->select($action)->first();
+    //     // //dd($resource);
+    //     // if ($perm)
+    //     //     return $perm->$action;
+    //     // else return false;
+    // }
+
+
+    // /**
+    //  * For a given userGroup return permission string for a perticular action
+    //  *
+    //  * @param \BethelChika\Laradmin\UserGroup $userGroup
+    //  * @param string $source_type
+    //  * @param string $source_id
+    //  * @param string $action Example Any of 'create','read', 'update' and 'delete'
+    //  * @return string
+    //  */
+    //  private function getUserGroupPermission(UserGroup $userGroup,$source_type,$source_id,$action){
+        
+    //     return $this->getUserGroupPermissions($userGroup,$source_type,$source_id,[$action]);
+
+        
+    //     // $userGroups=[];
+    //     // $perm=PermissionModel::where('user_group_id',$userGroup->id)
+    //     // ->where('source_type',$source_type)
+    //     // ->where('source_id',$source_id)
+    //     // ->select($action)->first();
+    //     // //dd($perm);
+    //     // if ($perm)
+    //     //     return $perm->$action;
+    //     // else return false;
+    // }
 
 
     /**
@@ -234,7 +286,10 @@ class Permission
     }
 
     /**
-     * CHeck if a User owns a model
+     * CHeck if a User owns a model.
+     * Currently checks the user_id and creator_user_id attributes on the given 
+     * model, $model against the $user.id. False is the result if these
+     * attributes do not exist.
      *
      * @param BethelChika\Laradmin\User $user
      * @param Illuminate\Database\Eloquent\Model $model
@@ -250,7 +305,7 @@ class Permission
             if ($user->id==$myId){
                 return true;
             }
-        }catch(Exception $ex){
+        }catch(\Exception $ex){
 
         }
 
@@ -260,7 +315,7 @@ class Permission
             if ($user->id==$myId){
                 return true;
             }
-        }catch(Exception $ex){
+        }catch(\Exception $ex){
 
         }
 
@@ -283,6 +338,62 @@ class Permission
      private function isDisabled(User $user){
 
         if ($user->is_active==0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks the validity of an access string
+     *
+     * @param string $permission_str
+     * @return boolean
+     */
+    private function isValidAccessString(string $permission_str){
+        
+        
+
+        // Must be a string
+        if(!is_string($permission_str)){
+            return false;
+        }
+
+        // An empty permission string is not valid
+        if(strlen($permission_str)==0){
+            return false;
+        }
+
+        // COnvert to array
+        $permission_str=str_split($permission_str);
+
+
+        // Must not be longer than 4.
+        if(count($permission_str)>4){
+            return false;
+        }
+
+        // Must contain '0' or '1'
+        foreach($permission_str as $ps){
+            if(!in_array($ps,['0','1'])){
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Checks access against a given access string
+     *
+     * @param string $permission_str
+     * @return boolean
+     */
+    private function hasAccess(string $permission_str){
+
+        if($this->isValidAccessString($permission_str)){
+            return false;
+        }
+
+        // Any presence of a '0' means no access
+        if(strpos($permission_str,'0')===false){
             return true;
         }
         return false;
@@ -325,19 +436,27 @@ class Permission
         return false;
     }
 
+
+
      /**
-     * CHeck if a User is allowed to perform a given action. Unless the user 
-     * is Super, non-explictly disallowed admin or owner, then given user 
+     * Check if a User is allowed to perform a given action. Unless the user 
+     * is Super, non-explicitly disallowed admin or owner, then given user 
      * must have explicit permission to access 
      *
      * @param BethelChika\Laradmin\User $user
      * @param string $source_type
      * @param string $source_id
-     * @param string $action Example Any of 'create','read', 'update' and 'delete'
+     * @param array|string $actions Example ['create','read', 'update' and 'delete'] or just ['create']
      * @param Illuminate\Database\Eloquent\Model $model
      * @return boolean True if the user can do the given action on the resource
      */
-    public function can(User $user,$source_type,$source_id,$action,Model $model=null){
+    public function can(User $user,$source_type=null,$source_id=null,$actions=[],Model $model=null){
+
+        
+        if(!is_array($actions)){
+            $actions=[$actions];
+        }
+
         //first and foremost
         if(!$this->before($user)){
             return false;
@@ -370,27 +489,34 @@ class Permission
 
         
         //Check for personal restriction
-        $permStr=$this->getUserPermission($user,$source_type,$source_id,$action);
-        //dd($permStr);
-        if($permStr!==false) {
-            if(!strcmp($permStr,'0')){
-                return false;
-            }else{
-                $cans++;
-            }
-        }
-
-        //CHeck for user restriction in the groups
-        foreach($userGroups as $userGroup){
-            $permStr=$this->getUserGroupPermission($userGroup,$source_type,$source_id,$action);
-           if($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
-                if(!strcmp($permStr,'0')){
-                    return false;
-                }else{
+        if ($source_type and $source_id) {
+            $permStr=$this->getUserPermissions($user, $source_type, $source_id, $actions);
+            if ($permStr!==false) {
+                if ($this->hasAccess($permStr)) {
                     $cans++;
+                } else {
+                    return false;
+                }
+            }
+
+            
+
+
+            //CHeck for user restriction in the groups
+            foreach ($userGroups as $userGroup) {
+                $permStr=$this->getUserGroupPermissions($userGroup, $source_type, $source_id, $actions);
+                if ($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
+                    if ($this->hasAccess($permStr)) {
+                        $cans++;
+                    } else {
+                        return false;
+                    }
                 }
             }
         }
+
+
+
         
         //Check if the $resource is this user and allow user access
         if($model){
@@ -415,7 +541,7 @@ class Permission
             }
         }
 
-        //user is allwed or is admin who is not restricted
+        //user is allowed or is admin who is not restricted
         return true;
 
     }
@@ -428,11 +554,17 @@ class Permission
      * @param BethelChika\Laradmin\User $user
      * @param string $source_type
      * @param string $source_id
-     * @param string $action Example Any of 'create','read', 'update' and 'delete'
+     * @param array|string $actions Example ['create','read', 'update' and 'delete'] or just ['create']
      * @param Illuminate\Database\Eloquent\Model $model TODO:[THIS PARAM IS NOT USED YET]
-     * @return boolean True is the user is disallowed
+     * @return boolean True if the user is disallowed
      */
-     public function isDisallowed(User $user,$source_type,$source_id,$action,Model $model=null){
+     public function isDisallowed(User $user,$source_type=null,$source_id=null,$actions=[],Model $model=null){
+        
+        if(!is_array($actions)){
+            $actions=[$actions];
+        }
+
+        
         //first and foremost
         if(!$this->before($user)){
             return true;
@@ -457,26 +589,27 @@ class Permission
             return true;
         }
 
-       
-        //Check for personal restriction
-        $permStr=$this->getUserPermission($user,$source_type,$source_id,$action);
-        //dd($permStr);
-        if($permStr!==false) {
-            if(!strcmp($permStr,'0')){
-                return true;
-            }else{
-                //$cans++;
-            }
-        }
-
-        //CHeck for user restriction in the groups
-        foreach($userGroups as $userGroup){
-            $permStr=$this->getUserGroupPermission($userGroup,$source_type,$source_id,$action);
-           if($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
-                if(!strcmp($permStr,'0')){
-                    return true;
-                }else{
+        if ($source_type and $source_id) {
+            //Check for personal restriction
+            $permStr=$this->getUserPermissions($user, $source_type, $source_id, $actions);
+            //dd($permStr);
+            if ($permStr!==false) {
+                if ($this->hasAccess($permStr)) {
                     //$cans++;
+                } else {
+                    return true;
+                }
+            }
+
+            //CHeck for user restriction in the groups
+            foreach ($userGroups as $userGroup) {
+                $permStr=$this->getUserGroupPermissions($userGroup, $source_type, $source_id, $actions);
+                if ($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
+                    if ($this->hasAccess($permStr)) {
+                        //$cans++;
+                    } else {
+                        return true;
+                    }
                 }
             }
         }
@@ -488,5 +621,155 @@ class Permission
     }
 
     
-    
+    // /**
+    //  * Checks that a user own a given model and is not disallowed.
+    //  * 
+    //  *
+    //  * @param User $user @see Permission::can()
+    //  * @param string $source_type @see Permission::can()
+    //  * @param string $source_id @see Permission::can()
+    //  * @param array $actions default= ['create','read', 'update', 'delete']
+    //  * @param Model $model @see Permission::can()
+    //  * @return boolean
+    //  */
+    // public function isOwner(User $user,string $source_type,string $source_id,array $actions=[],Model $model=null){
+    //     But what is now the purpose oof this method?? Delete?
+    //     //first and foremost
+    //     if(!$this->before($user)){
+    //         return false;
+    //     }
+
+    //     // Check if user has super powers etc
+    //     if ($this->isSuper($user)){
+    //         return true;
+    //     }
+
+    //     //Is the user disabled
+    //     if($this->isDisabled($user)){
+    //         return false;
+    //     }
+
+
+    //     $userGroups=$this->getUserGroups($user);
+
+    //     //If the user is banned then do not allow
+    //     if($this->isBanned($user,$userGroups)){
+    //         return false;
+    //     }
+
+    //     //Check for personal restrictions
+    //     $permStr=$this->getUserPermissions($user,$source_type,$source_id,$actions);
+    //     if($permStr!==false) {
+    //         if (!$this->hasAccess($permStr)) {
+    //             return false;
+    //         } 
+    //     }
+
+    //     //CHeck for user restrictions in the groups
+    //     foreach($userGroups as $userGroup){
+    //         $permStr=$this->getUserGroupPermissions($userGroup,$source_type,$source_id,$actions);
+    //        if($permStr!==false) {//dd($userGroup);//////////////////////////////////////////
+    //             if (!$this->hasAccess($permStr)) {
+    //                 return false;
+    //             } 
+    //         }
+    //     }
+
+        
+
+    //     //TODO: should also check $this->isMe()?
+    //     return $this->isMy($user,$model);
+    // }
+
+        
+    // /**
+    //  * Checks that a user is Admin or user owns a given model and is not disallowed.
+    //  * 
+    //  *
+    //  * @param User $user @see Permission::can()
+    //  * @param string $source_type @see Permission::can()
+    //  * @param string $source_id @see Permission::can()
+    //  * @param array $actions default= ['create','read', 'update', 'delete']
+    //  * @param Model $model @see Permission::can()
+    //  * @return boolean
+    //  */
+    // public function isAdminOwner(User $user,string $source_type,string $source_id,array $actions=[], Model $model=null){
+    //     But what is now the purpose oof this method?? Delete?
+    //     return  ( 
+    //                 $this->isOwner($user,$source_type,$source_id,$actions, $model) 
+    //             or 
+    //                 $this->isAdmin($user,$this->getUserGroups($user))
+    //             );
+    // }
+
+    // /**
+    //  * Checks if a user can generally be allowed to do things
+    //  *
+    //  * @param User $user
+    //  * @return boolean
+    //  */
+    // public function userCheck(User $user){
+        
+    //     //first and foremost
+    //     if(!$this->before($user)){
+    //         return false;
+    //     }
+
+    //     // Check if user has super powers etc
+    //     if ($this->isSuper($user)){
+    //         return true;
+    //     }
+
+    //     //Is the user disabled
+    //     if($this->isDisabled($user)){
+    //         return false;
+    //     }
+
+
+    //     $userGroups=$this->getUserGroups($user);
+
+    //     //If the user is banned then do not allow
+    //     if($this->isBanned($user,$userGroups)){
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
+
+    // /**
+    //  * Checks if a user can generally administer
+    //  *
+    //  * @param User $user
+    //  * @return boolean
+    //  */
+    // public function canAdminister(User $user){
+        
+    //     //first and foremost
+    //     if(!$this->before($user)){
+    //         return false;
+    //     }
+
+    //     // Check if user has super powers etc
+    //     if ($this->isSuper($user)){
+    //         return true;
+    //     }
+
+    //     //Is the user disabled
+    //     if($this->isDisabled($user)){
+    //         return false;
+    //     }
+
+
+    //     $userGroups=$this->getUserGroups($user);
+
+    //     //If the user is banned then do not allow
+    //     if($this->isBanned($user,$userGroups)){
+    //         return false;
+    //     }
+
+    //     if (!$this->isAdmin($user,$userGroups)){
+    //         return false;
+    //     }
+    //     return true;
+    // }
 }

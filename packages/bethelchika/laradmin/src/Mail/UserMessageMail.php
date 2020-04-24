@@ -17,6 +17,7 @@ class UserMessageMail extends Mailable
     public $sender;
     public $receiver;
     public $adminSender;
+    public $message;
     /**
      * Create a new message instance.
      *
@@ -39,6 +40,17 @@ class UserMessageMail extends Mailable
     public function build()
     { 
         $this->replyTo($this->sender);
+        $this->from($this->sender);
+        $this->subject($this->userMessage->subject);
+        $this->message=$this->userMessage->message;
+
+
+        // Remove html except <br>
+        $this->message= str_replace('<br>','\n',$this->message);
+        $this->message=htmlspecialchars($this->message);
+        $this->message= str_replace('\n','<br>',$this->message);
+        
+
         return $this->markdown('laradmin::emails.user_message');
     }
 }

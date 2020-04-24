@@ -2,16 +2,17 @@
 
 namespace BethelChika\Laradmin;
 use Carbon\Carbon;
+
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use BethelChika\Laradmin\Tools\Tools;
 use Illuminate\Database\Eloquent\Model;
 use GeoIp2\Exception\AddressNotFoundException;
 use BethelChika\Laradmin\AuthVerification\Contracts\Channel;
 use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
+
 
 
 class LoginAttempt extends Model
@@ -91,6 +92,27 @@ class LoginAttempt extends Model
         return $attempt_prev?:$current_attempt;
         
     }
+    /**
+     * Log an attempt when a user reset password.
+     *
+     * @param User $user
+     * @param Agent $agent
+     * @param string $ip
+     * @return LoginAttempt
+     */
+    public static function extractAndLogPasswordResetAttempt(User $user,Agent $agent,$ip){
+        $reset_password_attempt=self::exctractAttempt($user, true, $agent, $ip);
+
+        // Since this is a password reset, there might be an already attempt
+        $attempt_prev=$reset_password_attempt->getMatchedAttempt(false);
+        
+        $reset_password_attempt= $attempt_prev ? $attempt_prev : $reset_password_attempt;
+        
+        // The attempt used to make a password reset is considered verified.
+        $reset_password_attempt->is_verified=1;
+
+        return $reset_password_attempt->logAttempt(false);
+    }
 
     /**
      * Log an attempt when a user is registered.
@@ -101,6 +123,7 @@ class LoginAttempt extends Model
      * @return LoginAttempt
      */
     public static function extractAndLogRegisteredAttempt(User $user,Agent $agent,$ip){
+
         $login_attempt=self::exctractAttempt($user, true, $agent, $ip);
         
         // The attempt used to make a registration is considered verified.
@@ -138,12 +161,12 @@ class LoginAttempt extends Model
      * @return LoginAttempt
      */
     public function logOrUpdateAttempt(){
-        // What is the fastest possible rate in attemps/seconds. This is useful when
+        // What is the fastest possible rate in attempts/seconds. This is useful when
         // there is no difference in time b/w the current and the last attempt. 
         // Attempts reaching this rate should be considered dangerously fast.
         // Note: After changing this value, make sure that the 'rate' column on the 
-        // login_attempts table can acurately store the new max rate.
-        // Note: We could move this to config but there's no need as it is not like going to be chnaged.
+        // login_attempts table can accurately store the new max rate.
+        // Note: We could move this to config but there's no need as it is not like going to be changed.
         $max_rate=1;
 
         $login_attempt_prev=$this->getMatchedAttempt();
@@ -169,15 +192,15 @@ class LoginAttempt extends Model
                 // Now we will use the cumulative moving avg to update the rate
                 $n=$login_attempt_prev->counts;
                 $CMA=$login_attempt_prev->rate;
-                $CMA_1=($rate + $n*$CMA)/($n+1); //Cummulative moving average
+                $CMA_1=($rate + $n*$CMA)/($n+1); //Cumulative moving average
                 $login_attempt_prev->rate=$CMA_1;
             }
 
 
 
             // CAUTION: We are going to increment count but if it gets too big, then we will
-            // reset it to avoide exceeding the integer bit limits on database. Of cource this
-            // reseting will affect the rate calculation but it is the best we can do here
+            // reset it to avoid exceeding the integer bit limits on database. Of source this
+            // resetting will affect the rate calculation but it is the best we can do here
             // otherwise the counts will get too large.
             $login_attempt_prev->counts+=1;
             if ($login_attempt_prev->counts>4000000000) {
@@ -202,7 +225,6 @@ class LoginAttempt extends Model
      * @return LoginAttempt|null
      */
     public function logAttempt($increment_count=true){
-        //try{//
             
 
             if($increment_count){
@@ -216,12 +238,6 @@ class LoginAttempt extends Model
             if($re){
                 return $this;
             }
-
-        // }
-        // catch(\Exception $ex){
-        //     Log::error(__CLASS__.':'.__METHOD__.': Unable to log login because; msg=>'.$ex->getMessage());
-        //     throw $ex;
-        // }
 
         return null;
     }
@@ -248,13 +264,27 @@ class LoginAttempt extends Model
      * @return LoginAttempt|null
      */
     public function getMatchedAttempt($for_login=true){
-        //throw new \Exception('This method is incomplete');
-        // Now we check if similar attempt has been made before and update instead
-        $match_props=['user_id','ip',
-            'languages','browser','browser_version',
-            'platform','platform_version',
-            'mobile_device','device_type','robot'
-        ];
+        
+        // $settable_match_columns=['ip',
+        //     'languages','browser','browser_version',
+        //     'platform','platform_version',
+        //     'mobile_device','device_type','robot',
+        // ];
+
+        $config_match_columns=explode(',',config('laradmin.login_attempt_match_columns'));
+
+        $match_props=['user_id'];
+
+        // Validate and add to match array
+        foreach($config_match_columns as $column){
+            //if(in_array($column,$settable_match_columns)){// TODO: perhaps we should not validate so that errors/fail should result if columns cannot be found.
+                array_push($match_props,$column);
+            //}
+        }
+
+        //dd($match_props);
+        
+        
 
         if($for_login){
             $match_props[]='is_success';
@@ -285,10 +315,10 @@ class LoginAttempt extends Model
             $address=Tools::ip2Address($ip);
         }
         catch(AddressNotFoundException | \InvalidArgumentException $ex){
-            //dd($ex);
+            //
         }
         catch(\Exception $ex){
-            
+            //
         }
 
         $login_attempt=new loginAttempt;
@@ -345,7 +375,7 @@ class LoginAttempt extends Model
     }
   
     //     /**
-    //  * Count a specific number of attemps
+    //  * Count a specific number of attempts
     //  * @param array $wheres, Array of 3 element array of where clause e.g: [['user_id','=',3],['device','=','phone']]
     //  * @return Array Of two elements where [0=>fails,1=>successes]
     //  */
@@ -365,7 +395,7 @@ class LoginAttempt extends Model
 
 
     /**
-     * Return matrics of attempts
+     * Return metrics of attempts
      * TODO: UNUSED: Use this method when calculating security level
      * @param array $wheres, Array of 3 element array of where clause e.g: [['user_id','=',3],['device','=','phone']]
      * @return Array  e.g: [
@@ -391,7 +421,7 @@ class LoginAttempt extends Model
 
         //Note that is_sucess used for grouping can only have values {0=>failed,1=>success} hence index $attempt_groups[0] and $attempt_groups[1]
         $failed_count=$attempt_groups[0][0]->n??0; // Unsuccessful login count
-        $success_count=$attempt_groups[1][0]->n??0;// Successful loging count
+        $success_count=$attempt_groups[1][0]->n??0;// Successful logging count
         
         $max_failed_rate=$attempt_groups[0][0]->max_rate??0;// 
         $avg_failed_rate=$attempt_groups[0][0]->avg_rate??0;// 
@@ -500,6 +530,8 @@ class LoginAttempt extends Model
         return $this;
 
     }
+
+
 
     /**
      * Gets the Auth verification manager object

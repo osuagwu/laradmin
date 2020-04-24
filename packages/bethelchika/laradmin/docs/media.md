@@ -52,14 +52,22 @@ You can get the url of a media in a public disk thus:
 ```php
 $url=$media->url('slide');
 ```
+
 The argument is the image size of interest. You can also get the absolute filename.
 
 ```php
 $path=$media->getAbsoluteFullName('slide');
 ```
 
+To check that a file exists in the disk for the requested size, you can use exist(), or hasAny() which can take an array of sizes and returns true if any of them exists.
+```php
+if($media->hasAny(['slide','full'])){
+    // Image exists in disk
+}
+```
+
 ## Custom sizes
-The original media file size is regarded as 'full' size. So this name is reserved. The media system when instructed can create a special thumb image which are called 'thumbs'. This name is also reserved. You can register other size names as you desire. Lets register an image sizes and call it 'medium', with size 950 x 300 px 
+The original media file size is regarded as *full* size. So this name is reserved. The media system when instructed can create a special thumb image which are called *thumbs*(likely going to be removed). This name is also reserved. You can register other size names as you desire. You can also override non-reserved tags such as *_cover_photo_sm_* which is used for small size of a cover photo. To override it, just register the tag. Lets register an image size and call it 'medium', with size 950 x 300 px 
 
 ```php
     //Register image sizes

@@ -5,6 +5,7 @@ namespace BethelChika\Laradmin\Http\Controllers\User\Traits\AuthVerification;
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\LoginAttempt;
 use Illuminate\Support\Facades\Validator;
+use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
 use BethelChika\Laradmin\AuthVerification\Channels\SecurityQuestion;
 
 
@@ -16,7 +17,7 @@ trait SecurityQuestionChannel
         
         $security_question_channel=new SecurityQuestion; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($security_question_channel)){
@@ -39,7 +40,7 @@ trait SecurityQuestionChannel
         
         $security_question_channel=new SecurityQuestion; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($security_question_channel)){

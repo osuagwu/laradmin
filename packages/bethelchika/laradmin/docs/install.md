@@ -27,10 +27,10 @@ Currently this project is not on Packagist; the best way to use this project is 
 To do this:
 1) If it does not exists already create a a folder named `project` in the root of your Laravel project
 2) Copy Laradmin github into the folder you have just created. 
-3) Yoo should now have a folder path starting with `bethelchika/laradmin` inside `packages` folder.
+3) Yoo should now have a folder path starting with `packages/bethelchika/laradmin` folder.
 
 
-Now to configure the project, add psr4 in Laravel's composer.json under 'autoload'
+Now to configure the project, add the psr4 in Laravel's composer.json under 'autoload'
 ```json
 {...
 "psr-4": {
@@ -177,7 +177,7 @@ Below is a html for your login and register templates to enable login with faceb
 User login and registration are handled normally by Laravel controllers and views, unless when using social login which is handled by Laradmin.  
 
 #### Password policy
-Laradmin config include `rules.password` which allows you to set password rules what can conveniently be used site-wide. The rules set in this config will automatically be used by laradmin when setting/resetting a password. To make sure that the same password rule is used site-wide, make sure that this rule is used in the Laravel's App\Http\Controllers\Auth\RegisterController and App\Http\Controllers\Auth\ResetPasswordController. For the former you can just modify the `validation()` method and for the latter you should override the  `rules()` method provided through a trait.
+Laradmin config include `rules.password` which allows you to set password rules that can conveniently be used site-wide. The rules set in this config will automatically be used by laradmin when setting/resetting a password. To make sure that the same password rule is used site-wide, make sure that this rule is used in the Laravel's App\Http\Controllers\Auth\RegisterController and App\Http\Controllers\Auth\ResetPasswordController. For the former you can just modify the `validation()` method and for the latter you should override the  `rules()` method provided through a trait. The validation messages should be set in your Laravel validation.php lang file using the 'custom' key as described in Laravel docs. 
 
 ## Modifications of Controllers
 You could override a route of interest by redeclaring the route yourself in your main application, then provide your own controller which could be a modified copy of the original from Laradmin. You can of course modify or replace the views.

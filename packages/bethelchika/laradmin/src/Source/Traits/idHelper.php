@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 trait idHelper
 {
     /**
-     * This trait defines important keys for accessing the permission table for different sources. Note that changing this key will make already applied permission inaccessible, which makes it seem like the prvious permissions do not exist.
+     * This trait defines important keys for accessing the permission table for 
+     * different sources. Note that changing these keys will make already applied 
+     * permission inaccessible, which makes it seem like the previous permissions 
+     * do not exist. So keys should be changed before any permission is applied.
      
      */
 
@@ -18,10 +21,10 @@ trait idHelper
 
     /**
      * Returns the key for accessing permission table for table
-     * Note that this key does not suport multiple databases. 
+     * Note that this key does not support multiple databases. 
      * So if you have two tables with the same name but in 
      * different databases, they will be seen as the same 
-     * in the permission table. Use getTableKeyMultiple(...) to avoide this issue.
+     * in the permission table. Use getTableKeyMultiple(...) to avoid this issue.
      *
      * @param string $database_connection
      * @param string $database
@@ -36,7 +39,7 @@ trait idHelper
         if($config){
             return $config($database_connection,$database,$table_prefix,$table_name);
         }
-        return $database_connection.'/'.$database.'/'.$table_prefix.'/'.$table_name; // Note that changing this key will make already applied permission inaccessible, which makes it seem like the prvious permissions do not exist.
+        return $database_connection.'/'.$database.'/'.$table_prefix.'/'.$table_name; // Note that changing this key will make already applied permission inaccessible, which makes it seem like the previous permissions do not exist.
 
     }
 
@@ -53,12 +56,12 @@ trait idHelper
         if($config){
             return $config($route);
         }
-        return implode('|', $route->methods()) . ':' . $route->uri . ':' . $route->getActionName(); // Note that changing this key will make already applied permission inaccessible, which makes it seem like the prvious permissions do not exist.
+        return implode('|', $route->methods()) . ':' . $route->uri . ':' . $route->getActionName(); // Note that changing this key will make already applied permission inaccessible, which makes it seem like the previous permissions do not exist.
     }
 
  /**
      * Returns the key for accessing permission table for a route prefix
-     *  @param \Illuminate\Routing\Route $route $route The prefix including a preceeding foward slash
+     *  @param \Illuminate\Routing\Route $route $route The prefix including a preceding forward slash
      * @return string
      */
     public static function getRoutePrefixSourceId($route)
@@ -67,13 +70,13 @@ trait idHelper
         if($config){
             return $config($route);
         }
-        return $route->getPrefix() ; // Note that changing this key will make already applied permission inaccessible, which makes it seem like the prvious permissions do not exist.
+        return $route->getPrefix() ; // Note that changing this key will make already applied permission inaccessible, which makes it seem like the previous permissions do not exist.
     }
 
 
     /**
-     * Given a model instance, this method returns the string for that uniquely 
-     * identifies the underlying table for the specified model. The returned 
+     * Given a model instance, this method returns the string that uniquely 
+     * identifies the underlying table. The returned 
      * string can be used to access the permission table.
      * 
      *

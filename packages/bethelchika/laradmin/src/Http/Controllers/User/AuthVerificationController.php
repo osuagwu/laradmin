@@ -2,6 +2,7 @@
 
 namespace BethelChika\Laradmin\Http\Controllers\User;
 
+use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
 use Lang;
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\LoginAttempt;
@@ -10,6 +11,7 @@ use BethelChika\Laradmin\Http\Controllers\User\Traits\AuthVerification\EmailChan
 use BethelChika\Laradmin\Http\Controllers\User\Traits\AuthVerification\PasswordChannel;
 use BethelChika\Laradmin\Http\Controllers\User\Traits\AuthVerification\SecurityQuestionChannel;
 use BethelChika\Laradmin\Http\Controllers\User\Traits\AuthVerification\Xfactor;
+use BethelChika\Laradmin\Laradmin;
 
 class AuthVerificationController extends Controller
 {
@@ -21,11 +23,14 @@ class AuthVerificationController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Laradmin $laradmin)
     {
         parent::__construct();
         $this->middleware('auth');
         $this->middleware('re-auth:5')->only('xfactorUpdate');
+
+        // Set sub app name
+        $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
     }
 
      /**
@@ -34,9 +39,9 @@ class AuthVerificationController extends Controller
       * @return \Illuminate\Http\Response
       */
     public function index(Request $request){
-        $attempt=LoginAttempt::getCurrentAttempt($request);;
+        $attempt=LoginAttempt::getCurrentAttempt($request);
         
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
             return $this->intended();
         }
         $channels=$attempt->getChannels();
@@ -56,7 +61,7 @@ class AuthVerificationController extends Controller
     public function process(Request $request){
         $attempt=LoginAttempt::getCurrentAttempt($request);;
         
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
             return $this->intended();
         }
         $channels=$attempt->getChannels();
@@ -94,12 +99,20 @@ class AuthVerificationController extends Controller
 
     /**
      * Verification is complete
-     *
+     * @param Request $request
      * @return @return \Illuminate\Http\Response
      */
-    public function done(){
-        // There is currently no need to check here if the verification was actually 
-        // complete because the responsible middleware will handle that normally.
+    public function done(Request $request){
+
+        $attempt=LoginAttempt::getCurrentAttempt($request);
+        if(!AuthVerificationManager::has2Verify($attempt)){
+            AuthVerificationManager::onVerificationComplete();
+        }
+        // Clear variables if we are
+        
+
+        // We go ahead and let the user continue but if the verification was not
+        // complete then the responsible middleware will handle that normally.
         return $this->intended();
     }
 

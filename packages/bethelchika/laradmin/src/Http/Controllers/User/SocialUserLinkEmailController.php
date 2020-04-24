@@ -20,6 +20,9 @@ class SocialUserLinkEmailController extends Controller
         $this->middleware('re-auth')->only(['index']);
        $this->linkEmailManager=$linkEmailManager;
 
+       // Set sub app name
+       $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
+
        // Load menu item for user settings
        $laradmin->contentManager->loadMenu('user_settings');
 
@@ -84,7 +87,8 @@ class SocialUserLinkEmailController extends Controller
     public function destroy(SocialUser $socialUser){
         $user=Auth::user();
 
-        $this->authorize('update',$user);
+        $this->authorize('model.delete',$socialUser);
+
         $re=$this->linkEmailManager->unlinkEmail($socialUser,$user);
         
         
@@ -104,7 +108,12 @@ class SocialUserLinkEmailController extends Controller
 
     public function setPrimaryEmail(SocialUser $socialUser){
         $user=Auth::user();
+
+        // Authorise. We are using both authorise here because both the User and SocialUser 
+        // models will be directly affected by this change.
         $this->authorize('update',$user);
+        $this->authorize('model.update',$socialUser);
+
 
         $re=$this->linkEmailManager->setPrimaryEmail($socialUser,$user);
         
@@ -148,7 +157,8 @@ class SocialUserLinkEmailController extends Controller
 
     public function resendConfirmationEmail(SocialUser $socialUser){
         $user=Auth::user();
-        $this->authorize('update',$user);
+        $this->authorize('model.view',$socialUser);
+
         $re=$this->linkEmailManager->resendConfirmationEmail($socialUser,$user);
 
         if($re){

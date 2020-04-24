@@ -35,14 +35,16 @@ class ContentManager
         'footer-top',//TODO:
         'footer-bottom',//TODO:
         'meta',
+        'body-bottom',
     ];
 
     /**
      * A two element array where [0] is for the name for a current sub application and [1] is for the corresponding url
      *
-     * @var string
+     * @var array
+     * e.g: ['User manager', '/u/profile'];
      */
-    private static $subAppName = ['User manager', '/u/profile'];
+    private static $subAppName = null;
 
     /**
      * Predefined admin stacks.TODO: to be used to implement admin stuff
@@ -84,18 +86,37 @@ class ContentManager
      * Returns contents for a specified stack
      *
      * @param string $stack
+     * @param boolean determines if the variable should be removed from the content manager.
      * @return string
      */
-    public static function getStackContents($stack)
+    private static function getStackContents($stack,$pull=true)
     {
         $strings = '';
         if (array_key_exists($stack, self::$contents)) {
             foreach (self::$contents[$stack] as $tag) {
                 $strings .= $tag['content'];
             }
+            if($pull){
+                unset(self::$contents[$stack]);
+            }
         }
-
+        
         return $strings;
+    }
+
+
+    /**
+     * Returns contents for a specified stack and remove it. 
+     * Note that this method should be used when stacking the 
+     * contents in blade, the content is then removed from here to 
+     * avoid wasting memory.
+     *
+     * @param string $stack
+     * @return string
+     */
+    public static function pullStackContents($stack)
+    {   
+        return static::getStackContents($stack,true);
     }
 
     /**

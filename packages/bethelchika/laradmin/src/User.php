@@ -98,6 +98,30 @@ class User extends \App\User
     public function socialUsers(){
         return $this->hasMany('BethelChika\Laradmin\Social\Models\SocialUser');
     }
+
+    /**
+     * Add the user to a group with a given name
+     * 
+     * TODO: this method is untested
+     * 
+     * @param string $group_name
+     * @return boolean|null @see UserGroup::addUserTo()
+     */
+    public function addToGroup($group_name){
+        return UserGroup::addUserTo($this,$group_name);
+    }
+
+        /**
+     * Remove a user from a group with a given name
+     * 
+     * TODO: this method is untested
+     * 
+     * @param string $group_name
+     * @return boolean|null @see UserGroup::removeUserFrom()
+     */
+    public function removeFromGroup($group_name){
+        return UserGroup::removeUserFrom($this,$group_name);
+    }
     
     /**
      * Checks if this user is super

@@ -12,6 +12,7 @@ use BethelChika\Laradmin\Http\Controllers\User\Traits\ReAuthController;
 use Illuminate\Support\Facades\Log;
 use BethelChika\Laradmin\Laradmin;
 
+
 class SocialUserController extends Controller
 {
     use ReAuthController;
@@ -27,6 +28,9 @@ class SocialUserController extends Controller
        $this->socialUserManager=$socialUserManager;
 
        $this->laradmin=$laradmin;
+
+       // Set sub app name
+       $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
 
        // Load menu item for user settings
        $laradmin->contentManager->loadMenu('user_settings');
@@ -55,11 +59,16 @@ class SocialUserController extends Controller
 
   
     public function unlinkSocialUser(Request $request,SocialUser $socialUser){
-        $this->authorize('update',$socialUser->user);//edit ability of the user is required for this operation
+        //$this->authorize('update',$socialUser->user);// NOTE that this code is still fine for authorising since it checks if the logged in user can update the user who owns the socialUser.
+        
+        $this->authorize('model.delete',$socialUser);
+
+        
+
         
         switch($this->socialUserManager->unlinkSocialUser($socialUser)){
             case 0:
-                return back()->with('danger','Error occured while removing social user account');
+                return back()->with('danger','Error occurred while removing social user account');
                 break;
             case 1:
                 return back()->with('success', 'Done');

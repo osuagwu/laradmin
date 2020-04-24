@@ -14,7 +14,7 @@ class AddLaradminUserFields extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->nullable()->change();// Nullable is required by socialUser b/c email might not be supplied from social privider
+            $table->string('email')->nullable()->change();// Nullable is required by socialUser b/c email might not be supplied from social provider. Perhaps we can remove the nullable to say we must have email.
         });
 
         Schema::table('users', function (Blueprint $table) {
@@ -22,11 +22,13 @@ class AddLaradminUserFields extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            //TODO: A big issue here is that after we add these fields like 'settings' we cannot tell later if we infact added it, making it difficult to know what to delete during migration refresh. What we could do is move common fields to the main users table migration from laravel
+            // TODO: A big issue here is that after we add these fields like 'settings' we 
+            // cannot tell later if we in fact added it, making it difficult to know what 
+            // to delete during migration refresh. A solution is to save a file contain
+            // fields that we added ourselves so that we can know which to remove when 
+            // required.
 
             //Essential
-
-
             if (!Schema::hasColumn('users', 'last_login_at')) {
                 $table->timestamp('last_login_at')->nullable();
             }
@@ -34,8 +36,6 @@ class AddLaradminUserFields extends Migration
             if (!Schema::hasColumn('users', 'current_login_at')) {
                 $table->timestamp('current_login_at')->nullable();
             }
-            //$table->timestamp('last_confirm_auth_at');//
-
 
 
             //Status
@@ -59,30 +59,15 @@ class AddLaradminUserFields extends Migration
                 $table->timestamp('self_deactivated_at')->nullable();
             }
 
-            // Other details
-            // if (!Schema::hasColumn('users','first_names')){
-            //     $table->string('first_names')->nullable();
-            // }
-
-            // if (!Schema::hasColumn('users','last_name')){
-            //     $table->string('last_name')->nullable();
-            // }
-
-            // if (!Schema::hasColumn('users','year_of_birth')){
-            //     $table->smallInteger('year_of_birth')->nullable();
-            // }
-
-            // if (!Schema::hasColumn('users','gender')){
-            //     $table->string('gender')->nullable();
-            // }
 
             if (!Schema::hasColumn('users','avatar')){
                 $table->string('avatar')->nullable();
             }
 
-            // if (!Schema::hasColumn('users','country')){
-            //     $table->string('country')->nullable();
+            // if (!Schema::hasColumn('users','cover_photo')){
+            //     $table->string('cover_photo')->nullable();
             // }
+
 
             if (!Schema::hasColumn('users','local')){
                 $table->string('local')->nullable();//

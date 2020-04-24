@@ -29,7 +29,7 @@
                     {{--  end top stack  --}}
                     
                     
-                    {!!$post->getSidebar()!!}
+                    {!!$post->sidebarFiltered!!}
 
                     <h4 class="heading-4">In this section</h4>
                     <div class="scroll-y-lg no-scroll-x mCustomScrollbar" data-mcs-theme="minimal-dark" >
@@ -144,7 +144,7 @@
                             {{--  end top stack  --}}
 
 
-                            {!!$post->getRightbar()!!}
+                            {!!$post->rightbarFiltered!!}
                              {{--<h3 class="heading-3">In this section</h3> 
                             <div class="">
                                 

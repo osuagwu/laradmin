@@ -2,23 +2,38 @@
 
 namespace BethelChika\Laradmin\AuthVerification;
 
-use Carbon\Carbon;
+
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use BethelChika\Laradmin\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use BethelChika\Laradmin\LoginAttempt;
-use BethelChika\Laradmin\AuthVerification\Models\AuthVerification;
+use Illuminate\Support\Facades\Session;
+
 
 class AuthVerificationManager
 {
+    /**
+     * The name of session variable that stores when a login occurs. 
+     * Its presents means the user has just logged in via normal login, and verification 
+     * is either not checked or is required. It is deleted after verification is 
+     * completed or after a check confirms that verification is not required.
+     */
+    private const SESSION_VAR_LOGIN_AT='auth_v.login_at';
+
+     /**
+     * The name of session variable that stores when a login occurs via remember me.  
+     * Its presents means the user has just logged in via remember me, and verification 
+     * is either not checked or is required. It is deleted after verification is 
+     * completed or after a check confirms that verification is not required.
+     */
+    private const SESSION_VAR_REMEMBER_ME_AT='auth_v.remember_me_at';
+
     
 
     /**
      * Verification channels
      * The key to the outer array is that unique tag of each channel. 
      * Each channel sets ths max risk level it can handle and defines its class.
-     * TODO: make it possible to rigister channels dynamically, by creating a register method. This will make it possible for external scripts to define new channels.
      *
      * @var array
      */
@@ -41,7 +56,115 @@ class AuthVerificationManager
         self::$channels[$tag]=['max_level'=>$max_level,'class'=>$class];
     }
 
+    
 
+
+    /**
+     * Using configuration settings, check if we need to go into the more intensive process of
+     * examining an attempt for verification. So this is a check to see if another more 
+     * intensive check is needed.
+     *
+     * @return boolean True if we need to check if verification is needed.
+     */
+    public static function shouldCheckVerification(){
+        
+        $should=false;
+        $check=config('laradmin.login_attempt_check');
+        
+        switch($check){
+            case 'off':
+                $should= false;
+                break;
+            case 'login':
+                if(self::hasJustLoggedIn()){
+                    $should= true;
+                }
+                break;
+            case 'always':
+                $should= true;
+                break;
+        }
+        return $should;
+    }
+
+
+    /**
+     * Checks if a user has just logged in
+     *
+     * @return boolean True if a user has just logged in.
+     */
+    public static function hasJustLoggedIn(){
+        // So long as these variables are not null, 
+        // we assume that the user recently logged in although the user may 
+        // have logged in a while ago but has not verified.
+        return Session::get(self::SESSION_VAR_LOGIN_AT) or Session::get(self::SESSION_VAR_REMEMBER_ME_AT);
+    }
+    
+
+     /**
+     * Checks if verification is required.
+     *
+     * @param LoginAttempt $attempt
+     * @return boolean
+     */
+    public static function has2Verify(LoginAttempt $attempt){
+        
+        return  $attempt->has2Verify();
+                
+    }
+
+       
+
+    /**
+     * This method is called when a user logs in so to set some session 
+     * variables for use in verification.
+     *
+     * @param boolean $via_remember_me Is the login via remember me?
+     * @return void
+     */
+    public static function onLogin($is_via_remember_me=false){
+        // Currently we are only requiring the sessions variables below if the 
+        // config('laradmin.login_attempt_check') is set to 'login'. So lets only
+        // put the sessions if that config is set to 'login' 
+        if (Str::is(config('laradmin.login_attempt_check'), 'login')) {
+            if ($is_via_remember_me) {
+                Session::put(self::SESSION_VAR_REMEMBER_ME_AT, time());
+            } else {
+                Session::put(self::SESSION_VAR_LOGIN_AT, time());
+            }
+        }
+    
+        
+    }
+
+    /**
+     * Clear up and reset after verification is complete.
+     *
+     * @return void
+     */
+    public static function onVerificationComplete(){
+       self::resetSession();
+        
+    }
+
+
+
+
+    /**
+     * Updates session by removing variables that are not needed anymore, etc.
+     * 
+     * @return void
+     */
+    public static function resetSession(){
+
+        if (Session::has(self::SESSION_VAR_LOGIN_AT)) {
+            Session::forget(self::SESSION_VAR_LOGIN_AT);
+        }
+        if(Session::has(self::SESSION_VAR_REMEMBER_ME_AT)){
+            Session::forget(self::SESSION_VAR_REMEMBER_ME_AT); 
+        }           
+        
+    }
 
     /**
      * Checks if we need to set a verification following a successful login

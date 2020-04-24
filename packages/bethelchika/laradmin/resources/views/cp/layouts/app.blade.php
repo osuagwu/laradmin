@@ -210,7 +210,7 @@
 
 
     </div><!--#app-->
-
+    @stack('body-bottom')
 
 
 

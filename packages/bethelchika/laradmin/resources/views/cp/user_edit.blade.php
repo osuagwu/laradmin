@@ -32,10 +32,12 @@
 
                     @component('laradmin::components.input_text',['name'=>'name','value'=>$user->name,'label'=>'Name (Screen name)','required'=>'required'])
                     @endcomponent 
+                    <hr>
 
-                    {{--  @component('laradmin::components.input_text',['name'=>'first_names','value'=>$user->first_names,'label'=>'First names'])
+
+                    @component('laradmin::components.input_text',['name'=>'email','value'=>$user->email])
                     @endcomponent 
-
+                {{--
                     @component('laradmin::components.input_text',['name'=>'last_name','value'=>$user->last_name,'label'=>'Last name'])
                     @endcomponent
 
@@ -52,10 +54,10 @@
                     @endcomponent  --}}
                     
                     <hr class="hr">
-                    @component('laradmin::components.input_password',['name'=>'new_password','label'=>'New password'])
+                    @component('laradmin::components.input_password',['name'=>'password','label'=>'Password(new)'])
                     @endcomponent 
 
-                    @component('laradmin::components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation'])
+                    @component('laradmin::components.input_password',['name'=>'password_confirmation','label'=>'Password confirmation(new)'])
                     @endcomponent 
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

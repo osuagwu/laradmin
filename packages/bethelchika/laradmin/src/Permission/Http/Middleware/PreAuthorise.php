@@ -13,19 +13,27 @@ class PreAuthorise
 
 
      */
+
+     /**
+      * Laradmin
+      *
+      * @var \BethelChika\Laradmin\Laradmin
+      */
+      private $laradmin;
+
     /**
      * Permission instance
      *
      * @var \BethelChika\Laradmin\Permission\Permission
      */
-    public $perm;
+    private $perm;
 
     /**
      * User instance
      *
      * @var \BethelChika\Laradmin\User
      */
-    public $user;
+    private $user;
 
     /**
      * Handle an incoming request.
@@ -45,11 +53,14 @@ class PreAuthorise
         }
         
 
+        
+        $this->laradmin=app('laradmin');
+
+       $this->perm=$this->laradmin->permission;
+        $this->user=$request->user();
+
         // Begin Authorisation 
 
-       $this->perm=app('laradmin')->permission;
-        $this->user=$request->user();
-        
        //return $this->perm->can($user,'table:users','read',$userToView);
        //$perm->can();
 
@@ -150,6 +161,17 @@ class PreAuthorise
         //******************************************************************
         //CHeck prefix****************************************************
         $prefix=$route->getPrefix();
+        
+        // If is possible for a developer to not properly put a cp route within the cp prefix. Lets
+        // help such developer here and check if the route should be cp. So if the resource path
+        // begins with /cp we will assume it is cp. OPEN THE CODE BELOW to HELP THE DEVELOPER.
+         if(!$prefix and $this->laradmin->isCp()){ // Note that it is not documented that this help will be provided. We can document it after we find a way to not hardcode the \cp route prefix.
+             $prefix='/cp';//HARDCODING: route prefix
+         }
+        
+
+
+
         if(!$prefix){
             return true;
         }
@@ -160,16 +182,23 @@ class PreAuthorise
         $user=$this->user;
         if(!$user){
             if($this->perm->hasDenyEntry($source_type,$source_id,'read')){
-                abort(403,'You must login to access the request.');
+                abort(403,'You must login to make this request.');
             }
              
             $user=User::getGuestUser();// TODO: if there is no entry should we actually border trying to authorise at all against the guest user?
         }
 
         //Now check permission
-        if($this->perm->isDisallowed($user,$source_type,$source_id,'read')){
-            return false;
+        if($this->laradmin->isCp()){ //We check \cp prefix specially.
+            if(!$this->perm->can($user,$source_type,$source_id,'read')){
+                return false;
+            }
+        }else{
+            if($this->perm->isDisallowed($user,$source_type,$source_id,'read')){
+                return false;
+            }
         }
+        
 
         return true;
 

@@ -1,6 +1,6 @@
 {
     "name": "bethelchika/laradmin",
-    "description": "The most thought through feature-full laravel admin and user profile manager",
+    "description": "The most thought through feature-full Laravel admin and user profile manager",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -10,14 +10,15 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {        
+    "require": {    
+        "laravel/framework":">7.0",    
         "doctrine/dbal": ">=2.5",
         "laravel/socialite": ">=3.0",
         "intervention/image":">=2.4",
         "jgrossi/corcel":">=3.0.0",
-        "rezozero/mixedfeed": "^3.0",
-        "jenssegers/agent": "~2.1",
-        "geoip2/geoip2": "~2.0",
-        "laravel/helpers": "^1.1"
+        "rezozero/mixedfeed": ">=3.0",
+        "jenssegers/agent": ">=2.1",
+        "geoip2/geoip2": ">=2.0",
+        "laravel/helpers": ">=1.1"
     }
 }

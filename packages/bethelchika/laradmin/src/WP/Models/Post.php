@@ -1,9 +1,10 @@
 <?php
 namespace BethelChika\Laradmin\WP\Models;
-use Corcel\Model\Post as CorcelPost;
-use Corcel\Model\Meta\ThumbnailMeta;
-use BethelChika\Laradmin\WP\Traits\Formatting;
 use Corcel\Model\Attachment;
+use BethelChika\Laradmin\Source;
+use Corcel\Model\Meta\ThumbnailMeta;
+use Corcel\Model\Post as CorcelPost;
+use BethelChika\Laradmin\WP\Traits\Formatting;
 
 class Post extends CorcelPost
 {
@@ -137,14 +138,15 @@ class Post extends CorcelPost
      * Get the contents of laradmin page parts specified by array of slugs
      *
      * @param array $slugs Array of slugs for the page parts
+     * @param boolean $filtered If false content will not be filtered or formatted
      * @return string
      */
-    public static function getPageParts($slugs){
+    public static function getPageParts($slugs,$filtered=true){
         if(!count($slugs)){
             return '';
         }
         $c='';
-        $q=Post::where('post_type','laradmin_page_part')
+        $q=Post::select(['post_content'])->where('post_type','laradmin_page_part')
         ->where(function($query)use ($slugs){
             foreach($slugs as $slug){
                 $query->orwhere('post_name',$slug);
@@ -154,7 +156,12 @@ class Post extends CorcelPost
         //     $q->where('post_name', $slug);
         // }
         foreach($q->get() as $r){
-            $c=$c.$r->contentFiltered;
+            if($filtered){
+                $c=$c.$r->contentFiltered;
+            }else{
+                $c=$c.$r->post_content;
+            }
+            
         }
         return $c;
     }
@@ -196,7 +203,7 @@ class Post extends CorcelPost
 
 
 
-    // THE FOLLOWING WERE ORIGINALLY IN PAGE -- DELEte this comment
+   
 
     
 
@@ -204,44 +211,44 @@ class Post extends CorcelPost
 
     /**
      * Returns the sidebar laradmin_page_part content
-     *
+     * @param boolean $filtered If false content will not be filtered or formatted
      * @return string
      */
-    public function getSidebar(){
+    public function getSidebar($filtered=true){
         $c='';
         $sidebars=$this->meta->sidebars;
         if($sidebars){
-            return static::getPageParts(explode(',',$sidebars));
+            return static::getPageParts(explode(',',$sidebars),$filtered);
         }
-        return static::getPageParts(['sidebar']);
+        return static::getPageParts(['sidebar'],$filtered);
     }
 
     /**
      * Returns the  rightbar laradmin_page_part content
-     *
+     * @param boolean $filtered If false content will not be filtered or formatted
      * @return string
      */
-    public function getRightbar(){
+    public function getRightbar($filtered=true){
         $c='';
         $rightbars=$this->meta->rightbars;
         if($rightbars){
-            return static::getPageParts(explode(',',$rightbars));
+            return static::getPageParts(explode(',',$rightbars),$filtered);
         }
-        return static::getPageParts(['rightbar']);
+        return static::getPageParts(['rightbar'],$filtered);
     }
 
     /**
      * Returns the footer laradmin_page_part content
-     *
+     * @param boolean $filtered If false content will not be filtered or formatted
      * @return string
      */
-    public function getFooter(){
+    public function getFooter($filtered=true){
         $c='';
         $footers=$this->meta->footers;
         if($footers){
-           return static::getPageParts(explode(',',$footers));
+           return static::getPageParts(explode(',',$footers),$filtered);
         }
-        return static::getPageParts(['footer']);
+        return static::getPageParts(['footer'],$filtered);
     }
 
 

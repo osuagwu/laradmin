@@ -25,6 +25,8 @@ Route::group(['middleware' => ['web']], function () use ($LCR){
     Route::get('/u/security/security-questions',$LCR.'User\UserProfileController@securityQuestions')->name('user-security-questions');
     Route::get('/u/security/security-questions/edit',$LCR.'User\UserProfileController@securityQuestionsEdit')->name('user-security-questions-edit');
     Route::match(['post','put'],'/u/security/security-questions/edit',$LCR.'User\UserProfileController@securityQuestionsUpdate');
+    
+    Route::put('/u/security/log-out-others-devices',$LCR.'User\UserProfileController@logoutOtherDevices')->name('user-logout-others');
 
     Route::get('/u/security/login-attempts',$LCR.'User\UserProfileController@loginAttempts')->name('user-login-attempts');
     Route::delete('/u/security/login-attempt/{attempt_id}',$LCR.'User\UserProfileController@loginAttemptDestroy')->name('user-login-attempt');
@@ -45,11 +47,20 @@ Route::group(['middleware' => ['web']], function () use ($LCR){
    
     Route::get('/u/alerts',$LCR.'User\UserProfileController@userAlerts')->name('user-alerts');
 
+    // User profile - Avatar
     Route::get('/u/avatar/',$LCR.'User\UserProfileController@avatar')->name('user-avatar');
     Route::get('/u/avatar/json',$LCR.'User\UserProfileController@avatarJson')->name('user-avatar-json');
     Route::post('/u/avatar/json',$LCR.'User\UserProfileController@avatarJsonStore');
+    Route::put('/u/avatar/json',$LCR.'User\UserProfileController@avatarJsonUpdate');
     Route::delete('/u/avatar/json',$LCR.'User\UserProfileController@avatarJsonDelete');
-    //Route::put('/u/avatar/json',$LCR.'User\UserProfileController@avatartJsonUpdate');
+
+    // User profile - Cover photo
+    Route::get('/u/cover-photo/',$LCR.'User\UserProfileController@coverPhoto')->name('user-cphoto');
+    Route::get('/u/cover-photo/json',$LCR.'User\UserProfileController@coverPhotoJson')->name('user-cphoto-json');
+    Route::post('/u/cover-photo/json',$LCR.'User\UserProfileController@coverPhotoJsonStore');
+    Route::put('/u/cover-photo/json',$LCR.'User\UserProfileController@coverPhotoJsonUpdate');
+    Route::delete('/u/cover-photo/json',$LCR.'User\UserProfileController@coverPhotoJsonDelete');
+
 
     // Privacy
     Route::get('/u/privacy/',$LCR.'User\UserProfileController@privacy')->name('user-privacy');

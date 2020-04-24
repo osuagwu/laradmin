@@ -54,10 +54,10 @@
                     @endcomponent  --}}
                     
                     <hr class="hr">
-                    @component('laradmin::components.input_password',['name'=>'new_password','label'=>'New password'])
+                    @component('laradmin::components.input_password',['name'=>'password'])
                     @endcomponent 
 
-                    @component('laradmin::components.input_password',['name'=>'new_password_confirmation','label'=>'New password confirmation'])
+                    @component('laradmin::components.input_password',['name'=>'password_confirmation'])
                     @endcomponent 
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

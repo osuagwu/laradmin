@@ -33,102 +33,51 @@
                 </aside>
         
                     <!-- Page Content Holder -->
-                <div class="mainbar" role="main">
-
-                    @include('laradmin::menu.breadcrumb')
-                       
-                    
+                <div class="mainbar" role="main" >
+                    @if($media_cover_photo)
+                        <div class="cover-photo" style="padding-top:{{100*$media_cover_photo->getHeight()/$media_cover_photo->getWidth()}}%" ></div>
+                    @endif
+                    <div class="mainbar-header">
+                        @include('laradmin::menu.breadcrumb')
                         <h1 class="heading-4 page-title">Welcome to profile</h1> 
-                        {{-- <h3 id="PD-personal-information" class="heading-6 heading-slashes">Personal details</h3>
-                        --}}
-                        @include ('laradmin::inc.msg_board')
-                        @include('laradmin::inc.email_confirmation_prompt')
-                        <nav>
-                            <ul class="nav nav-tabs nav-flat">
-                                @include('laradmin::menu',['tag'=>$forms_nav_tag])
-                            </ul>
-                        </nav>
+                    </div>
 
-                        
-                        @if(str_is($form->getTag(),'personal'))
-                            <div class="row row-c no-elevation">
-                                <div class="col-md-2">
-                                    {{-- <img class="img-circle" src="{{Auth::user()->avatar}}" /> --}}
-                                    @component('laradmin::components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
-                                    @endcomponent
-                                    <a class="fainted-04  text-danger" href="{{route('user-avatar')}}" ><i class="fas fa-camera"></i></a>
-                                </div>
-                                <div class="col-md-10">
-                                        @include('laradmin::form.index_form',['form'=>$form])
-                                   
-    
-                                        {{-- <div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs" href="{{route('user-profile-edit',[$form->getPack(),$form->getTag()])}}" title="Edit profile"> <i class="fas fa-user-edit"></i> {{__('Edit profile')}}</a></div> --}}
+                    @include ('laradmin::inc.msg_board')
+                    @include('laradmin::inc.email_confirmation_prompt')
+                    <nav>
+                        <ul class="nav nav-tabs nav-flat">
+                            @include('laradmin::menu',['tag'=>$forms_nav_tag])
+                        </ul>
+                    </nav>
 
-                                    {{-- <div class="row">  
-                                        <div class="col-xs-6 col-md-3"><span class="">Screen name</span></div>
-                                        <div class="col-xs-6 col-md-6 ">{{Auth::user()->name}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-6 col-md-3 "><span class="">First names</span></div>
-                                        <div class="col-xs-6 col-md-9 ">{{Auth::user()->first_names}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-6 col-md-3 "><span class="">Last name</span></div>
-                                        <div class="col-xs-6 col-md-9 ">{{Auth::user()->last_name}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a></div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-xs-6 col-md-3 "><span class="">Year of birth</span></div>
-                                        <div class="col-xs-6 col-md-9 ">{{Auth::user()->year_of_birth}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-6 col-md-3 "><span class="">Gender</span></div>
-                                        <div class="col-xs-6 col-md-9 ">{{ucfirst(Auth::user()->gender)}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-6 col-md-3 "><span class="">Faith</span></div>
-                                        <div class="col-xs-6 col-md-9 ">{{ucfirst(Auth::user()->faith)}} <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a>
-                                                
-                                        </div>
-                                    </div> --}}
-
-                                   
-                                </div>
+                    
+                    @if(str_is($form->getTag(),'personal'))
+                        <div class="row row-c no-elevation">
+                            <div class="col-md-2">
+                                
+                                @component('laradmin::components.user_icon',['user'=>Auth::user(),'size'=>'lg'])
+                                @endcomponent
+                                <a  href="{{route('user-avatar')}}" title="Edit avatar"><i class="fas fa-camera"></i></a>
+                                <br><br>
+                                @if($media_cover_photo)
+                                    <a  title="Edit cover photo"  href="{{route('user-cphoto')}}" ><i class="fas fa-camera"></i> Change cover photo</a>
+                                @else
+                                    <a class="no-cover-photo" title="Add cover photo"  href="{{route('user-cphoto')}}" ><i class="fas fa-camera"></i> Add cover photo</a>
+                                @endif
+                                
                             </div>
-                            {{-- <h3 class="heading-6 heading-slashes padding-top-x8">Contact details</h3>
-                            <div class="row row-c no-elevation">
-                                <div class="col-xs-6 col-md-3 "><span class="">Primary e-mail</span></div>
-                                <div class="col-xs-6 col-md-9 ">{{Auth::user()->email}}  
-                                        <p><a class="fainted-04" href="{{route('social-user-link-email')}}"  > <i class="fas fa-pen"></i></a></p>
-                                    <div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs"  href="{{route('social-user-link-email')}}" title="Edit profile"> <i class="fas fa-user-edit"></i> Edit e-mails</a></div>
-                                </div>
-                            </div> --}}
-                        @else
+                            <div class="col-md-10">
+                                @include('laradmin::form.index_form',['form'=>$form])
+                            </div>
+                        </div>
                         
-                            @include('laradmin::form.index_form',['form'=>$form]) 
-                            @if(!$form->getEditLink())
-                                <div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs" href="{{route('user-profile-edit',[$form->getPack(),$form->getTag()])}}" title="Edit profile"> <i class="fas fa-user-edit"></i> {{__('Edit profile')}}</a></div>
-                            @endif
+                    @else
+                    
+                        @include('laradmin::form.index_form',['form'=>$form]) 
+                        @if(!$form->getEditLink())
+                            <div class="text-right padding-top-x2"><a class="btn btn-primary btn-xs" href="{{route('user-profile-edit',[$form->getPack(),$form->getTag()])}}" title="Edit profile"> <i class="fas fa-user-edit"></i> {{__('Edit profile')}}</a></div>
                         @endif
-                        
-                        
-
-                       
-                        {{--  
-
-                        <h3 id="PD-location" class="heading-6 heading-slashes padding-top-x8">Location details</h3>
-
-                       <div class="row row-c no-elevation">
-                            <div class="col-xs-6 col-md-3 "><span class="">Country</span></div>
-                            <div class="col-xs-6 col-md-9 ">@if(Auth::user()->country){{ __( 'laradmin::list_of_countries.'.Auth::user()->country )}} @endif
-                                    <a class="fainted-04" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-pen"></i></a>
-                                    <div class="text-right"><a class="btn btn-primary btn-xs" href="{{route('user-edit')}}" title="Edit profile"> <i class="fas fa-user-edit"></i> {{__('Edit profile')}}</a></div>
-                            </div>
-                        </div> --}}
-                        
-        
-                        
-        
+                    @endif
                        
                 </div>
             </div>

@@ -4,6 +4,7 @@ namespace BethelChika\Laradmin\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\Http\Controllers\Controller;
+use BethelChika\Laradmin\Laradmin;
 use Illuminate\Support\Facades\Auth;
 use BethelChika\Laradmin\Notifications\Notice;
 
@@ -18,10 +19,13 @@ class NotificationController extends Controller
      *
      * @return void
      */
-     public function __construct()
+     public function __construct(Laradmin $laradmin)
      {
         parent::__construct();
         $this->middleware('auth');
+
+        // Set sub app name
+        $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
      }
 
     /**

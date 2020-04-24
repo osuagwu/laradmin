@@ -10,12 +10,10 @@ use BethelChika\Laradmin\Feed\FeedManager;
 use Illuminate\View\Factory as ViewFactory;
 use BethelChika\Laradmin\Asset\AssetManager;
 use BethelChika\Laradmin\Media\MediaManager;
-//use Intervention\Image\ImageServiceProvider;
 use BethelChika\Laradmin\Notifications\Notice;
 use BethelChika\Laradmin\WP\WPServiceProvider;
 use BethelChika\Laradmin\Permission\Permission;
 use BethelChika\Laradmin\Content\ContentManager;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use BethelChika\Laradmin\Form\FormServiceProvider;
 use BethelChika\Laradmin\Menu\MenuServiceProvider;
@@ -35,11 +33,7 @@ class LaradminServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // //Register Laradmin singleton
-        // $this->app->singleton('BethelChika\Laradmin\Laradmin', function ($app) {
-        //     return new Laradmin(new MediaManager($app->make('filesystem')),new FeedManager,new AssetManager, new ContentManager,new Permission );
-        // });
-        // $this->app->alias('BethelChika\Laradmin\Laradmin','laradmin');
+        
  
          //Register Laradmin singleton
          $this->app->singleton('laradmin', function ($app) {
@@ -58,9 +52,7 @@ class LaradminServiceProvider extends ServiceProvider
         //Register service provider for plugin
         $this->app->register(PluginServiceProvider::class);
 
-        // Register service providers from other packages 
-        //$this->app->register(ImageServiceProvider::class); //TODO: this can also be simply be put in the laravel's main config/app instead expecially if the main app is going to use this package already
-
+       
         // Register wordpress bridge which will used for pages menus etc
         $this->app->register(WPServiceProvider::class);
 
@@ -125,10 +117,12 @@ class LaradminServiceProvider extends ServiceProvider
         
         
 
-        // Cookie consent: Let us not encript the consent cookie
-        $this->app->resolving(EncryptCookies::class, function (EncryptCookies $encryptCookies) {
-            $encryptCookies->disableFor(config('laradmin.cookie_consent.name'));
-        });
+        // Cookie consent: Let us not encrypt the consent cookie
+        if (config('laradmin.cookie_consent.enable')) {
+            $this->app->resolving(EncryptCookies::class, function (EncryptCookies $encryptCookies) {
+                $encryptCookies->disableFor(config('laradmin.cookie_consent.name'));
+            });
+        }
         
 
         

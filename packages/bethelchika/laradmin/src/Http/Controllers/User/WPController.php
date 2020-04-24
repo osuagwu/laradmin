@@ -2,10 +2,7 @@
 
 namespace BethelChika\Laradmin\Http\Controllers\User;
 
-use Corcel\Model\Comment;
-use Illuminate\Http\Request;
-use BethelChika\Laradmin\User;
-use Illuminate\Support\Carbon;
+
 use BethelChika\Laradmin\Laradmin;
 use Illuminate\Support\Facades\Auth;
 use BethelChika\Laradmin\WP\Models\Page;
@@ -14,7 +11,7 @@ use BethelChika\Laradmin\WP\Models\LarusPost;
 use BethelChika\Laradmin\Http\Controllers\Controller;
 use BethelChika\Laradmin\Http\Controllers\User\Traits\WP\Homepage;
 use BethelChika\Laradmin\Http\Controllers\User\Traits\WP\PostComment;
-use BethelChika\Laradmin\Theme\DefaultTheme;
+
 use Corcel\Model\Option;
 
 class WPController extends Controller
@@ -85,6 +82,9 @@ class WPController extends Controller
         if($main_nav_scheme){
             $this->laradmin->assetManager->registerMainNavScheme($main_nav_scheme);
         }
+
+
+        
         
     }
 
@@ -99,7 +99,7 @@ class WPController extends Controller
         $metas['url'] = $post_url?:route('page', $post->slug);
         $metas['type'] = 'article';
         $metas['title'] = $post->title;
-        $metas['description'] = $post->post_excerpt ? $post->post_excerpt : strip_tags(str_limit($post->content, 280,'...'));
+        $metas['description'] = $post->post_excerpt ? $post->post_excerpt : strip_tags(str_limit($post->post_content, 280,'...'));
         $metas['image'] = $post->image;//TODO: check that this is right
         $metas['tweet'] = str_finish($post->post_excerpt, 277,'...') . ' #' . config('app.name');
 
@@ -213,6 +213,8 @@ class WPController extends Controller
         //$is_bs_container_fluid = $this->laradmin->assetManager->isContainerFluid();
          
 
+        // Finally get the content ready
+        $post->filterContents();
         return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts','post_settings'));
 
     } 
@@ -275,6 +277,8 @@ class WPController extends Controller
         $posts = Post::where('post_type', 'laradmin_larus_post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
         
 
+        // Finally get the content ready
+        $post->filterContents();
         return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts','post_settings'));
 
     }
@@ -434,7 +438,7 @@ class WPController extends Controller
     public function makeSettings(Post $post){
         // Is sidebar enabled
         $post_settings['has_sidebar']=false;
-        if(!str_contains(strtolower($post->meta->sidebar),'off') and ($post->meta->sidebars or str_contains(strtolower($post->meta->blog_listing),'left'))){
+        if(!str_contains(strtolower($post->meta->sidebar),'off') or ($post->meta->sidebars or str_contains(strtolower($post->meta->blog_listing),'left'))){
             $post_settings['has_sidebar']=true;
         }
 
@@ -532,6 +536,8 @@ class WPController extends Controller
         $posts = Post::where('post_type', 'post')->where('post_status', 'publish')->latest()->limit($post->meta->blog_listing_count??4)->get();
         
 
+        // Finally get the content ready
+        $post->filterContents();
         return view($this->laradmin->theme->defaultFrom().'wp.page', compact('pageTitle','tpl','tpl_default', 'post', 'metas', 'posts','post_settings'));
     }
 

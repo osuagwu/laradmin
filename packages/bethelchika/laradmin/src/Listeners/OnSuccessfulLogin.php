@@ -2,6 +2,7 @@
 
 namespace BethelChika\Laradmin\Listeners;
 
+use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Queue\InteractsWithQueue;
@@ -30,10 +31,20 @@ class OnSuccessfulLogin
         // We first make sure that the user object is uptodate
         $user=$event->user->fresh();
 
+        
+
         // Update last login
         $user->loginAt();
-
         
+        
+        $is_remember_me=Auth::viaRemember();
+
+        // Set login attempt in verification:: 
+        // Must be don after we have called $user->loginAt() as 
+        // AuthVerification may need to check last login which needs 
+        // to be up to date.
+        AuthVerificationManager::onLogin($is_remember_me);
+
 
         // Check if there is restriction and apply it
         $user->applyLoginRestrictions();
@@ -41,7 +52,7 @@ class OnSuccessfulLogin
         // Log login
         $attempt=$user->logSuccessfulLogin();
 
-        if(!Auth::viaRemember()){
+        if(!$is_remember_me){//TODO: But after a while of login in via remember me we should one day force reverification. Perhaps we could count all remember me logins and once a thresh is reached we then force $attempt->mustReverify()
             $attempt->checkXfactor();
         }
             

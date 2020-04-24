@@ -2,7 +2,7 @@
 
         <div class="container{{$laradmin->assetManager->isContainerFluid('-fluid')}}" >
 
-        @if(isset($page) and $page){!!$page->getFooter()!!} <hr> @endif
+        @if(isset($post) and $post){!!$post->footerFiltered!!} <hr> @endif
 
         {{-- <p class="cookies-use padding-top-x5 padding-bottom-x5">This site rely on cookies for normal functioning. By using this site, you agree we can set and use cookies.</p> --}}
 

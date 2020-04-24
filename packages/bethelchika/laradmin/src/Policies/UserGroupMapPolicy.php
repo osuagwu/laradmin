@@ -43,9 +43,9 @@ class UserGroupMapPolicy
     /**
      * Determine whether the user can view the userGroupMap.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserGroupMap  $userGroupMap
-     * @return mixed
+     * @param  User  $user
+     * @param  UserGroupMap  $userGroupMap
+     * @return boolean
      */
     public function view(User $user, UserGroupMap $userGroupMap)
     {
@@ -56,7 +56,7 @@ class UserGroupMapPolicy
      * Determine whether the user can create userGroupMaps.
      *
      * @param  \App\User  $user
-     * @return mixed
+     * @return boolean
      */
     public function create(User $user)
     {
@@ -66,9 +66,9 @@ class UserGroupMapPolicy
     /**
      * Determine whether the user can update the userGroupMap.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserGroupMap  $userGroupMap
-     * @return mixed
+     * @param  User  $user
+     * @param  UserGroupMap  $userGroupMap
+     * @return boolean
      */
     public function update(User $user, UserGroupMap $userGroupMap)
     {
@@ -78,8 +78,8 @@ class UserGroupMapPolicy
      /**
      * Determine whether the user can update the userGroupMap.
      *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param  User  $user
+     * @return boolean
      */
      public function updates(User $user,$userToMap)
      {
@@ -102,9 +102,9 @@ class UserGroupMapPolicy
     /**
      * Determine whether the user can delete the userGroupMap.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserGroupMap  $userGroupMap
-     * @return mixed
+     * @param  User  $user
+     * @param  UserGroupMap  $userGroupMap
+     * @return boolean
      */
     public function delete(User $user, UserGroupMap $userGroupMap)
     {
@@ -116,6 +116,9 @@ class UserGroupMapPolicy
              /*///////////////////////////////////////////////////////////////////////
     /*////////////Helprs////////////
     /*/////////////////////////////////////////////////////////
+    */
+
+
      /**
      * A helper for cheking permission at the model level
      *
@@ -126,7 +129,7 @@ class UserGroupMapPolicy
      */
     private function modelCheckHelper(User $user, $action,Model $model=null){
         //Check at the model level
-        $source=Source::where('type','model')->where('name',UserGroup::class)->first();
+        $source=Source::where('type','model')->where('name',UserGroupMap::class)->first();
         if($source){
             //$access_string=,$source->id;
             if(!$this->perm->can($user,Source::class,$source->id,$action,$model)){

@@ -18,17 +18,19 @@ Route::group(['middleware' => ['web']], function () {
     Route::put('/comicpic/unpublish/{comicpic}', $CR.'UserController@unpublish')->name('comicpic.unpublish');
 
     Route::get('/comicpic/me', $CR.'UserController@me')->name('comicpic.me');
-
+ 
     //\admin setitngs
-    Route::get('/comicpic/admin', $CR.'AdminController@index')->name('comicpic.admin');
-    Route::get('/comicpic/admin/create', $CR.'AdminController@create')->name('comicpic.admin-create');
-    Route::post('/comicpic/admin/create', $CR.'AdminController@store');
-    Route::get('/comicpic/admin/show/{comicpic}', $CR.'AdminController@show')->name('comicpic.admin-show');
-    Route::delete('/comicpic/admin/deletes', $CR.'AdminController@destroys')->name('comicpic.admin-deletes');
-    Route::delete('/comicpic/admin/delete/{comicpic}', $CR.'AdminController@destroy')->name('comicpic.admin-delete');
+    Route::prefix('cp')->group(function () use( $CR){
+        Route::get('/comicpic/admin', $CR.'AdminController@index')->name('comicpic.admin');
+        Route::get('/comicpic/admin/create', $CR.'AdminController@create')->name('comicpic.admin-create');
+        Route::post('/comicpic/admin/create', $CR.'AdminController@store');
+        Route::get('/comicpic/admin/show/{comicpic}', $CR.'AdminController@show')->name('comicpic.admin-show');
+        Route::delete('/comicpic/admin/deletes', $CR.'AdminController@destroys')->name('comicpic.admin-deletes');
+        Route::delete('/comicpic/admin/delete/{comicpic}', $CR.'AdminController@destroy')->name('comicpic.admin-delete');
 
-    Route::get('/comicpic/admin/settings', $CR.'AdminController@editSettings')->name('comicpic.admin-edit-settings');
-    Route::put('/comicpic/admin/settings', $CR.'AdminController@updateSettings');
+        Route::get('/comicpic/admin/settings', $CR.'AdminController@editSettings')->name('comicpic.admin-edit-settings');
+        Route::put('/comicpic/admin/settings', $CR.'AdminController@updateSettings');
+    });
 
     // User settings
     Route::get('/comicpic/user_settings', $CR.'UserController@settings')->name('comicpic.user_settings');

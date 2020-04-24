@@ -63,7 +63,7 @@ class UserMessagePolicy
             if ($user->id==$myId){
                 return true;
             }
-        }catch(Exception $ex){
+        }catch(\Exception $ex){
 
         }
 
@@ -73,7 +73,7 @@ class UserMessagePolicy
             if ($user->id==$myId){
                 return true;
             }
-        }catch(Exception $ex){
+        }catch(\Exception $ex){
 
         }
 
@@ -86,7 +86,7 @@ class UserMessagePolicy
      *
      * @param  \BethelChika\Laradmin\User  $user
      * @param  \BethelChika\Laradmin\UserMessage $userMessage
-     * @return mixed
+     * @return boolean
      */
     public function cpView(User $user, UserMessage $userMessage)
     {
@@ -108,7 +108,7 @@ class UserMessagePolicy
      * suitable for authorizing users outside of control panel
      *
      * @param  \BethelChika\Laradmin\User  $user
-     * @return mixed
+     * @return boolean
      */
      public function cpViews(User $user)
      {
@@ -130,7 +130,7 @@ class UserMessagePolicy
      * Determine whether the user can create userMessages in control panel.
      *
      * @param  \BethelChika\Laradmin\User  $user
-     * @return mixed
+     * @return boolean
      */
     public function cpCreate(User $user)
     {
@@ -152,7 +152,7 @@ class UserMessagePolicy
      *
      * @param  \BethelChika\Laradmin\User  $user
      * @param  \BethelChika\Laradmin\UserMessage  $userMessage
-     * @return mixed
+     * @return boolean
      */
     public function cpUpdate(User $user, UserMessage $userMessage)
     {
@@ -175,7 +175,7 @@ class UserMessagePolicy
      *
      * @param  \BethelChika\Laradmin\User  $user
      * @param  \BethelChika\Laradmin\UserMessage $userMessage
-     * @return mixed
+     * @return boolean
      */
     public function cpDelete(User $user, UserMessage $userMessage)
     {
@@ -205,7 +205,7 @@ class UserMessagePolicy
      *
      * @param  \BethelChika\Laradmin\User  $user
      * @param  \BethelChika\Laradmin\UserMessage $userMessage
-     * @return mixed
+     * @return boolean
      */
     public function view(User $user, UserMessage $userMessage)
     {
@@ -224,7 +224,7 @@ class UserMessagePolicy
      * limiting the message to those that belong to the current user
      *
      * @param  \BethelChika\Laradmin\User  $user
-     * @return mixed
+     * @return boolean
      */
      public function views(User $user)
      {
@@ -237,7 +237,7 @@ class UserMessagePolicy
      * Determine whether the user can create userMessagess.
      *
      * @param  \BethelChika\Laradmin\User  $user
-     * @return mixed
+     * @return boolean
      */
     public function create(User $user)
     {
@@ -250,7 +250,7 @@ class UserMessagePolicy
      *
      * @param  \BethelChika\Laradmin\User  $user
      * @param  \BethelChika\Laradmin\UserMessage  $userMessage
-     * @return mixed
+     * @return boolean
      */
     public function update(User $user, UserMessage $userMessage)
     {
@@ -266,7 +266,7 @@ class UserMessagePolicy
      *
      * @param  \BethelChika\Laradmin\User  $user
      * @param  \BethelChika\Laradmin\UserMessage $userMessage
-     * @return mixed
+     * @return boolean
      */
     public function delete(User $user, UserMessage $userMessage)
     {

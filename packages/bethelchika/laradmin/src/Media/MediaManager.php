@@ -6,10 +6,11 @@ use BethelChika\Laradmin\Media\Models\Media;
 use BethelChika\Laradmin\Meta\Exceptions\MetaSaveContextException;
 use BethelChika\Laradmin\Meta\Option;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Filesystem\FilesystemManager as FileSystem;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Image;
 
+/**
+ * A class for managing the media model
+ */
 class MediaManager
 {
     //private $add_image_size( 'custom-size', 220, 180 );
@@ -19,9 +20,12 @@ class MediaManager
      * @var array
      */
     private $imageSizes=[ 
-        
+        //Reserved
         'full'=>['w'=>null,'h'=>null],//reserved tag which refers to the main uploaded image.
-        //'thumb'=>['w'=>400,'h'=>300],
+        
+        //None reserved: so these can be overridden
+        '_cover_photo_sm_'=>['w'=>780,'h'=>260],//Allows us to create smaller version of cover photo for mobiles.
+        
         
     ];
     /**
@@ -38,8 +42,15 @@ class MediaManager
      */
     private $imageSizesOptionName='__media_image_sizes';
 
+    //*********************************************** */
+    // TODO: Note that the thumb* referred  below predates self::$imageSizes  
+    // and may later be removed completely as arbitrary sizes can be 
+    // implemented with self::$imageSizes.
+    //************************************************** */
+
     /**
      * The default width of thumbnails in pixels
+     * 
      * 
      * @var integer
      */
@@ -84,9 +95,9 @@ class MediaManager
     /**
      * Construct a new media
      *
-     * @param \Illuminate\Filesystem\FilesystemManager $filesystem
+     * 
      */
-    public function __construct(/*FileSystem $filesystem*/)
+    public function __construct()
     {
         
     }
@@ -189,7 +200,7 @@ class MediaManager
       //$name='change';
         $disk = $disk ? $disk : 'local';
         $visibility = $visibility ? $visibility : 'private';
-        $user_id = $user ? $user->id : 1; //Need to change the default to CP_ID
+        $user_id = $user ? $user->id : 1; //TODO: Need to change the default to CP_ID
 
         $media = new Media;
         $media->disk=$disk;
@@ -596,6 +607,73 @@ class MediaManager
 
     }
 
+
+    /**
+     * Reshape a given media image
+     *
+     * @param Media $media
+     * @param int $x
+     * @param  int  $y
+     * @param  int $width
+     * @param  int  $height
+     * @param  float $rotate
+     * @param  float $scale_x
+     * @param  float  $scale_y
+     * @return void
+     */
+    public function reshapeImage(Media $media,  $x=null,  $y=null, $width=null, $height=null,$rotate=null,$scale_x=null,$scale_y=null){
+       
+        $image = $this->getImageManager()->make($this->getContent($media));
+        $changed=false;
+        if($rotate){
+            $image->rotate($rotate);
+            $changed=true;
+        }
+
+        if(!is_null($scale_x) or !is_null($scale_y)){
+            if (($scale_x!=1 and $scale_y!=1) and ($scale_x*$scale_y!=0)) {// both should not be equal 1 and any should not be zero.
+                
+               $this->resizeImage($image, $scale_x*$image->width(), $scale_y*$image->height());
+                $changed=true;
+            }
+        }
+
+        if(!is_null($width) or !is_null($height)){
+            $bg_color='#ffffff';
+            if($media->getExtension()=='png'){//TODO: add other formats that are transparent to this check.
+                $bg_color=null;
+            }
+            $image=$this->cropImage($image,$width,$height,$x,$y,$bg_color);
+            $changed=true;
+        }
+
+
+        //Save
+        if($changed){
+            // Convert to stream
+            $source = $image->stream($media->getExtension());
+
+            // save i.e overwrite
+            $visibility = $media->fileSystem()->getVisibility($media->getFullName());
+
+            $path = $media->fileSystem()->put(
+                $media->getFullName(),
+                $source,
+                $visibility
+            );
+
+            //Update the size and save
+            $media->size = $media->readSize();
+            $media->width=$image->width();
+            $media->height=$image->height();
+            
+            if ($media->exists) {
+                $media->save();
+            }
+        }
+        
+    }
+
     /**
      * Returns folder name for a size for a given Media
      *
@@ -633,12 +711,73 @@ class MediaManager
      * Resize the given image
      *
      * @param Image $image
-     * @param int $width
-     * @param int $height
-     * @return Image
+     * @param float $width
+     * @param float $height
+     * @return void
      */
     private function resizeImage(Image $image,$width,$height){
-        return $image->resize($width,$height);
+        $image->resize($width,$height);
+    }
+
+
+    /**
+     * Crop the given Intervention Image
+     *
+     * @param \Intervention\Image\Image $image
+     * @param int $width
+     * @param int $height
+     * @param int $x
+     * @param int $y
+     * @param string $bg_color Any color format acceptable to @see \Intervention\Image\Image::fill(); e.g. '#ffffff'
+     * @return \Intervention\Image\Image
+     */
+    private function cropImage(Image $image,$width,$height,$x=null,$y=null,$bg_color=null){
+
+        // What is the size of the image to crop
+        $image_width=$image->width();
+        $image_height=$image->height();
+
+        // Do we have a special case based on the following conditions
+        if ($image_width<$width+abs($x) or $x<0   // Is the crop width outside the image
+            or $image_height<$height+abs($y) or $y<0) {// Is the crop height outside the image
+
+                
+            
+
+            // Determine the size of background image
+            $canvas_width=abs($x)+$width;
+            $canvas_height=abs($y)+ $height;
+
+            // Create a background image ;
+            $background = $this->getImageManager()->canvas($canvas_width, $canvas_height);
+            if ($bg_color) {
+                $background->fill($bg_color);
+            }
+            
+
+            // Determine the insert position of the image to crop inside the background image
+            $ins_x=abs(($x-abs($x))/2);
+            $ins_y=abs(($y-abs($y))/2);
+
+            // Adjust x and y with respect to the background image
+            $x=abs(($x+abs($x))/2);
+            $y=abs(($y+abs($y))/2);
+
+            // Insert the image to crop into the background.
+            //TODO: I can't really think now, but I think we could just return this as the crop?
+            $background->insert($image, 'top-left',$ins_x,$ins_y);
+            
+            //TODO: Any need to unset $image here to reclaim memory? 
+            //unset($image);
+
+            $image=$background;
+
+            //TODO: Any need for this to reclaim memory? 
+            unset($background);
+        }
+
+
+        return $image->crop($width,$height,$x,$y);
     }
 
     /**
@@ -647,7 +786,7 @@ class MediaManager
      * @param Image $image
      * @param int $width
      * @param int $height
-     * @return Image
+     * @return void
      */
     private function fitImage(Image $image,$width,$height){
         if ($image->width() > $width or $image->height() > $height) {
@@ -658,41 +797,56 @@ class MediaManager
             },'center');
 
         } 
-        return $image;
-    }
-
-    /**
-     * Return the width of the image by using the image content. May not be adequate to run 
-     * this on every page load since it may be quite heavy since it is loading the entire image first.
-     * @param Media $media
-     * @return int|null
-     */
-    public function imageWidth(Media $media){
-        if ($media->storage()->exists($media->getFullName('full'))) {
-            $image = $this->getImageManager()->make($this->getContent($media));
-            return $image->width() ;
-        }
-        return null;
-    }
-
-     /**
-     * Return the height of the image by using the image content. May not be adequate to run 
-     * this on every page load since it may be quite heavy since it is loading the entire image first. 
-     * @param Media $media
-     * @return int
-     */
-    public function imageHeight(Media $media){
-
-        if ($media->storage()->exists($media->getFullName('full'))) {
-            $image = $this->getImageManager()->make($this->getContent($media));
-            return $image->height() ;
-        }
-        return null;
         
     }
 
+     /**
+     * Return the width and height of the image as array by using the image content. May not be adequate to run 
+     * this on every page load since it may be quite heavy since it is loading the entire image first.
+     * @param Media $media
+     * @return array The array => ['w'=>#,'h'=>#]
+     */
+    public function imageDimensionFromSource(Media $media){
+        if ($media->storage()->exists($media->getFullName('full'))) {
+            $image = $this->getImageManager()->make($this->getContent($media));
+            return ['w'=>$image->width(),'h'=> $image->height()] ;
+        }
+        return ['w'=>0,'h'=>0];//Incase the files has issues, it good to claim it is zero else the Media model will continue to call this heavy method whenever someone tries to get the dimension of the file.
+    }
+
+    // /**
+    //  * Return the width of the image by using the image content. May not be adequate to run 
+    //  * this on every page load since it may be quite heavy since it is loading the entire image first.
+    //  * @param Media $media
+    //  * @return int|null
+    //  */
+    // public function imageWidth(Media $media){
+    //     return $this->imageDimension($media)['width'];
+    //     // if ($media->storage()->exists($media->getFullName('full'))) {
+    //     //     $image = $this->getImageManager()->make($this->getContent($media));
+    //     //     return $image->width() ;
+    //     // }
+    //     // return null;
+    // }
+
+    //  /**
+    //  * Return the height of the image by using the image content. May not be adequate to run 
+    //  * this on every page load since it may be quite heavy since it is loading the entire image first. 
+    //  * @param Media $media
+    //  * @return int
+    //  */
+    // public function imageHeight(Media $media){
+    //     return $this->imageDimension($media)['height'];
+    //     // if ($media->storage()->exists($media->getFullName('full'))) {
+    //     //     $image = $this->getImageManager()->make($this->getContent($media));
+    //     //     return $image->height() ;
+    //     // }
+    //     // return null;
+        
+    // }
+
     /**
-     * Resize and crop the media source and replaces the source on disk. If the image is smaller than given dimension, then the image will not be touched when the $type='fit'.
+     * Constrain the underlying image to a given dimension. Resize the media source and replaces the source on disk. If the image is smaller than given dimension, then the image will not be touched when the $type='fit'.
      * 
      * @param Media $media
      * @param $width
@@ -700,7 +854,7 @@ class MediaManager
      * @param $type {fit,fixed} The type of the resize. 'fixed' is normal image resize. 'fit' will keep the aspect ratio.
      * @return void
      */
-    public function constrainSaved(Media $media,$width,$height,$type='fit'){
+    public function constrain(Media $media,$width,$height,$type='fixed'){
         // but keep aspect-ratio and do not size up,
         // so smaller sizes don't stretch
 
@@ -711,7 +865,7 @@ class MediaManager
         $image = $this->getImageManager()->make($source);
         $changed=false;
         switch($type){
-            case 'fit':// Respects aspect ration and do not strech.
+            case 'fit':// Respects aspect ratio and do not stretch.
                 if ($image->width() > $width or $image->height() > $height) {
                     //large enough
                     $image->fit($width, $height, function ($c) {
@@ -722,7 +876,7 @@ class MediaManager
                     $changed=true;
                 } 
                 break;
-            case 'fixed':
+            case 'fixed': //No respect for aspect ratio
                 $image->resize($width,$height);
                 $changed=true;
                 break;
@@ -742,9 +896,13 @@ class MediaManager
                 $visibility
             );
 
-            //Update the size
+            //Update the size and save
             $media->size = $media->readSize();
-            $media->save();
+            $media->width=$image->width();
+            $media->height=$image->height();
+            if ($media->exists) {
+                $media->save();
+            }
         }
         
 

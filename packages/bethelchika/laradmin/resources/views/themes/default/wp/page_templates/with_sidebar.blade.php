@@ -38,7 +38,7 @@
 
                     {{--  Stuff from WP  --}}
                     <div class="inner-content padding-top-x3">
-                        {!!$post->getSidebar()!!}
+                        {!!$post->sidebarFiltered!!}
                     </div>
                     {{--  end stuff from WP  --}}
 
@@ -157,7 +157,7 @@
                                 </ul>
                             </div>--}}
                             @if(str_contains(strtolower($post->meta->rightbar),'on'))
-                                {!!$post->getRightbar()!!} 
+                                {!!$post->rightbarFiltered!!} 
                             @endif
                             @if(str_contains(strtolower($post->meta->blog_listing),'right'))
                             <div class="blog-listing">

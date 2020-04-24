@@ -165,7 +165,9 @@
 
         @include('laradmin::user/layouts/footer')
 
-    </div>  <!--app-->    
+    </div>  <!--app-->   
+    
+    @stack('body-bottom')
     
     {{-- Scripts 
     <script src="{{asset('js/manifest.js')}}"></script>
@@ -185,7 +187,11 @@
 
 
     {{--Vue--}}
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    @if(config('app.env')=='local')
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    @else
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    @endif
     
     @stack('footer-scripts-library')
 

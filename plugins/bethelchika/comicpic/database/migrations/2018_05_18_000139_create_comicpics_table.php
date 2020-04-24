@@ -13,6 +13,7 @@ class CreateComicpicsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('comicpics');
         Schema::create('comicpics', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('user_id')->unsigned();
@@ -28,6 +29,7 @@ class CreateComicpicsTable extends Migration
             $table->timestamp('unpublished_at')->nullable();
             $table->timestamps();
         });
+        
     } 
 
     /**

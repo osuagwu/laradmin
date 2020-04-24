@@ -39,7 +39,7 @@ To add a permission:
 <h3>Gates</h3>
 <p>
 The Control panel has a gate called <i class="label label-warning">cp</i> 
-which checks read permission on the '/cp' route prefix.
+which checks 'read' permission on the '/cp' route prefix.
 </p>
 
 

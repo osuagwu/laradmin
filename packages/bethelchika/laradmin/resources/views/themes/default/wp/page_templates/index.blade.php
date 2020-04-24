@@ -30,7 +30,7 @@
                         {{--  end top stack  --}}
                         
                         
-                        {!!$post->getSidebar()!!}
+                        {!!$post->sidebarFiltered!!}
 
                         <h4 class="heading-4">In this section</h4>
                         <div class="scroll-y-lg no-scroll-x mCustomScrollbar" data-mcs-theme="minimal-dark" >
@@ -164,7 +164,7 @@
                             {{--  end top stack  --}}
 
                             @if(str_contains(strtolower($post->meta->rightbar),'on'))
-                                {!!$post->getRightbar()!!} 
+                                {!!$post->rightbarFiltered!!} 
                             @endif
                             @if(str_contains(strtolower($post->meta->blog_listing),'right'))
                             <div class="blog-listing">

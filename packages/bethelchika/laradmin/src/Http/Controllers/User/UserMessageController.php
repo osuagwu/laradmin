@@ -4,15 +4,15 @@ namespace BethelChika\Laradmin\Http\Controllers\User;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Http\Request;
 use BethelChika\Laradmin\User;
 use BethelChika\Laradmin\Laradmin;
-use Illuminate\Http\Request;
-use BethelChika\Laradmin\UserMessage;
 use Illuminate\Support\Collection;
-use BethelChika\Laradmin\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use BethelChika\Laradmin\UserMessage;
 use BethelChika\Laradmin\Mail\UserMessageMail;
+use BethelChika\Laradmin\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -62,6 +62,9 @@ class UserMessageController extends Controller
 
          $laradmin->assetManager->registerMainNavScheme('primary');
          $laradmin->assetManager->setContainerType('fluid',true);
+
+         // Set sub app name
+        $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
      }
     
 
@@ -486,6 +489,8 @@ class UserMessageController extends Controller
     public function show(UserMessage $message)
     {   
         $this->authorize('view',$message);
+
+        
 
         $user=Auth::user();
 

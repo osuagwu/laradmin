@@ -37,7 +37,7 @@ trait Homepage
         $metas['url'] = url()->current();
         $metas['type'] = 'article';
         $metas['title'] = $post->title;
-        $metas['description'] = $post->post_excerpt ? $post->post_excerpt : strip_tags(str_limit($post->content, 280,'...'));
+        $metas['description'] = $post->post_excerpt ? $post->post_excerpt : strip_tags(str_limit($post->post_content, 280,'...'));
         $metas['image'] = $post->image;//TODO: check that this is right
         $metas['tweet'] = str_finish($post->post_excerpt, 277,'...') . '#' . config('app.name');
         

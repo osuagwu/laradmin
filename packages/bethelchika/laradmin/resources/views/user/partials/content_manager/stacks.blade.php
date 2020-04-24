@@ -2,6 +2,6 @@
     --}}
 @foreach($laradmin->contentManager->getStacks() as $stack)
     @push($stack)
-        {!!$laradmin->contentManager->getStackContents($stack)!!}
+        {!!$laradmin->contentManager->pullStackContents($stack)!!}
     @endpush
 @endforeach

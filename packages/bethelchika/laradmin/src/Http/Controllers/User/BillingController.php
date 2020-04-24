@@ -38,6 +38,9 @@ class BillingController extends Controller
         $this->laradmin->assetManager->registerMainNavScheme('primary');
         $this->laradmin->assetManager->setContainerType('fluid');
 
+        // Set sub app name
+        $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
+
         
       
     }

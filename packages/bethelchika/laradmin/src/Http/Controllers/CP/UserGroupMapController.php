@@ -102,7 +102,7 @@ class UserGroupMapController extends Controller
                 $user_groups_unmapped[]=$user_group;
                 
             }
-            //print $user_group->id.'=='.implode(',',$mapped_ids).'</br>';
+            
         }
      
                 
@@ -143,11 +143,7 @@ class UserGroupMapController extends Controller
             'member_of' => 'nullable|string|max:255',
           ]);
 
-        //exit(var_dump(strcmp(strtolower($user->name),'super user')));
-        //if(!strcmp(strtolower($user->name),'super')){//TODO: find better way to do this
-        //    return redirect()->route('cp-user',$user->id)->with('warning', 'Cannot alter the group membership of this user!');
-            
-        //}
+       
         
 
         $new_user_maps=[];
@@ -159,8 +155,7 @@ class UserGroupMapController extends Controller
         $user_maps=$user->userGroupMap;
         $changes=0;
         foreach($user_maps as $user_map){
-            //var_dump($user_map);
-            //exit();
+           
             if(in_array(intval($user_map->user_group_id),$new_user_maps,true)){
                 //this is the db already so don't add it again
                 $key_found=array_search(intval($user_map->user_group_id),$new_user_maps);

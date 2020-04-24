@@ -38,8 +38,6 @@ class UserGroupController extends Controller
         $order_by_dir=$request->get('order_by_dir','asc');
         $currentOrder=$order_by.':'.$order_by_dir;
 
-        //$url = str_replace('','',$request->fullUrl());
-        //print($request->fullUrlWithQuery(['order_by'=>'id','order_by_dir'=> 'asc']));
         
         
         
@@ -184,7 +182,7 @@ class UserGroupController extends Controller
      {
         $this->cpAuthorize();
         
-         //var_dump($request->user_group_ids);exit();
+         
          $i=0;
          foreach (explode(',',$request->user_groups_ids) as $user_groups_id){
             $userGroup=UserGroup::find($user_groups_id);

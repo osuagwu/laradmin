@@ -18,12 +18,18 @@ return [
         'width'=>360,//px
         'height'=>360,//px
     ],
+
+    /**
+     * These settings will be used when creating and managing cover photo
+     */
+    'cover_photo'=>[
+        'width'=>1500,//px
+        'height'=>500,//px
+    ],
     /**
      * General Laravel validation rule for general fields. Primarily used for user password
      * See Laravel docs for how to define validation  rules. THE RULES HERE HOWEVER SHOULD BE
      * SPECIFIED USING ARRAY.
-     * Help message that instruct on the password format should be set in the Laravel lang
-     * file called passwords(e.g. /resources/lang/en/passwords.php) using the 'password' key.
      *
      * NOTE: To make sure that the same password rule is used site-wide, make sure that this rule
      * is used in the Laravel's App\Http\Controllers\Auth\RegisterController and
@@ -51,8 +57,38 @@ return [
     'log_out_restricted_user' => env('LARADMIN_LOG_OUT_RESTRICTED_USER', true),
 
     /**
-     * Each login attemp is logged. In order to save space use this setting to define the max 
-     * number of login attemps logs you would want each user to have.
+     * How often should the login attempt check be made?
+     * Values:{'off'=>never, 'login' => on every login, including remember 
+     * me login, 'always'= at every request}
+     * 
+     * Note: Using 'login' means that if a mix match occurs with respect to 
+     * config('laradmin.login_attempt_match_columns') after user has already logged 
+     * in, the user will not be asked to verify. But the user will be asked to 
+     * verify in this case when using 'always'. However 'always' may could lead 
+     * to the user being asked to verify many times and require extraction of 
+     * useragent info and database access at every request. 
+     * 
+     * If a user is not logged in then no check is made a all.
+     */
+    'login_attempt_check'=>env('LARADMIN_LOGIN_ATTEMPT_CHECK','login'),
+    
+    /**
+     * CSV names of additional columns of login_attempt table that should be taken into account 
+     * when comparing two attempts. Including more or specific columns e.g 'ip'  
+     * increases the security but may annoy users who may be asked to verify 
+     * every now and them as the columns vary between requests. So try to 
+     * balance security and useability.
+     * 
+     * NOTE: you may get sql error if any of the listed names is not a column in the 
+     * login_attempt table.
+     */
+    'login_attempt_match_columns'=>env('LARADMIN_LOGIN_ATTEMPT_MATCH_COLUMNS',
+                                        'ip,languages,browser,browser_version,platform,platform_version,mobile_device,device_type,robot'),
+
+    
+    /**
+     * Each login attempt is logged. In order to save space use this setting to define the max 
+     * number of login attempts logs you would want each user to have.
      */
     'login_attempt_max_rows'=>8,
 
@@ -81,10 +117,18 @@ return [
      */
     'plugins_path'=>env('LARADMIN_PLUGINS_PATH',''),
 
+    
     /**
+     * NAVIGATION
      * Navigation file
      */
     'navigation_file'=>env('LARADMIN_NAVIGATION_FILE',storage_path('navigation.nav')),
+
+    /**
+     * NAVIGATION
+     * Mark external links external
+     */
+    'mark_external_link'=>true,
 
     /**
      * The brand colors
@@ -102,7 +146,7 @@ return [
      ],
 
      /**
-      * Names of different variants of logo.
+      * Url of different variants of logo.
       */
      'logos'=>[
         'default'=>'/img/logo.svg',
@@ -197,7 +241,7 @@ return [
      * The regular gradient will flow from color A to B only once. If this config is false
      * then the gradients flow from the colour A to the other colour B may repeat itself.
      */
-    'regular_section_gradient'=>env('LARADMIN_REGULAR_SECTION_GRADIENT',true),
+    'regular_section_gradient'=>true,
 
 
     /*

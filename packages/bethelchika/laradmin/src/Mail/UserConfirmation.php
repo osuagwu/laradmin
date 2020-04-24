@@ -32,6 +32,7 @@ class UserConfirmation extends Mailable
      */
     public function build()
     {
+        $this->subject(config('app.name').' user confirmation (Email channel)');
         return $this->markdown('laradmin::emails.user_confirmation');
     }
 }

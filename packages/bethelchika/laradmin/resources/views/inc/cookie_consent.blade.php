@@ -5,7 +5,7 @@
 
         <span class="cookie-consent-message">
 
-            {!! trans('laradmin::cookie_consent.message') !!}
+            {!! trans('laradmin::messages.cookie_consent.message') !!}
              <a href="{{route('user-privacy')}}">Privacy policy</a>.
 
         </span>
@@ -14,7 +14,7 @@
 
         <button class="js-cookie-consent-agree cookie-consent-agree">
 
-            {{ trans('laradmin::cookie_consent.agree') }}
+            {{ trans('laradmin::messages.cookie_consent.agree') }}
 
         </button>
 

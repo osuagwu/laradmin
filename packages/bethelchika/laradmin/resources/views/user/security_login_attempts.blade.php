@@ -37,6 +37,7 @@
                         </nav>
 
                         <h3  class="heading-3">Second factor Authentication</h3>
+                        <p>Enable or disable second factor authentication for your account</p>
                         <form class="form-inline sub-content with-padding no-elevation no-border" id="xfactor-form-update" role="form" method="POST" action="{{route('user-auth-xfactor-update')}}" >
                             @method('PUT')
                                 
@@ -55,6 +56,30 @@
                                 <div class="col-md-6">
                                     <button type="submit" class="btn btn-primary btn-xs">
                                         Save
+                                    </button>
+                                </div>
+                            </div>
+                            
+                    
+                        </form>
+
+
+                        <h3  class="heading-3">Logout other devices</h3>
+                        <p>Enter your current password in order to logout other devices barring your current session.<p>
+                        <form class="form-inline sub-content with-padding no-elevation no-border" role="form" method="POST" action="{{route('user-logout-others')}}" >
+                            @method('PUT')
+                                
+                            {{ csrf_field() }}
+                            {{-- <label> Password
+                                <input type="password" name="password" >
+                            </label> --}}
+
+                            @include('laradmin::form.components.input_password',['name'=>'password','value'=>'','required'=>'required', ])
+                            
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary btn-xs">
+                                        Logout other session
                                     </button>
                                 </div>
                             </div>
@@ -91,7 +116,7 @@
                                         @if($la->country)<span class="fainted-07"> {{$la->country}}.</span>@endif   --}}
                                         <span class="fainted-05"> 
                                             <span class="label label-{{$la->is_success?'success':'danger'}}"> {{$la->counts?:1}}</span> 
-                                            {{$la->is_success?' successful ':'failed'}} attempts, @if($la->rate)made every {{round((1/$la->rate)/60)}} minutes*, @endif 
+                                            {{$la->is_success?' successful ':'failed'}} attempts, @if($la->rate!=0)made every {{round((1/$la->rate)/60)}} minutes*, @endif 
                                         </span> 
                                         <span class="fainted-04">last attempt on: {{$la->updated_at}}</span>  
                                         <br>

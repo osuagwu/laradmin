@@ -7,7 +7,7 @@
     $sizes array The sizes array (default =33vw). Examples: ['(max-width: 320px) 280px',
                                                                 '(max-width: 480px) 440px', 
                                                                 '800px']
-    $attrs array Array where eachc item is a key=>val pair and the key is is img tag attribut and the value is the val. Must not have 'src','srcset' or 'sizes' attributes else there'll be duplicates.
+    $attrs array Array where each item is a key=>val pair and the key is  img tag attribute and the value is the val. Must not have 'src','srcset' or 'sizes' attributes else there'll be duplicates.
     --}}
 @if(count($srcset))
 <img @if(!isset($attrs))alt="{{$alt}}"  class="{{$class??''}}" @endif src="{{$srcset[0]['url']}}" 

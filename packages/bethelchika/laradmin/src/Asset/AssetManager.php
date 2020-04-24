@@ -379,19 +379,33 @@ class AssetManager
 
 
         // Now do the image styles
+        $css=self::makeResponsiveCssBg($img_urls,'.section.hero');
+        if ($css) {
+            self::registerAsset('head-styles', 'hero_image', $css);
+        }
+    }
+
+    /**
+     * Make responsive background from the given images.
+     * @param array $img_urls Array of image urls indexed with 'sm' and 'lg' to specify the images screen sizes 
+     * @param string $css_selector e.g: '.section.hero' or '#page-top' i.e including the dots and hash etc.
+     * @return string
+     */
+    public static function makeResponsiveCssBg(array $img_urls,$css_selector){
         // Wrap images in ono-overlapping media  queries to avoid multiple downloads. See https://timkadlec.com/2012/04/media-query-asset-downloading-results/
+        
         if (count($img_urls)) {
             $css = '
             <style type="text/css">
-                @media all and (min-width: 768px){
-                    .section.hero{
+                @media all and (min-width: 768px){'.
+                    $css_selector.'{
                         background-image: url(' . $img_urls['lg'] . ');
                     }
                 }';
             if(isset($img_urls['sm']) and $img_urls['sm']){ 
                 $css.='
-                    @media all and (max-width: 767px){
-                        .section.hero{
+                    @media all and (max-width: 767px){'.
+                        $css_selector.'{
                             background-image: url(' . $img_urls['sm'] . ');
                         }
                     }
@@ -400,8 +414,8 @@ class AssetManager
                 $css.='</style>';
             }
             
-            self::registerAsset('head-styles', 'hero_image', $css);
         }
+        return $css;
     }
 
     /**

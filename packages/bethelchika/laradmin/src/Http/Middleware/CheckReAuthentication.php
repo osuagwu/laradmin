@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Session;
 class CheckReAuthentication
 {
     //use AuthManagement;
+
+    /**
+     * We define the reauth status code as 420.
+     */
+    const STATUS_CODE=420;
+
     /**
      * Time in minutes since last auth or re auth at which reauth is required
      *
@@ -48,13 +54,26 @@ class CheckReAuthentication
         //dd($lastTime->diffForHumans(Carbon::now()));
         if($lastTime->addMinutes($minutes)->gt(Carbon::now())){
             Session::put('re_auth_at',Carbon::now()->timestamp);//This line allows resetting the re_auth_at so that no need to reauth as long as the user keeps requesting pages that needs reauth 
-            Session::put('re_auth_on',0);// Others scripts use this to tell that reauth is not corrently needed
+            Session::put('re_auth_on',0);// Others scripts can use this to tell that reauth is not currently needed
             return $next($request);
         }
         else{
             Session::put('re_auth_url_intended',URL::full());
-            Session::put('re_auth_on',1);// Other scripts will use this to tell if user has been told to reauth
-            return redirect()->route('re-auth');
+            Session::put('re_auth_on',1);// Other scripts can use this to tell if user has been told to reauth
+           if($request->ajax() or $request->wantsJson()) { 
+               
+               $data=['message'=>'Re authentication is required', 
+                        'info'=>'re-auth-url:'.route('re-auth'),
+
+                        // Build errors to look like Laravel's validation errors for ajax.
+                        'errors'=>[
+                            're-auth'=>['Please re-authenticate',],
+                        ],
+                    ];
+
+                return response()->json($data,self::STATUS_CODE,[],JSON_UNESCAPED_SLASHES);
+           } 
+           return redirect()->route('re-auth',[]);
         }
         
     }

@@ -65,31 +65,36 @@
 
 
             </div>
+            @if(__('passwords.guide')!='passwords.guide')
             <div class="col-md-3 ">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <span class="heading-6 panel-title" >Password rules</span>
+                        <span class="heading-6 panel-title" >Password guide</span>
                     </div>
                     <div class="panel-body">
+                        @if(is_array(__('passwords.guide')))
                         <ul>
-                            @foreach(explode('.',__('passwords.password')) as $msg)
+                            @foreach(__('passwords.guide') as $msg)
                                 @if(!strlen($msg)) @continue @endif
                                 <li><small>{{$msg}}</small></li>
                             @endforeach
 
                         </ul>
+                        @else
+                            <span>{{__('passwords.guide')}}</span>
+                        @endif
                     </div>
                 </div>
 
             </div>
-
+            @endif
 
         </div>
         <div class="padding-top-x6">
             <h6>Note on passwords</h6>
             <ul class="fainted-08">
                 <li>Make sure your password is safe</li>
-                <li>Do npt reuse password used on other website and packages</li>
+                <li>Do not reuse password used on other website and packages</li>
                 <li>Change your password regularly <br>...</li>
             </ul>
         </div>

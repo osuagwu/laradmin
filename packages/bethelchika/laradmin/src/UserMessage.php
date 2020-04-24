@@ -263,7 +263,7 @@ class UserMessage extends Model
         $system_user=(new User)->getSystemUser();
         if($sender->is($system_user)){
             if($admin_creator_user){
-                $userMessage->admin_creator_user->id;
+                $userMessage->admin_creator_user_id=$admin_creator_user->id;
             }else{
                 return -6;
             }
@@ -330,6 +330,10 @@ class UserMessage extends Model
         $m= str_replace('<br>',"\n",$this->message);
 
         $m=htmlspecialchars($m);
+
+        $url_pattern = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
+        $m= preg_replace($url_pattern, '<a href="http$2://$4" target="_blank" title="$0">$0 <small><i class="fas fa-external-link-alt"></i></small></a> ', $m);
+
         return nl2br($m); 
     }
 }

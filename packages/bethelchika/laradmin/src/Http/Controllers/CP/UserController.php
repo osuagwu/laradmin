@@ -2,12 +2,10 @@
 
 namespace  BethelChika\Laradmin\Http\Controllers\CP;
 
-use Lang;
+
 use Illuminate\Http\Request;
 use BethelChika\Laradmin\User;
-use Illuminate\Support\Facades\DB;
 use BethelChika\Laradmin\UserGroup;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use BethelChika\Laradmin\Notifications\Notice;
 use BethelChika\Laradmin\Traits\EmailConfirmationEmail;
@@ -36,10 +34,8 @@ class UserController extends Controller
     public function index()
     {
         $this->cpAuthorize();
-        //var_dump(\Illuminate\Support\Facades\Auth::user());exit();
-        $this->authorize('views','BethelChika\Laradmin\User');
 
-        //$users=User::paginate(10);
+        $this->authorize('views','BethelChika\Laradmin\User');
 
 
         $request=Request();
@@ -72,9 +68,8 @@ class UserController extends Controller
         $this->cpAuthorize();
         $this->authorize('create','BethelChika\Laradmin\User');
 
-        $countries=Lang::get('laradmin::list_of_countries');
-        $faiths=Lang::get('laradmin::list_of_faiths');
-        return view('laradmin::cp.user_create',compact('countries','faiths'));
+        $pageTitle="New user";
+        return view('laradmin::cp.user_create',compact('pageTitle'));
     }
 
     /**
@@ -91,24 +86,14 @@ class UserController extends Controller
         $this->validate($request, [
             'email' => 'required|string|email|max:255|unique:users',
             'name' => 'required|string|max:255',
-            //'first_names'=>'nullable|max:255|string',
-            //'last_name'=>'nullable|max:255|string',
-            //'year_of_birth'=>'nullable|integer|max:10000',
-            'new_password' =>config('laradmin.rules.password'),
-            //'gender'=>'nullable|string|max:10000',
-            //'faith'=>'nullable|string|max:255',
-            //'country'=>'nullable|string|max:255',
-          ]);
+            'password' =>config('laradmin.rules.password'),
+
+        ]);
 
            $user=new User;
            $user->email=$request->email;
            $user->name=$request->name;
-           //$user->first_names=$request->first_names;
-           //$user->last_name=$request->last_name;
-           //$user->year_of_birth=$request->year_of_birth;
-           //$user->gender=$request->gender;
-           //$user->faith=$request->faith;
-           //$user->country=$request->country;
+
 
            $user->password=Hash::make($request->new_password);
            $user->save();
@@ -150,9 +135,6 @@ class UserController extends Controller
 
         $this->authorize('update',$user);
 
-        //$countries=Lang::get('laradmin::list_of_countries');
-        //$faiths=Lang::get('laradmin::list_of_faiths');
-        //var_dump($faiths);exit();
         return view('laradmin::cp.user_edit',compact('user'));
     }
 
@@ -169,37 +151,39 @@ class UserController extends Controller
 
         $this->authorize('update',$user);
 
-        $this->validate($request, [
+
+
+
+        $rules=[
             'name' => 'required|string|max:255',
-            //'first_names'=>'nullable|max:255|string',
-            //'last_name'=>'nullable|max:255|string',
-            //'year_of_birth'=>'nullable|integer|max:10000',
-            //'new_password' =>config('laradmin.rules.password'),
-            //'gender'=>'nullable|string|max:10000',
-            //'faith'=>'nullable|string|max:255',
-            //'country'=>'nullable|string|max:255',
-          ]); 
-         // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
-          //update the user
+        ];
+        $this->validate($request, $rules); 
+         
 
-          //$user=User::find($user->id);
           $user->name=$request->name;
-          //$user->first_names=$request->first_names;
-          //$user->last_name=$request->last_name;
-          //$user->year_of_birth=$request->year_of_birth;
-          //$user->gender=$request->gender;
-          //$user->faith=$request->faith;
-          //$user->country=$request->country;
 
-          if (strcmp($request->new_password, '')) {
+
+          if(strcmp($user->email,$request->email)){
+                //validate emails
+                $this->validate($request, [
+                    'email' => 'required|string|email|max:255|unique:users',
+                ]);
+
+                $user->email=$request->email;
+            }
+
+           // dd(trans('laradmin::messages.password'));
+          if (strcmp($request->password, '')) {
 
             // Validate for password
             $this->validate($request, [
-                'new_password' =>config('laradmin.rules.password'),
+                'password' =>config('laradmin.rules.password'),
             ]);
 
-            $user->password=Hash::make($request->new_password);
+            $user->password=Hash::make($request->password);
           }
+
+
           $user->save();
 
           return redirect()->route('cp-user',$user->id)->with('success', 'User updated!');
@@ -269,16 +253,7 @@ class UserController extends Controller
 
         $this->authorize('update',$user);//We just authorise this as an update
 
-        /*
-        $confirmed=DB::table('confirmation')->where('user_id','=',$user->id)->where('type','=','email_confirmation')->delete();
-
-        $key= str_random(40);
-        $now=\Carbon\Carbon::now();
-        DB::table('confirmation')->insert(['key'=>$key,'type'=>'email_confirmation','user_id'=>$user->id,'created_at'=>$now,'updated_at'=>$now]);
-        $confirmationLink= route('email-confirmation',[$user->email,$key]);
-
-        \Illuminate\Support\Facades\Mail::to($user->email)
-        ->send(new \App\Mail\Laradmin\UserConfirmation($user,$confirmationLink)); */
+     
 
         $sentEmail=$this->confirmEmailEmail($user);
 
@@ -295,13 +270,7 @@ class UserController extends Controller
         $this->cpAuthorize();
         $this->authorize('update',$user);
 
-        // DB::table('confirmation')
-        // ->where('user_id','=',$user->id)
-        // ->where('type','=','email_confirmation')
-        // ->delete();//delete confirmation
 
-        // $user->status=1;
-        // $user->save();
         if($user->confirmEmail()){
             return back()->with('success','Email ('. $user->email.') was marked as confirmed');
         }else{

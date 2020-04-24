@@ -131,6 +131,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'password'=>[
+            'min'=>'Your password should contain 6 characters or more',
+        ],
 
     ],
 

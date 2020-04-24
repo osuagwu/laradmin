@@ -13,19 +13,25 @@ class Shortcodes{
     * Interpretes a route shortcode
      * Instruction: The shortcode should define 'name'=>route  and an optional 'params':
      * name: A named route
-     * params: The parameters of the route:  given as a name:value pair with pairs separated with commas. e.g. define params with id=1 and lang=en: params=id:1,lang:en 
+     * text:[optional] Link text
+     * params:[optional] The parameters of the route:  given as a name:value pair with pairs separated with commas. e.g. define params with id=1 and lang=en: params=id:1,lang:en 
      * Examples:
-     *  [route name=user-settings]
-     *  [route name=user-profile params=id:1,lang:en]
+     *  [route name=user-settings text="Contact us"] 
+     *  [route name=user-profile params=id:1,lang:en] => http://dev.eziulo.com/u/profile?id=1&lang=en
      *  
      * 
      * @param \Thunder\Shortcode\Shortcode\ShortcodeInterface $shortcode
      * @return string
      */
-    public static function route($shortcode){   
+    public static function route($shortcode){
+      
         $params=$shortcode->getParameters();
 
+        $href='';
+       
         if(isset($params['name']) and Route::has($params['name'])){
+            
+            
             if(isset($params['params'])){
                 $ps=[];
                 foreach(explode(',',$params['params']) as $p){
@@ -33,10 +39,15 @@ class Shortcodes{
                     if(count($v)<2) continue;
                     $ps[$v[0]]=$v[1];
                 }
-
-                return route($params['name'],$ps);
+                $href=route($params['name'],$ps);
             }
-            else return route($params['name']);
+            else {
+                $href=route($params['name']);
+            }
+            
+            $text=$params['text']??$href;
+            return '<a href="'.$href.'">'.$text.'</a>';
+
         }else {
             return '';
         }
@@ -120,15 +131,11 @@ class Shortcodes{
      * to push contents from main content to other part of a page. 
      * 
      * Instruction: parameters include:
-     * content : The content to be pushed
+     * content : The content to be pushed .Should be omitted when content is inside the shortcode.
      * bar : {sidebar-top/bottom,mainbar-top/bottom,rightbar-top/bottom 
      *                  (But essentially all stacks defined in ContentManager are eligible)}. 
      *                  The content will be placed on the specified bar of the page. If not 
-     *                  given the content will be place where it is defined. NOTE that the 'bar'
-     *                  parameter will not currently work properly if the  shortcode is defined
-     *                  in a rightbar or footer; because the shortcode won't be processed early 
-     *                  enough. TODO: To make it work everywhere we will need to retrieve the content
-     *                  of the footer and rightbar before loading the view. egg. in the controlller. 
+     *                  given the content will be place where it is defined.  
      * title [optinal]: The title of the content.
      * 
      * e.g: 
@@ -150,7 +157,7 @@ class Shortcodes{
      */
     public static function push($shortcode){
         $params=$shortcode->getParameters();
-        $content=$shortcode->getContent()??'';        
+        $content=$params['content']??$shortcode->getContent()??'';        
         $bar=$params['bar']??false;
         $title=$params['title']??'';
 
@@ -181,10 +188,7 @@ class Shortcodes{
      * bar [optional]: {sidebar-top/bottom,mainbar-top/bottom,rightbar-top/bottom 
      *                  (But essentially all stacks defined in ContentManager are eligible)}. 
      *                  The menu will be placed on the specified bar of the page. If not 
-     *                  given the menu will b place where it id defined. NOTE that the 'bar'
-     *                  parameter will note work properly if the menu shortcode is defined
-     *                  in a sidebar or rightbar in WP; because the shortcode won't be 
-     *                  processed early enough. 
+     *                  given the menu will b place where it id defined.
      * title [optinal]: The title of the menu.
      * e.g: [menu tag=primary title="Main menu"]
      * 

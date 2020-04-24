@@ -19,10 +19,12 @@ use BethelChika\Laradmin\WP\Models\Page;
 use BethelChika\Laradmin\SecurityQuestion;
 use Illuminate\Support\Facades\Validator;
 use  BethelChika\Laradmin\Http\Controllers\User\Traits\UserAvatar;
+use BethelChika\Laradmin\Http\Controllers\User\Traits\UserCoverPhoto;
+use BethelChika\Laradmin\Media\Models\Media;
 
 class UserProfileController extends Controller
 {
-    use EmailConfirmationEmail, ReAuthController,UserAvatar;
+    use EmailConfirmationEmail, ReAuthController,UserAvatar,UserCoverPhoto;
 
     private $laradmin;
     /**
@@ -35,9 +37,15 @@ class UserProfileController extends Controller
         parent::__construct();
         $this->middleware('auth', ['except' => ['emailConfirmation','privacy']]);
         
-        $this->middleware('re-auth:30')->only(['edit','avatar']);
+        $this->middleware('re-auth:30')->only(['edit',//main methods
+                                                'avatar','avatarJson','avatarJsonStore','avatarJsonUpdate','avatarJsonDelete',//avatar methods
+                                                'coverPhoto','coverPhotoJson','coverPhotoJsonStore','coverPhotoJsonUpdate','coverPhotoJsonDelete',//cover photo methods
+                                                ]);
+
         $this->middleware('re-auth:5')->only(['editPassword' ,'updatePassword','securityQuestionsUpdate','securityQuestionsEdit', 'initiateSelfDelete', 'selfDeactivate']); //Set a much more strict rerauth params for changing password.
         
+        // Set sub app name
+        $laradmin->contentManager->registerSubAppName('User manager',route('user-profile'));
 
         $this->laradmin = $laradmin;
         // Load menu items for user settings
@@ -57,7 +65,7 @@ class UserProfileController extends Controller
     public function index(Laradmin $laradmin)
     {
         $pageTitle = "Home";
-        //$feeds=app('laradmin')->feedManager->getFeedsJson();
+        
         $laradmin->assetManager->registerMainNavScheme('primary');
 
         //Get blog posts
@@ -69,27 +77,7 @@ class UserProfileController extends Controller
         return view('laradmin::user.index', compact('pageTitle', 'posts', 'laradmin'));
     }
 
-    // /**
-    //    * A helper function to help get profile form
-    //    *
-    //    * @param string $form_pack
-    //    * @param string $form_tag
-    //    * @param string $mode The mode that this call is mage for {'index','edit'}
-    //    * @return void
-    //    */
-    // private function getProfileForm($form_pack, $form_tag,$mode)
-    // {
-    //     $form = new Form($form_pack, $form_tag,$mode);
-    //     //$form->editLink='#';
-    //     switch ($form->getTag()) {
-    //         case 'personal':
-
-
-
-    //             break;
-    //     }
-    //     return $form;
-    // }
+   
 
     /**
       * Show the profile info.
@@ -97,9 +85,9 @@ class UserProfileController extends Controller
       * @param string $form_tag A tag of a form in the 'user_settings' pack
       * @return \Illuminate\Http\Response
       */
-    public function profile($form_pack = null, $form_tag = null)
+    public function profile(Request $request,$form_pack = null, $form_tag = null)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $this->authorize('view', $user);
 
         if (!$form_pack or !$form_tag) {
@@ -121,13 +109,47 @@ class UserProfileController extends Controller
         $forms_nav_tag = $form->packToMenu(route('user-profile'),'user_settings.account');
 
 
-
-
+        // See if we can add a cover photo
+        $media_cover_photo=$user->medias()->where('tag','cover-photo')->first();
+        if($media_cover_photo){
+            $sm_url=$media_cover_photo->url('_cover_photo_sm_');
+            // If we still do not have the small one we won't do anything. 
+            // This is because we are not checking if the request is from 
+            // a mobile or not and don't want the mobile to download large 
+            // image. TODO: fix by checking if is desktop or small device 
+            // and serve the correct bg instead of all these responsive css
+            // we are creating below,???.
+            if($sm_url){
+                $this->showCoverPhoto($media_cover_photo->url(),$sm_url);
+            }else{
+                $media_cover_photo=null;
+            }   
+        }
+        
 
 
         $show_profile_card = false; //When true similar profile card shown in the dashboard will be shown in the profile page too
 
-        return view('laradmin::user.profile', ['pageTitle' => $pageTitle, 'show_profile_card' => $show_profile_card, 'form' => $form, 'forms_nav_tag' => $forms_nav_tag]);
+        return view('laradmin::user.profile', ['pageTitle' => $pageTitle, 'user'=>$user,'media_cover_photo'=>$media_cover_photo, 'show_profile_card' => $show_profile_card, 'form' => $form, 'forms_nav_tag' => $forms_nav_tag]);
+    }
+
+    /**
+     * Place a cover photo on the page 
+     *
+     * @param string $img_url_lg url of large version of image
+     * @param string $img_url_sm Url of small version/mobile devices' version of image
+     * @return void
+     */
+    private function showCoverPhoto($img_url_lg,$img_url_sm){
+        $img_urls=[
+            'lg'=>$img_url_lg,
+            'sm'=>$img_url_sm,
+        ];
+
+        $css=$this->laradmin->assetManager->makeResponsiveCssBg($img_urls,'.cover-photo');
+        $this->laradmin->assetManager->registerAsset('head-styles','mainbar-cover',$css);
+        $this->laradmin->assetManager->registerBodyClass('has-cover-photo');
+       
     }
 
 
@@ -163,8 +185,7 @@ class UserProfileController extends Controller
         $form->link=route('user-profile',[$form_pack, $form_tag]);
         $form->title='';
 
-        //$countries = Lang::get('laradmin::list_of_countries'); //TODO: add countries
-        //$faiths = Lang::get('laradmin::list_of_faiths');
+
         $pageTitle = 'Edit profile | ' . Auth::user()->name;
         return view('laradmin::user.edit', ['user' => Auth::user(), 'pageTitle' => $pageTitle, 'form' => $form]);
     }
@@ -178,24 +199,26 @@ class UserProfileController extends Controller
     public function update(Request $request, $form_pack, $form_tag)
     {
 
-        $this->authorize('update', Auth::user()); //No need to authorize here but we will do it anyways
+        $user = $request->user();
 
-        $save_profile=false;
+        $this->authorize('update', $user); 
+
+        //$save_profile=false;
 
         // Get form for profile
         $form = new Form($form_pack, $form_tag,'edit');
 
 
+        // First process intrinsic 
         switch ($form->getTag()) {
             case 'personal':
                 $rules = [
                     'name' => 'required|string|max:255',
                 ];
                 $this->validate($request, $rules);
-                $user = User::find(Auth::user()->id);
                 $user->name = $request->name;
-                $save_profile=true;
-
+                //$save_profile=true;
+                $user->save();
                 break;
             case 'contacts':
                 break;
@@ -206,39 +229,20 @@ class UserProfileController extends Controller
         $form->getValidator($request->all())->validate();
         $form->process($request);
 
-        //   $this->validate($request, [
-        //     'name' => 'required|string|max:255',
-        //     //'password'=>'required|in:'.$pass_match,
-        //     'first_names'=>'nullable|max:255|string',
-        //     'last_name'=>'nullable|max:255|string',
-        //     'year_of_birth'=>'required|integer|max:10000',
-        //     //'new_password' => 'nullable|string|min:6|confirmed|max:255',
-        //     'gender'=>'nullable|string|max:10000',
-        //     'faith'=>'nullable|string|max:255',
-        //     'country'=>'nullable|string|max:255',
-        //   ]);
 
+        // if($save_profile){
+        //     $user->save();
+        // }
 
-
-        // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
-        //update the user
-
-        //$user->first_names=$request->first_names;
-        //$user->last_name=$request->last_name;
-        //$user->year_of_birth=$request->year_of_birth;
-        //$user->gender=$request->gender;
-        //$user->faith=$request->faith;
-        //$user->country=$request->country;
-
-
-
-        //if(strcmp($request->new_password,''))$user->password=Hash::make($request->new_password);
-        if($save_profile){
-            $user->save();
-        }
+        
 
         return redirect()->route('user-profile', [$form->getPack(), $form->getTag()])->with('success', 'Done!');
     }
+
+
+    
+
+
     /**
        * Display security view
        *
@@ -249,12 +253,6 @@ class UserProfileController extends Controller
         $user=Auth::user();
         $this->authorize('update', $user);
         $this->laradmin->assetManager->setContainerType('fluid');
-
-
-        // $security_answers=$user->securityAnswers;
-        // $security_answers_count=config('laradmin.security_answers_count');
-
-        // $login_attempts=$user->loginAttempts;
 
 
         $pageTitle = "Security";
@@ -279,6 +277,35 @@ class UserProfileController extends Controller
           $login_attempts=$user->loginAttempts()->latest('updated_at')->get();
           $pageTitle = "Security - Login attempts";
           return view('laradmin::user.security_login_attempts', compact('pageTitle','login_attempts'));
+      }
+
+      /**
+       * Logout other devices leaving the current one.
+       * See https://laravel.com/docs/7.x/authentication#events for "Invalidating Sessions On 
+       * Other Devices" to open the add a required middleware i.e \Illuminate\Session\Middleware\AuthenticateSession::class
+       *
+       * @param Request $request
+       * @return \Illuminate\Http\Response
+       */
+      public function logoutOtherDevices(Request $request){
+          
+
+          $this->validate($request,[
+              'password'=>'required|string'
+          ]);
+          
+          $user=$request->user();
+          
+          $password=$request->input('password');
+
+          if(!Hash::check($password,$user->password)){
+            return back()->with('danger','Incorrect password');
+          }
+
+          
+            Auth::logoutOtherDevices($password);
+
+            return back()->with('success','Done');
       }
 
       /**
@@ -364,7 +391,6 @@ class UserProfileController extends Controller
         $user=Auth::user();
         $this->authorize('update', $user);
         $this->laradmin->assetManager->setContainerType('fluid');
-        //dd($request->security_questions);
         
         $security_answers_count=config('laradmin.security_answers_count');
         
@@ -372,7 +398,7 @@ class UserProfileController extends Controller
 
         
 
-        // Make sure apprioprate number of unique answers are provided.
+        // Make sure appropriate number of unique answers are provided.
         $security_question_keys=\array_unique($request->security_questions);
         if(!is_array($security_question_keys) or count($security_question_keys)!==$security_answers_count){
             $request->flash();
@@ -385,7 +411,7 @@ class UserProfileController extends Controller
            $security_questions[$sq->id]=$sq->question;
         }
 
-        //Make sure actuall questions are selected
+        //Make sure actual questions are selected
         foreach($request->security_questions as $sq_key){
             if(!array_key_exists($sq_key,$security_questions)){
                 $request->flash();
@@ -403,7 +429,7 @@ class UserProfileController extends Controller
         $reminder_pieces=implode(',',$reminder_pieces);
 
         
-        //TODO: validation to prevent having none common words that are present in both anwers and reminders.
+        //TODO: validation to prevent having 'none common' words that are present in both anwers and reminders.
 
         
         // Create a separate validation to check that answers do not exist in in any of the reminders
@@ -476,24 +502,12 @@ class UserProfileController extends Controller
 
         $this->authorize('update', Auth::user());
 
-        //Implment validation
-        //   //First check that old password is correct
-        //  $pass_match= Hash::check($request->password,Auth::user()->password);
-        //  if($pass_match){
-        //      $pass_match="$request->password";
-        //  }
-        // else{
-        //     $pass_match=$request->password.'make_no_match_by adding random letterdf fvdfv';
-        // }
-
-        //dd(__('validation.custom.password.regex'));
-
 
         $this->validate($request, [
             'new_password' =>config('laradmin.rules.password')
 
         ]);
-        // regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/ |
+        
         //update the user
         $user = User::find(Auth::user()->id);
 
@@ -521,17 +535,6 @@ class UserProfileController extends Controller
             return redirect()->route('user-home')->with('warning', 'Email is already confirmed');
         }
 
-        /*
-        $confirmed=DB::table('confirmation')->where('user_id','=',$user->id)->where('type','=','email_confirmation')->delete();
-
-        $key= str_random(40);
-        $now=\Carbon\Carbon::now();
-        DB::table('confirmation')->insert(['key'=>$key,'type'=>'email_confirmation','user_id'=>$user->id,'created_at'=>$now,'updated_at'=>$now]);
-        $confirmationLink= route('email-confirmation',[$user->email,$key]);
-
-        \Illuminate\Support\Facades\Mail::to($user->email)
-        ->send(new \App\Mail\Laradmin\UserConfirmation($user,$confirmationLink));
-        */
 
         $sentEmail = $this->confirmEmailEmail($user);
 
@@ -553,7 +556,7 @@ class UserProfileController extends Controller
         } else {
             $user = false;
         }
-        //dd($user);
+        
 
         $confirmed = 0;
         $row = false;
@@ -567,9 +570,9 @@ class UserProfileController extends Controller
 
         if ($row) {
             $now = \Carbon\Carbon::now();
-            //dd(\Carbon\Carbon::parse($row->created_at));
+            
             $expired = ($now > \Carbon\Carbon::parse($row->created_at)->addHours(1));
-            //dd($expired);
+            
             if (!strcmp($token, $row->token) and !$expired) {
                 $user->status = 1;
                 $user->save();
@@ -731,16 +734,7 @@ class UserProfileController extends Controller
         return view('laradmin::user.alerts', compact('pageTitle', 'alerts'));
     }
 
-    /**TODO: Delete this method as its probably not in use
-    * List plugings for the purpose of settings
-    * @param  void
-    * @return \Illuminate\Http\Response
-    */
-    public function pluginSettings()
-    {
-        $pageTitle = 'Application settings';
-        return view('laradmin::user.plugin_settings', compact('pageTitle'));
-    }
+
 
     /**
      * Display site privacy information
@@ -749,7 +743,6 @@ class UserProfileController extends Controller
      */
     public function privacy()
     {
-        //dd(\BethelChika\Laradmin\Social\Feed\Feed::getFeeds());
         $pageTitle = 'Privacy policy';
         $page=null;
         $privacy_content=null;
@@ -757,7 +750,6 @@ class UserProfileController extends Controller
             $privacy_content=Page::getPageParts(['privacy']);
             if(!$privacy_content){
                 $page=Page::where('post_name','privacy-policy')->first();
-                //dd($page);
             }
         }
         return view('laradmin::user.privacy', compact('privacy_content','page','pageTitle'));

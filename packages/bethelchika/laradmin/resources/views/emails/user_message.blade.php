@@ -1,7 +1,7 @@
 @component('mail::message')
 ### This message is for {{$receiver->name}}
 
-{{$userMessage->message}}
+{!!$message!!}
 
 
 

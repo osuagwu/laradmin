@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use BethelChika\Laradmin\LoginAttempt;
 use Illuminate\Support\Facades\Validator;
 use BethelChika\Laradmin\AuthVerification\Channels\Email;
+use BethelChika\Laradmin\AuthVerification\AuthVerificationManager;
 
 
 
@@ -17,7 +18,7 @@ trait EmailChannel
         
         $email_channel=new Email; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($email_channel)){
@@ -43,7 +44,7 @@ trait EmailChannel
         
         $email_channel=new Email; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($email_channel)){
@@ -85,7 +86,7 @@ trait EmailChannel
         
         $email_channel=new Email; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($email_channel)){
@@ -118,7 +119,7 @@ trait EmailChannel
         
         $email_channel=new Email; 
 
-        if(!$attempt->has2Verify()){
+        if(!AuthVerificationManager::has2Verify($attempt)){
            return $this->intended();
         }
         if(!$attempt->canVerify($email_channel)){

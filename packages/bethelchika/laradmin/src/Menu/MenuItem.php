@@ -244,17 +244,26 @@ class MenuItem extends NavigationItem
         return $u;
     }
 
-    /**
-     * Check if the link is external
+   /**
+     * Check if the link is external. 
+     * TODO: Note that currently subdomains except 'www.' are considered different. This can easily be implemented when required.
      *
      * @return boolean
      */
     public function isExternalLink(){
-        $link=$this->getLink();
-        $links_no_protocol=str_replace(['http://','https://','ftp://'],'',[$link,env('APP_URL')]);
+        $host=parse_url($this->getLink(),PHP_URL_HOST);
+        $host=str_replace('www.','',$host);// TODO: Should this be done only if occures at the start?
+        if($host){
+            $app_host=parse_url(config('app.url'),PHP_URL_HOST);
+            $app_host=str_replace('www.','',$app_host);// TODO: Should this be done only if occures at the start?
+            return !!strcmp($host,$app_host);
+        }
+        return false;
+        // $link=$this->getLink();
+        // $links_no_protocol=str_replace(['http://','https://','ftp://'],'',[$link,env('APP_URL')]);
 
-        return (strpos($link,'http://')===0 or strpos($link,'https://')===0 or strpos($link,'ftp://')===0)
-                and !str_contains($links_no_protocol[0],$links_no_protocol[1]);
+        // return (strpos($link,'http://')===0 or strpos($link,'https://')===0 or strpos($link,'ftp://')===0)
+        //         and !str_contains($links_no_protocol[0],$links_no_protocol[1]);
     }
 
     /**
